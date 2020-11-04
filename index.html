@@ -15,12 +15,13 @@
     <link rel="stylesheet" href="./assets/dist/spectre.min.css">
     <link rel="stylesheet" href="./assets/dist/spectre-exp.min.css">
     <link rel="stylesheet" href="./assets/dist/spectre-icons.min.css">
+    <!-- <link rel="stylesheet" href="./assets/dist/icons.min.css"> -->
     <link rel="stylesheet" href="./assets/style.css">
 </head>
 
 <body>
     <!-- Navigation bar -->
-    <header class="navbar text-bold text-large p-2">
+    <header class="navbar text-bold text-large font-serif p-2">
         <section class="navbar-section">
             <a href="#" class="btn btn-link text-dark">Project Proposal</a>
             <a href="#" class="btn btn-link text-dark">About</a>
@@ -31,7 +32,7 @@
         </section>
         <section class="navbar-section">
             <a href="#" class="btn btn-link text-dark">Process Book</a>
-            <a href="#" class="btn btn-link text-dark">GitHub</a>
+            <a href="https://github.com/reepoi/data-vis-2020-fires/tree/develop" class="btn btn-link text-dark">GitHub</a>
         </section>
     </header>
 
@@ -41,10 +42,13 @@
 
     <div class="container">
         <!-- Visualization Name/options -->
-        <div class="columns">
+        <div class="columns font-serif">
             <div class="column col-3"></div>
             <div class="column col-6">
                 <ul class="tab tab-block">
+                    <li class="">
+                        <a href="#back" class="btn btn-link btn-lg icon icon-back"></a>
+                    </li>
                     <li class="tab-item">
                         <a href="#fire-map" class="active">U.S. Fire Map</a>
                     </li>
@@ -54,24 +58,83 @@
                     <li class="tab-item">
                         <a href="#stories">Stories</a>
                     </li>
+                    <li class="">
+                        <a href="#forward" class="btn btn-link btn-lg icon icon-forward"></a>
+                    </li>
+
                 </ul>
+                <!-- Brief Data column -->
+                <div class="columns">
+                    <div class="column col-3 col-mx-auto text-center text-dark">
+                        <h4 class="text-bold mb-0">13</h4>
+                        <p class="text-italic">
+                            millions acres <br> burned
+                        </p>
+                    </div>
+                    <div class="column col-3 col-mx-auto text-center text-dark">
+                        <h4 class="text-bold mb-0">$3.5</h4>
+                        <p class="text-italic mt-0">
+                            billion in <br> suppresion costs
+                        </p>
+                    </div>
+                    <div class="column col-3 col-mx-auto text-center text-dark">
+                        <h4 class="text-bold mb-0">14,000</h4>
+                        <p class="text-italic">
+                            structures <br> burned
+                        </p>
+                    </div>
+                    <div class="column col-3 col-mx-auto text-center text-dark">
+                        <h4 class="text-bold mb-0">43</h4>
+                        <p class="text-italic">
+                            fatalities
+                        </p>
+                    </div>
+
+                </div>
             </div>
             <div class="column col-3"></div>
 
         </div>
+
         <!-- Visualization content -->
         <div class="columns">
-            <div id="vis-1" class="column col-3">
-
+            <div id="vis-1" class="column col-3 col-mr-auto">
+                <div class="panel">
+                    <div class="panel-header font-serif">
+                        <div class="panel-title h3">Wildfire Stats</div>
+                    </div>
+                    <div class="panel-body">
+                        <h5>Put some data or charts here!</h3>
+                            <svg id="vis-1-svg"></svg>
+                    </div>
+                </div>
             </div>
             <div id="vis-2" class="column col-6">
-
+                <svg id="vis-2-svg"></svg>
             </div>
-            <div id="vis-3" class="column col-3">
-
+            <div id="vis-3" class="column col-3 col-ml-auto">
+                <div class="panel">
+                    <div class="panel-header font-serif">
+                        <div class="panel-title h3">Some info here?</div>
+                    </div>
+                    <div class="panel-body">
+                        <h5>Panel body content</h3>
+                            <svg id="vis-3-svg"></svg>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Storytelling content -->
+        <div class="columns">
+            <div class="column col-6 col-mx-auto text-center text-dark">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et vehicula felis. Cras id risus sollicitudin, pulvinar sapien sed, vehicula augue. Quisque odio tortor, lobortis viverra finibus id, tincidunt a sapien. Vestibulum vitae ex semper, tempor
+                    justo sit amet, tristique libero. Nulla suscipit non augue ac venenatis. In in massa id odio bibendum facilisis vel eu felis. Ut dictum non nibh et maximus. Vivamus mattis lorem diam, eu elementum lorem dictum placerat. Nulla condimentum
+                    nisl ac diam tristique iaculis in vehicula felis. Praesent in nibh eget velit commodo rhoncus sit amet vitae metus. Donec quis nibh et metus viverra porta eget sed urna. Phasellus vel leo ullamcorper, tristique nunc quis, dignissim
+                    arcu.
+                </p>
+            </div>
+        </div>
     </div>
 
 

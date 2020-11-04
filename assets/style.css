@@ -1,4 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
 * {
+    /* Specify for all elements */
+}
+
+li.tab-item {
+    font-weight: 600;
+}
+
+.font-serif {
     font-family: 'Crimson Text', serif;
+}
+
+svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#vis-1 .panel {
+    border: 0px;
+    border-right: .05rem solid #dadee4;
+}
+
+#vis-3 .panel {
+    border: 0px;
+    border-left: .05rem solid #dadee4;
 }
