@@ -12,14 +12,67 @@
     <title>U.S. Wildfires 2020</title>
 
     <!-- Spectre.CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+    <link rel="stylesheet" href="./assets/dist/spectre.min.css">
+    <link rel="stylesheet" href="./assets/dist/spectre-exp.min.css">
+    <link rel="stylesheet" href="./assets/dist/spectre-icons.min.css">
+    <link rel="stylesheet" href="./assets/style.css">
 </head>
 
 <body>
+    <!-- Navigation bar -->
+    <header class="navbar text-bold text-large p-2">
+        <section class="navbar-section">
+            <a href="#" class="btn btn-link text-dark">Project Proposal</a>
+            <a href="#" class="btn btn-link text-dark">About</a>
+        </section>
+        <section class="navbar-center">
+            <!-- centered logo or brand -->
+            <a href="#" class="text-dark">U.S. Wildfires 2020 Visualization</a>
+        </section>
+        <section class="navbar-section">
+            <a href="#" class="btn btn-link text-dark">Process Book</a>
+            <a href="#" class="btn btn-link text-dark">GitHub</a>
+        </section>
+    </header>
+
+    <div class="divider"></div>
+
     <!-- Page Content -->
 
+    <div class="container">
+        <!-- Visualization Name/options -->
+        <div class="columns">
+            <div class="column col-3"></div>
+            <div class="column col-6">
+                <ul class="tab tab-block">
+                    <li class="tab-item">
+                        <a href="#fire-map" class="active">U.S. Fire Map</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#compare-year" class="">Compare Years</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#stories">Stories</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="column col-3"></div>
+
+        </div>
+        <!-- Visualization content -->
+        <div class="columns">
+            <div id="vis-1" class="column col-3">
+
+            </div>
+            <div id="vis-2" class="column col-6">
+
+            </div>
+            <div id="vis-3" class="column col-3">
+
+            </div>
+        </div>
+        <!-- Storytelling content -->
+    </div>
 
 
 
