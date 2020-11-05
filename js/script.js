@@ -7,6 +7,9 @@ window.addEventListener("hashchange", function(e) {
     pagingHandler();
 });
 
+const tabHashes = getTabHashes();
+
+
 /* Visualization: After data load */
 loadData().then(data => {
     console.log(data);
@@ -34,12 +37,16 @@ async function loadData() {
 
 
 /* Views Helper Functions */
+
 /**
  * This function handles the website paging
  * with hash locations.
+ * @param {*} givenHash - String - a given hash to relocate. 
  */
-function pagingHandler() {
-    let currentHash = window.location.hash;
+function pagingHandler(hash = "") {
+    let currentHash = hash;
+    if (hash === "")
+        currentHash = window.location.hash;
     switch (currentHash) {
         case "#compare-year":
             /* This is just a demo function I made to see how tabbing works */
@@ -68,16 +75,15 @@ function pagingHandler() {
  * This doesn't touch any Visualizations or Data content
  */
 function activeTabHandler(currentHash) {
-    let tabHashes = [];
+    // let tabHashes = [];
     let tabsSelection = d3.select("#menu").selectAll(".tab-item")
         .each(function() {
             let aElement = d3.select(this).select("a");
             if (aElement.attr("href") === currentHash) {
-                console.log(aElement);
                 aElement.classed("active", true)
             } else
                 aElement.classed("active", false)
-            tabHashes.push(aElement.attr("href"));
+                // tabHashes.push(aElement.attr("href"));
         });
     //Disable and Enable at left and right most tabs:
     //if hashtag = left most, then disable back button
@@ -85,4 +91,32 @@ function activeTabHandler(currentHash) {
     //if hashtag = right most, then disable forward button
     d3.select("#menu-forward").classed("disabled", (_) => currentHash === tabHashes[tabHashes.length - 1]);
 
+}
+
+/**
+ * Handle when tab Forward button clicked
+ */
+function tabForwardClicked() {
+    let currentHash = window.location.hash;
+    let currentTabIndex = tabHashes.indexOf(currentHash);
+    pagingHandler(tabHashes[currentTabIndex + 1]);
+}
+
+/**
+ *  Handle when tab Back button clicked
+ */
+function tabBackClicked() {
+    let currentHash = window.location.hash;
+    let currentTabIndex = tabHashes.indexOf(currentHash);
+    pagingHandler(tabHashes[currentTabIndex - 1]);
+}
+
+/* Helper function: get the hashes from main menu (tab) */
+function getTabHashes() {
+    let tabHashes = [];
+    d3.select("#menu").selectAll(".tab-item")
+        .each(function() {
+            tabHashes.push(d3.select(this).select("a").attr("href"));
+        });
+    return tabHashes;
 }
