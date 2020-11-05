@@ -11,7 +11,7 @@
 }
 
 
-/* LAYOUT ELEMENTS*/
+/* LAYOUT and VIEWS ELEMENTS*/
 
 li.tab-item {
     font-weight: 600;
@@ -25,6 +25,12 @@ li.tab-item {
 #vis-3 .panel {
     border: 0px;
     border-left: .05rem solid #dadee4;
+}
+
+a:focus,
+button:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 

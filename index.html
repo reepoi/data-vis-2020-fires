@@ -45,9 +45,9 @@
         <div class="columns font-serif">
             <div class="column col-3"></div>
             <div class="column col-6">
-                <ul class="tab tab-block">
+                <ul id="menu" class="tab tab-block">
                     <li class="">
-                        <a href="#back" class="btn btn-link btn-lg icon icon-back"></a>
+                        <button id="menu-back" class="btn disabled btn-link btn-lg icon icon-back"></button>
                     </li>
                     <li class="tab-item">
                         <a href="#fire-map" class="active">U.S. Fire Map</a>
@@ -59,7 +59,7 @@
                         <a href="#stories">Stories</a>
                     </li>
                     <li class="">
-                        <a href="#forward" class="btn btn-link btn-lg icon icon-forward"></a>
+                        <button id="menu-forward" class="btn btn-link btn-lg icon icon-forward"></button>
                     </li>
 
                 </ul>
@@ -141,6 +141,7 @@
 
 
     <!-- JS files at bottom of page: -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
 </body>
 
