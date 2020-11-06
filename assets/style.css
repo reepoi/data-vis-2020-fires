@@ -22,6 +22,10 @@ li.tab-item {
     border-right: .05rem solid #dadee4;
 }
 
+#vis-2 {
+    height: 400px;
+}
+
 #vis-3 .panel {
     border: 0px;
     border-left: .05rem solid #dadee4;
@@ -36,8 +40,10 @@ button:focus {
 
 /* Visualization CSS */
 
+
+/* 
 svg {
     display: block;
     width: 100%;
     height: 100%;
-}
+} */
