@@ -1,9 +1,14 @@
 class MapView{
 
-  constructor(divContainer, initLat, initLong, initZoom){
+  constructor(divContainer, initLatLng, initZoom){
     this.leafletMap = L.map(divContainer);
-    this.setMapView(initLat, initLong, initZoom);
+    this.polygonLayer; // initialized when drawPolygonFeatures is called
+    this.pointLayer; // initialized when drawPointFeatures is called
+
+    this.setMapView(initLatLng, initZoom);
     this.addMapTiling();
+    this.addMapEventHanlders();
+    this.addMapScale();
   }
 
   /*
@@ -17,8 +22,8 @@ class MapView{
   /*
   * Sets what location is displayed and its zoom on the Leaflet map
   */
-  setMapView(lat, long, zoom){
-    this.leafletMap.setView([lat, long], zoom);
+  setMapView(latlng, zoom){
+    this.leafletMap.setView(latlng, zoom);
   }
 
   /*
@@ -27,6 +32,7 @@ class MapView{
   addMapTiling(){
     L.tileLayer(TILE_API_URL, {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      minZoom: 2,
       maxZoom: 18,
       id: MAPBOX_TILE_STYLE,
       tileSize: 512,
@@ -36,13 +42,23 @@ class MapView{
   }
 
   /*
+  * Adds event handler methods to the Leaflet map
+  */
+  addMapEventHanlders(){
+    this.leafletMap.on('zoomend', this.onMapZoom);
+  }
+
+  /*
   * Draws polygon features onto the Leaflet map
   */
   drawPolygonFeatures(data){
-    L.geoJSON(data, {
+    this.polygonLayer = L.geoJSON(data, {
       onEachFeature: this.onEachPolygonFeature,
       style: this.getPolygonStyle(),
-    }).addTo(this.leafletMap);
+    });
+    if(this.leafletMap.getZoom() >= MAP_SHW_PLYGN_ZOOM){
+      this.polygonLayer.addTo(this.leafletMap);
+    }
   }
 
   /*
@@ -57,10 +73,70 @@ class MapView{
   }
 
   /*
+  * Draws point features onto the Leaflet map
+  */
+  drawPointFeatures(data){
+    this.pointLayer = L.geoJSON(data, {
+      onEachFeature: this.onEachPointFeature,
+      // style: this.getPolygonStyle(),
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, mapView.getPointerMarkerStyle());
+      }
+    });
+    if(this.leafletMap.getZoom() < MAP_SHW_PLYGN_ZOOM){
+      this.pointLayer.addTo(this.leafletMap);
+    }
+  }
+
+  /*
+  * Functions and attributes to be added to each point drawn on Leaflet map
+  */
+  onEachPointFeature(feature, layer){
+    layer.on({
+      // mouseover: mapView.onPointHover,
+      // mouseout: mapView.pointReset,
+      click: mapView.zoomToFeature
+    });
+  }
+
+  ////////////////////////////////////////////////////////////
+  // Event hanlder methods ///////////////////////////////////
+  ////////////////////////////////////////////////////////////
+
+  /* Map event handler methods */
+
+  /*
+  * Event handler to switch out polygon or points layers based on zoom level of Leaflet map
+  */
+  onMapZoom(){
+    if(mapView.getLeafletMap().getZoom() >= MAP_SHW_PLYGN_ZOOM){
+      if(mapView.pointLayer){
+        mapView.pointLayer.removeFrom(mapView.getLeafletMap());
+      }
+      if(mapView.polygonLayer){
+        mapView.polygonLayer.addTo(mapView.getLeafletMap());
+      }
+    } else {
+      if(mapView.polygonLayer){
+        mapView.polygonLayer.removeFrom(mapView.getLeafletMap());
+      }
+      if(mapView.pointLayer){
+        mapView.pointLayer.addTo(mapView.getLeafletMap());
+      }
+    }
+  }
+
+  /* Polygon event handler methods */
+
+  /*
   * Event handler to zoom map onto feature with defined bounds
   */
   zoomToFeature(e){
-    mapView.getLeafletMap().fitBounds(e.target.getBounds());
+    if(e.target.feature.geometry.type === 'Point'){
+      mapView.setMapView(e.latlng, MAP_SHW_PLYGN_ZOOM);
+    } else {
+      mapView.getLeafletMap().fitBounds(e.target.getBounds());
+    }
   }
 
   /*
@@ -82,6 +158,10 @@ class MapView{
     let layer = e.target;
     layer.setStyle(mapView.getPolygonStyle());
   }
+
+  ////////////////////////////////////////////////////////////
+  // Style methods ///////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
   
   /*
   * Returns style object for polygons on Leaflet map
@@ -103,6 +183,20 @@ class MapView{
         "weight": 3,
         "opacity": 0.85
     }
+  }
+
+  /*
+  * Returns style object for points on Leaflet map
+  */
+  getPointerMarkerStyle(){
+    return {
+      radius: 8,
+      fillColor: "#ff7800",
+      color: "#000",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.8
+    };
   }
 
 }
