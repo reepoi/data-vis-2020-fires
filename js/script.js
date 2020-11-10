@@ -8,7 +8,7 @@ window.addEventListener("hashchange", function(e) {
 });
 
 const tabHashes = getTabHashes();
-const mapView = new MapView('vis-2', 37, -120, 8);
+const mapView = new MapView('vis-2', [MAP_INIT_LAT, MAP_INIT_LONG], MAP_INIT_ZOOM);
 
 /* Visualization: After data load */
 loadData().then(data => {
@@ -20,9 +20,11 @@ loadData().then(data => {
     }
 
     /* TODO: D3 Visualization classes here */
-    mapView.drawPolygonFeatures(data.perimeters, updateFireInfo);
     let fireInfo = new FireInfo(data.perimeters, updateFireInfo);
     fireInfo.drawFireStats();
+    /* TODO: D3 Visualizations here */
+    mapView.drawPolygonFeatures(data.perimeters);
+    mapView.drawPointFeatures(data.points);
 
 
     /*Set up website handlers (internal) after data load*/
