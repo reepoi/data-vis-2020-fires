@@ -14,12 +14,18 @@ const mapView = new MapView('vis-2', 37, -120, 8);
 loadData().then(data => {
     console.log(data);
 
-    /* TODO: D3 Visualizations here */
-    mapView.drawPolygonFeatures(data.perimeters); // TODO: figure out what to pass to draw the polygons
+    /*linking functions*/
+    function updateFireInfo(selectedFire) {
+        console.log("script.js: updateFireInfo fired");
+    }
+
+    /* TODO: D3 Visualization classes here */
+    mapView.drawPolygonFeatures(data.perimeters, updateFireInfo);
+    let fireInfo = new FireInfo(data.perimeters, updateFireInfo);
+    fireInfo.drawFireStats();
 
 
     /*Set up website handlers (internal) after data load*/
-    /* Update Visualizations */
 
 })
 
