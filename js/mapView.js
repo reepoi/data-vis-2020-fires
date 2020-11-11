@@ -8,7 +8,6 @@ class MapView{
     this.setMapView(initLatLng, initZoom);
     this.addMapTiling();
     this.addMapEventHanlders();
-    this.addMapScale();
   }
 
   /*
