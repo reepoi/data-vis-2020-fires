@@ -8,14 +8,15 @@ window.addEventListener("hashchange", function(e) {
 });
 
 const tabHashes = getTabHashes();
-const mapView = new MapView('vis-2', 37, -120, 8);
+const mapView = new MapView('vis-2', [MAP_INIT_LAT, MAP_INIT_LONG], MAP_INIT_ZOOM);
 
 /* Visualization: After data load */
 loadData().then(data => {
     console.log(data);
 
     /* TODO: D3 Visualizations here */
-    mapView.drawPolygonFeatures(data.perimeters); // TODO: figure out what to pass to draw the polygons
+    mapView.drawPolygonFeatures(data.perimeters);
+    mapView.drawPointFeatures(data.points);
 
 
     /*Set up website handlers (internal) after data load*/
