@@ -2,6 +2,7 @@
 window.addEventListener('load', function() {
     console.log('All assets are loaded');
     pagingHandler();
+    initializeVis();
 });
 window.addEventListener("hashchange", function(e) {
     pagingHandler();
@@ -11,25 +12,27 @@ const tabHashes = getTabHashes();
 const mapView = new MapView('vis-2', [MAP_INIT_LAT, MAP_INIT_LONG], MAP_INIT_ZOOM);
 
 /* Visualization: After data load */
-loadData().then(data => {
-    console.log(data);
+function initializeVis() {
+    loadData().then(data => {
+        console.log(data);
 
-    /*linking functions*/
-    function updateFireInfo(selectedFire) {
-        console.log("script.js: updateFireInfo fired");
-    }
+        /*linking functions*/
+        function updateFireInfo(selectedFire) {
+            console.log("script.js: updateFireInfo fired");
+        }
 
-    /* TODO: D3 Visualization classes here */
-    let fireInfo = new FireInfo(data.perimeters, updateFireInfo);
-    fireInfo.drawFireStats();
-    /* TODO: D3 Visualizations here */
-    mapView.drawPolygonFeatures(data.perimeters);
-    mapView.drawPointFeatures(data.points);
+        /* TODO: D3 Visualization classes here */
+        let fireInfo = new FireInfo(data, updateFireInfo);
+        fireInfo.drawFireChart();
+        /* TODO: D3 Visualizations here */
+        mapView.drawPolygonFeatures(data.perimeters);
+        mapView.drawPointFeatures(data.points);
 
 
-    /*Set up website handlers (internal) after data load*/
+        /*Set up website handlers (internal) after data load*/
 
-})
+    });
+}
 
 /* Async function to load files that you want */
 async function loadData() {

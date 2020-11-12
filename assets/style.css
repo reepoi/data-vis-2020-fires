@@ -20,6 +20,28 @@ li.tab-item {
 #vis-1 .panel {
     border: 0px;
     border-right: .05rem solid #dadee4;
+    height: 100%;
+}
+
+#vis-1 .panel-body {
+    height: 300px;
+    overflow-y: scroll;
+}
+
+
+/* #vis-1 .panel svg {
+    height: 1000px;
+} */
+
+.barRect {
+    /* overflow: scroll; */
+    color: #ff6361;
+    fill: #ff6361;
+}
+
+.barText {
+    color: black;
+    cursor: default;
 }
 
 #vis-2 {
