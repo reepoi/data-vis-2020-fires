@@ -6,3 +6,4 @@ const MAP_INIT_LAT = 38;
 const MAP_INIT_LONG = -98;
 const MAP_INIT_ZOOM = 4;
 const MAP_SHW_PLYGN_ZOOM = 8;
+const MAP_CLK_PLYGN_ZOOM = 11;
