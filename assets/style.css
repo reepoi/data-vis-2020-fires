@@ -32,6 +32,11 @@ li.tab-item {
     overflow-y: scroll;
 }
 
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
 .barRect {
     color: #ff6361;
     fill: #ff6361;
