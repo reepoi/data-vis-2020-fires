@@ -37,9 +37,11 @@ function initializeVis() {
 async function loadData() {
     let perimeters = await d3.json("./data/WF_Perimeters.geojson");
     let points = await d3.json("./data/WF_Points.geojson");
+    let fireHistory = await d3.json("./data/CA_fire_history.geojson");
     return {
         'perimeters': perimeters,
         'points': points,
+        'fireHistory': fireHistory
     };
 }
 
