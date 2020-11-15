@@ -101,14 +101,19 @@
         <div class="columns">
             <div id="vis-1" class="column col-3 col-mr-auto col-sm-12">
                 <div class="panel">
-                    <div class="panel-header text-center font-serif py-0">
-                        <div class="panel-title h3">Area Burned:</div>
-                        <div class="panel-subtitle h5 text-bold">Size by Acres</div>
+                    <div class="panel-header text-center  py-0">
+                        <div class="panel-title h3 font-serif">Area Burned:</div>
+                        <div class="panel-subtitle h5 text-bold font-serif">Size by Acres</div>
+                        <button id="vis-1-prev" class="btn btn-link disabled">Prev</button>
+                        <button id="vis-1-next" class="btn btn-link ">Next</button>
                         <div class="divider"></div>
                     </div>
 
                     <div class="panel-body">
-                        <div class="h6">Largest Fires by Area:</div>
+                        <!-- Pagination on bar chart -->
+
+                        <div id="vis-1-subtitle" class="column col-8 col-mx-auto">Largest Fire by Area</div>
+                        <!-- Visualization 1 -->
                         <div id="vis-1-div">
                             <svg id="vis-1-svg"></svg>
                         </div>
@@ -117,6 +122,7 @@
                 </div>
             </div>
             <div id="vis-2" class="column col-6 col-sm-12">
+                <!-- Visualization 2 -->
                 <svg id="vis-2-svg"></svg>
             </div>
             <div id="vis-3" class="column col-3 col-ml-auto col-sm-12 col-lg-12">

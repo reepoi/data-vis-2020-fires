@@ -7,6 +7,7 @@ class FireInfo {
     constructor(data, updateFireInfo) {
         this.datapoints = data.points.features;
         this.updateFireInfo = updateFireInfo;
+        this.dataPrepare();
 
 
         //Vis sizes:
@@ -16,26 +17,44 @@ class FireInfo {
 
 
         // Scales
-        this.scaleSizeAcre = d3.scaleLinear()
+        let scaleSizeAcre = d3.scaleLinear()
             .domain([0, d3.max(this.datapoints, d => d.properties.SizeAcre)])
             .range([this.vizBarMinWidth, this.vizBarWidth - 100]);
-        this.scaleStructuresDestroyed = d3.scaleLinear()
+        let scaleStructuresDestroyed = d3.scaleLinear()
             .domain([0, d3.max(this.datapoints, d => d.properties.StructuresDestroyed)])
             .range([this.vizBarMinWidth, this.vizBarWidth - 100]);
-        this.scaleSuppresionCost = d3.scaleLinear()
+        let scaleSuppresionCost = d3.scaleLinear()
             .domain([0, d3.max(this.datapoints, d => d.properties.SuppresionCost)])
             .range([this.vizBarMinWidth, this.vizBarWidth - 100]);
 
-        //Prepare and Update showing data:
-        this.currentSort = "SizeAcre";
-        this.dataPrepare();
-        this.dataUpdate("SizeAcre", 20, true);
+        //Update showing data:
+        this.pages = ["SizeAcre", "StructuresDestroyed", "SuppresionCost"];
+        this.pagesScaleX = [scaleSizeAcre, scaleStructuresDestroyed, scaleSuppresionCost];
+        this.currentPage = "SizeAcre"; //this.pages[0]
+        this.currentIndex = 0;
+        this.numShowingFire = 20;
+        this.Ascending = true;
 
-        //Draw Visualization:
-        this.drawPanelInfo(this.currentSort);
-        this.drawFireChart(this.scaleSizeAcre, this.currentSort);
+        this.drawPanelPage(0);
+        //Initialize buttons:
+        this.attachButtonHandlers();
     }
 
+    /**
+     * 
+     * 
+     */
+    drawPanelPage() {
+        this.dataUpdate(this.currentPage, this.numShowingFire, this.Ascending);
+        //Draw Visualization:
+        this.drawPanelInfo(this.currentPage);
+        this.drawFireChart(this.pagesScaleX[this.currentIndex], this.currentPage);
+    }
+
+    /**
+     * 
+     * @param {*} statName 
+     */
     drawPanelInfo(statName = "SizeAcre") {
         let panelSelection = d3.select("#vis-1").select(".panel");
         //Change Header:
@@ -44,6 +63,10 @@ class FireInfo {
             .text(headerInfo[0]);
         panelSelection.select(".panel-subtitle")
             .text(headerInfo[1]);
+
+        //Change vis-1-subtitle
+        panelSelection.select("#vis-1-subtitle")
+            .text(headerInfo[2]);
     }
 
     /**
@@ -52,6 +75,7 @@ class FireInfo {
      * Given a scale:
      */
     drawFireChart(scaleX = this.scaleSizeAcre, statName = "SizeAcre") {
+        console.log(this.showingData);
         //Set up scales:
         let yScale = d3.scaleBand()
             .domain(d3.range(this.showingData.length))
@@ -81,7 +105,7 @@ class FireInfo {
             .attr("width", d => scaleX(d.properties[statName]));
 
         //Add Name Text:
-        bars.selectAll("text .barName").data(d => [d])
+        bars.selectAll(".barName").data(d => [d])
             .join("text")
             .attr("class", "barName")
             .attr("x", function(d) {
@@ -94,7 +118,7 @@ class FireInfo {
                 else return d.properties.CompactName;
             });
         //Add Value Text:
-        bars.selectAll("text .barValue").data(d => [d])
+        bars.selectAll(".barValue").data(d => [d])
             .join("text")
             .attr("class", "barValue")
             .attr("x", d => scaleX(d.properties[statName]) + 5)
@@ -119,7 +143,7 @@ class FireInfo {
         selection.on("mouseover", function(event, d) {
                 let fireName = d.properties.IncidentName;
                 let complexName = d.properties.ComplexName;
-                let ranking = `${parent.nth(+d.properties.Ranking)} in "${parent.currentSort}"\n`;
+                let ranking = `${parent.nth(+d.properties.Ranking)} in "${parent.currentPage}"\n`;
                 let sizeAcre = `${parent.numberWithCommas(d.properties.SizeAcre)}`;
                 let structuresDestroyed = `${parent.numberWithCommas(d.properties.StructuresDestroyed)}\n`;
                 let suppresionCost = `$${parent.numberWithCommas(d.properties.SuppresionCost)} \n`;
@@ -170,7 +194,37 @@ class FireInfo {
             });
     }
 
+    /**
+     * 
+     */
+    attachButtonHandlers() {
+        let parent = this;
+        let prevBtn = d3.select("#vis-1-prev")
+            .on("click", function(event) {
+                parent.currentIndex -= 1;
+                //Change Info display:
+                parent.currentPage = parent.pages[parent.currentIndex];
+                parent.drawPanelPage();
+                //disable button:
+                if (parent.currentIndex === 0) {
+                    d3.select(this).classed("disabled", true);
+                }
+                d3.select("#vis-1-next").classed("disabled", false);
+            });
 
+        let nextBtn = d3.select("#vis-1-next")
+            .on("click", function(event) {
+                parent.currentIndex += 1;
+                //Change Info display:
+                parent.currentPage = parent.pages[parent.currentIndex];
+                parent.drawPanelPage();
+                //disable button:
+                if (parent.currentIndex === parent.pages.length - 1) {
+                    d3.select(this).classed("disabled", true);
+                }
+                d3.select("#vis-1-prev").classed("disabled", false);
+            });
+    }
 
     /**
      * Function to update the fire info on side panels
@@ -233,7 +287,7 @@ class FireInfo {
         }
 
         //Update current Sort:
-        this.currentSort = statName;
+        this.currentPage = statName;
     }
 
     /**
@@ -270,11 +324,11 @@ class FireInfo {
         switch (statName) {
             case "SizeArea":
             default:
-                return ["Area Burned:", `${this.numberWithCommas(this.totalAreaBurned)} acres`];
+                return ["Area Burned:", `${this.numberWithCommas(this.totalAreaBurned)} acres`, 'Largest Fires by Area:'];
             case "StructuresDestroyed":
-                return ["Structures Destroyed:", `${this.numberWithCommas(this.totalStructuresDestroyed)}`];
-            case "SuppressionCost":
-                return ["Suppression Cost:", `${this.numberWithCommas(this.totalSuppressionCost)}`];
+                return ["Structures Destroyed:", `${this.numberWithCommas(this.totalStructuresDestroyed)}`, 'Most Structures Destroyed:'];
+            case "SuppresionCost":
+                return ["Suppresion Cost:", `${this.numberWithCommas(this.totalSuppressionCost)}`, 'Highest Suppression Cost:'];
 
         }
     }
