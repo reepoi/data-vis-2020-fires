@@ -27,7 +27,7 @@ function initializeVis() {
         mapView.drawPointFeatures(data.points);
 
         let fireInfo = new FireInfo(data, updateFireInfo);
-
+        let compareYears = new CompareYear(data.fireHistory);
         /*Set up website handlers (internal) after data load*/
 
     });
