@@ -39,8 +39,17 @@ li.tab-item {
     fill: #ff6361;
 }
 
-.barText {
-    color: black;
+.barName {
+    fill: white;
+    font-size: 0.6rem;
+    font-weight: 500;
+    cursor: default;
+}
+
+.barValue {
+    fill: black;
+    font-size: 0.7rem;
+    font-weight: 500;
     cursor: default;
 }
 
