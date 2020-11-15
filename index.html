@@ -67,7 +67,7 @@
                 <!-- Brief Data column -->
                 <div class="columns">
                     <div class="column col-3 col-mx-auto text-center text-dark">
-                        <h4 class="text-bold mb-0">13</h4>
+                        <h4 class="text-bold mb-0">7,88</h4>
                         <p class="text-italic mb-0">
                             millions acres <br> burned
                         </p>
@@ -101,12 +101,17 @@
         <div class="columns">
             <div id="vis-1" class="column col-3 col-mr-auto col-sm-12">
                 <div class="panel">
-                    <div class="panel-header font-serif">
-                        <div class="panel-title h3">Wildfires</div>
+                    <div class="panel-header text-center font-serif py-0">
+                        <div class="panel-title h3">Area Burned:</div>
+                        <div class="panel-subtitle h5 text-bold">Size by Acres</div>
+                        <div class="divider"></div>
                     </div>
+
                     <div class="panel-body">
-                        <!-- <h5>Put some data or charts here!</h5> -->
-                        <svg id="vis-1-svg"></svg>
+                        <div class="h6">Largest Fires by Area:</div>
+                        <div id="vis-1-div">
+                            <svg id="vis-1-svg"></svg>
+                        </div>
 
                     </div>
                 </div>
@@ -137,6 +142,30 @@
                 </p>
             </div>
         </div>
+        <!-- TOOLTIP -->
+        <div id="tooltip" class="">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title h5"></div>
+                    <div class="card-subtitle text-gray"></div>
+                </div>
+                <div class="card-body">
+                    <!-- sizeacre -->
+                    <div>
+                        Size in Acres: <span class="h5"></span>
+                    </div>
+                    <!-- structures destroyed -->
+                    <div>
+                        Structures Destroyed: <span class="h5"></span>
+                    </div>
+                    <!-- suppresion cost-->
+                    <div>
+                        Suppresion Cost: <span class="h5"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 

@@ -22,11 +22,11 @@ function initializeVis() {
         }
 
         /* TODO: D3 Visualization classes here */
-        let fireInfo = new FireInfo(data, updateFireInfo);
         /* TODO: D3 Visualizations here */
         mapView.drawPolygonFeatures(data.perimeters);
         mapView.drawPointFeatures(data.points);
 
+        let fireInfo = new FireInfo(data, updateFireInfo);
 
         /*Set up website handlers (internal) after data load*/
 

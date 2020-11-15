@@ -8,13 +8,11 @@ class FireInfo {
         this.datapoints = data.points.features;
         this.updateFireInfo = updateFireInfo;
 
-        this.dataPrepare();
 
         //Vis sizes:
         this.vizBarWidth = d3.select("#vis-1-svg").style("width").replace("px", "");
         this.vizBarHeight = d3.select("#vis-1-svg").style("height").replace("px", "");
         this.vizBarMinWidth = 10;
-        console.log(this.showingData);
 
 
         // Scales
@@ -27,11 +25,30 @@ class FireInfo {
         this.scaleSuppresionCost = d3.scaleLinear()
             .domain([0, d3.max(this.datapoints, d => d.properties.SuppresionCost)])
             .range([this.vizBarMinWidth, this.vizBarWidth - 100]);
-        this.drawFireChart();
+
+        //Prepare and Update showing data:
+        this.currentSort = "SizeAcre";
+        this.dataPrepare();
+        this.dataUpdate("SizeAcre", 20, true);
+
+        //Draw Visualization:
+        this.drawPanelInfo(this.currentSort);
+        this.drawFireChart(this.scaleSizeAcre, this.currentSort);
+    }
+
+    drawPanelInfo(statName = "SizeAcre") {
+        let panelSelection = d3.select("#vis-1").select(".panel");
+        //Change Header:
+        let headerInfo = this.toDefinition(statName);
+        panelSelection.select(".panel-title")
+            .text(headerInfo[0]);
+        panelSelection.select(".panel-subtitle")
+            .text(headerInfo[1]);
     }
 
     /**
      * Function to draw bar charts on vis-1
+     * ONLY DRAW this.showingData
      * Given a scale:
      */
     drawFireChart(scaleX = this.scaleSizeAcre, statName = "SizeAcre") {
@@ -51,9 +68,10 @@ class FireInfo {
         let bars = svgSelection.selectAll("g")
             .data(this.showingData)
             .join("g")
-            .attr("transform", (d, i) => `translate(0,${yScale(i)})`);
+            .attr("class", "barGroup")
+            .attr("transform", (d, i) => `translate(2,${yScale(i)})`);
 
-        bars.selectAll("rect").data(d => [d])
+        let rectSelection = bars.selectAll("rect").data(d => [d])
             .join("rect")
             .attr("class", "barRect")
             .attr("width", 0)
@@ -81,8 +99,78 @@ class FireInfo {
             .attr("class", "barValue")
             .attr("x", d => scaleX(d.properties[statName]) + 5)
             .attr("y", yScale.bandwidth() / 2 + 4)
-            .text(d => d.properties[statName]);
+            .text(d => this.numberWithCommas(d.properties[statName]));
+
+        //Add tooltip :
+        //Each tooltip is a Card: https://picturepan2.github.io/spectre/components/cards.html;
+        this.drawTooltip(bars);
+
     }
+
+    /**
+     * 
+     * @param {*} selection 
+     */
+    drawTooltip(selection) {
+        let tooltipSelect = d3.select("#tooltip");
+        tooltipSelect
+            .style("opacity", 0);
+        let parent = this;
+        selection.on("mouseover", function(event, d) {
+                let fireName = d.properties.IncidentName;
+                let complexName = d.properties.ComplexName;
+                let ranking = `${parent.nth(+d.properties.Ranking)} in "${parent.currentSort}"\n`;
+                let sizeAcre = `${parent.numberWithCommas(d.properties.SizeAcre)}`;
+                let structuresDestroyed = `${parent.numberWithCommas(d.properties.StructuresDestroyed)}\n`;
+                let suppresionCost = `$${parent.numberWithCommas(d.properties.SuppresionCost)} \n`;
+                let tooltipData = [sizeAcre, structuresDestroyed, suppresionCost];
+
+                //Highlight bar
+                d3.select(this).select("rect")
+                    .style("stroke", "black")
+                    .style("stroke-width", 1.5)
+                    .style("fill", "#de425b");
+                d3.select(this).selectAll("text")
+                    .style("font-weight", 700);
+
+                //tooltip content
+                tooltipSelect.select(".card-title")
+                    .text(fireName);
+                tooltipSelect.select(".card-subtitle")
+                    .text(complexName);
+
+                let attrGroup = tooltipSelect.select(".card-body").selectAll("div")
+                    .data(tooltipData);
+                attrGroup.selectAll("span").data(d => [d])
+                    .text(d => d);
+                tooltipSelect
+                    .style("left", (event.pageX + 20) + 'px')
+                    .style("top", (event.pageY + 20) + 'px')
+                    .classed("d-none", false)
+                    .transition()
+                    .duration(200)
+                    .style("opacity", 1.0);
+                tooltipSelect.select(".card").raise();
+
+            })
+            .on("mouseout", function(d, i) {
+                tooltipSelect
+                    .transition()
+                    .duration(200)
+                    .style("opacity", 0);
+                tooltipSelect
+                    .classed("d-none", true);
+                d3.select(this).select("rect")
+                    .style("stroke", "black")
+                    .style("stroke-width", 0)
+                    .style("fill", "#ff6361");
+
+                d3.select(this).selectAll("text")
+                    .style("font-weight", 500);
+            });
+    }
+
+
 
     /**
      * Function to update the fire info on side panels
@@ -96,8 +184,6 @@ class FireInfo {
      * 
      */
     dataPrepare() {
-        //Sort (descending) by sizeacre
-        this.datapoints.sort((a, b) => a.properties.SizeAcre - b.properties.SizeAcre).reverse();
         //Iterate through fires:
         let totalAreaBurned = 0;
         let totalStructuresDestroyed = 0;
@@ -122,18 +208,75 @@ class FireInfo {
         }
 
         //Stats:
-        this.totalAreaBurned = totalAreaBurned;
-        this.totalStructuresDestroyed = totalStructuresDestroyed;
-        this.totalSuppressionCost = totalSuppressionCost;
-
-
-
-        //Specify how many fires to show here:
-        this.showingData = this.datapoints.slice(0, 20);
-
-
+        this.totalAreaBurned = Math.round(totalAreaBurned);
+        this.totalStructuresDestroyed = Math.round(totalStructuresDestroyed);
+        this.totalSuppressionCost = Math.round(totalSuppressionCost);
 
     }
 
+    /**
+     * * Update this.datapoints (341 fires)
+     * and this.showingData(specify howmany fires to display)
+     * @param {*} statName 
+     * @param {*} numFires 
+     * @param {*} descending 
+     */
+    dataUpdate(statName = "SizeAcre", numFires = 20, descending = false) {
+        this.datapoints.sort((a, b) => a.properties[statName] - b.properties[statName]);
+        if (descending)
+            this.datapoints.reverse();
+        this.showingData = this.datapoints.slice(0, numFires);
+
+        //Add Ranking by statName:
+        for (let i in this.datapoints) {
+            this.datapoints[i].properties.Ranking = +i + 1;
+        }
+
+        //Update current Sort:
+        this.currentSort = statName;
+    }
+
+    /**
+     * Generate string based on ranking number (1st, 2nd, 3rd)
+     * @param {number} i
+     */
+    nth(i) {
+            var j = i % 10,
+                k = i % 100;
+            if (j == 1 && k != 11) {
+                return i + "st";
+            }
+            if (j == 2 && k != 12) {
+                return i + "nd";
+            }
+            if (j == 3 && k != 13) {
+                return i + "rd";
+            }
+            return i + "th";
+        }
+        /**
+         * 
+         * @param {*} x 
+         */
+    numberWithCommas(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    /**
+     * 
+     * @param {*} statName 
+     */
+    toDefinition(statName) {
+        switch (statName) {
+            case "SizeArea":
+            default:
+                return ["Area Burned:", `${this.numberWithCommas(this.totalAreaBurned)} acres`];
+            case "StructuresDestroyed":
+                return ["Structures Destroyed:", `${this.numberWithCommas(this.totalStructuresDestroyed)}`];
+            case "SuppressionCost":
+                return ["Suppression Cost:", `${this.numberWithCommas(this.totalSuppressionCost)}`];
+
+        }
+    }
 
 }
