@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Page Title -->
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <title>U.S. Wildfires 2020</title>
+
+
+    <!-- <link rel="stylesheet" href="./assets/dist/icons.min.css"> -->
+    <!-- Used for Beautify map icons -->
+    <script src="https://kit.fontawesome.com/6546e7b150.js" crossorigin="anonymous"></script>
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="./assets/dist/leaflet-beautify-marker-icon.css">
+    <!-- Spectre.CSS -->
+    <link rel="stylesheet" href="./assets/dist/spectre.min.css">
+    <link rel="stylesheet" href="./assets/dist/spectre-exp.min.css">
+    <link rel="stylesheet" href="./assets/dist/spectre-icons.min.css">
+    <link rel="stylesheet" href="./assets/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+</head>
+
+<body>
+    <!-- Navigation bar -->
+    <header class="navbar text-bold text-large font-serif px-2 py-0">
+        <section class="navbar-section">
+            <a href="#" class="btn btn-link text-dark">Project Proposal</a>
+            <a href="#" class="btn btn-link text-dark">About</a>
+        </section>
+        <section class="navbar-center">
+            <!-- centered logo or brand -->
+            <a id="title" href="#" class="text-dark text-large">U.S. Wildfires 2020 Visualization</a>
+        </section>
+        <section class="navbar-section">
+            <a href="#" class="btn btn-link text-dark">Process Book</a>
+            <a href="https://github.com/reepoi/data-vis-2020-fires/tree/develop" class="btn btn-link text-dark">GitHub</a>
+        </section>
+    </header>
+
+    <div class="divider"></div>
+
+    <!-- Page Content -->
+
+    <div class="container">
+        <!-- Visualization Name/options -->
+        <div class="columns font-serif">
+            <div class="column col-3"></div>
+            <div class="column col-6">
+                <ul id="menu" class="tab tab-block">
+                    <li class="">
+                        <button id="menu-back" onclick="tabBackClicked()" class="btn disabled btn-link btn-lg icon icon-back"></button>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#fire-map" class="active">U.S. Fire Map</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#compare-year" class="">Compare Years</a>
+                    </li>
+                    <li class="tab-item">
+                        <a href="#stories">Stories</a>
+                    </li>
+                    <li class="">
+                        <button id="menu-forward" onclick="tabForwardClicked()" class="btn btn-link btn-lg icon icon-forward"></button>
+                    </li>
+
+                </ul>
+                <!-- Brief Data column -->
+                <div class="columns">
+                    <div class="column col-3 col-mx-auto text-center text-dark">
+                        <h4 class="text-bold mb-0">7,88</h4>
+                        <p class="text-italic mb-0">
+                            millions acres <br> burned
+                        </p>
+                    </div>
+                    <div class="column col-3 col-mx-auto text-center text-dark">
+                        <h4 class="text-bold mb-0">$2.5</h4>
+                        <p class="text-italic mb-0">
+                            billion in <br> suppresion costs
+                        </p>
+                    </div>
+                    <div class="column col-3 col-mx-auto text-center text-dark">
+                        <h4 class="text-bold mb-0">11,933</h4>
+                        <p class="text-italic mb-0">
+                            structures <br> burned
+                        </p>
+                    </div>
+                    <div class="column col-3 col-mx-auto text-center text-dark">
+                        <h4 class="text-bold mb-0">43</h4>
+                        <p class="text-italic mb-0">
+                            fatalities
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <div class="column col-3"></div>
+
+        </div>
+
+        <!-- Visualization content -->
+        <div class="columns">
+            <div id="vis-1" class="column col-3 col-mr-auto col-sm-12">
+                <div class="panel">
+                    <div class="panel-header text-center  py-0">
+                        <div class="panel-title h3 font-serif">Area Burned:</div>
+                        <div class="panel-subtitle h5 text-bold font-serif">Size by Acres</div>
+                        <button id="vis-1-prev" class="btn btn-link disabled">Prev</button>
+                        <button id="vis-1-next" class="btn btn-link ">Next</button>
+                        <div class="divider"></div>
+                    </div>
+
+                    <div class="panel-body">
+                        <!-- Pagination on bar chart -->
+
+                        <div id="vis-1-subtitle" class="column col-8 col-mx-auto">Largest Fire by Area</div>
+                        <!-- Visualization 1 -->
+                        <div id="vis-1-div">
+                            <svg id="vis-1-svg"></svg>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div id="vis-2" class="column col-6 col-sm-12">
+                <!-- Visualization 2 -->
+                <svg id="vis-2-svg"></svg>
+            </div>
+            <div id="vis-3" class="column col-3 col-ml-auto col-sm-12 col-lg-12">
+                <div class="panel">
+                    <div class="panel-header font-serif">
+                        <div class="panel-title h3">Some info here?</div>
+                    </div>
+                    <div class="panel-body">
+                        <h5>Panel body content</h3>
+                            <svg id="vis-3-svg"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Storytelling content -->
+        <div class="columns">
+            <div class="column col-6 col-mx-auto text-center text-dark">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et vehicula felis. Cras id risus sollicitudin, pulvinar sapien sed, vehicula augue. Quisque odio tortor, lobortis viverra finibus id, tincidunt a sapien. Vestibulum vitae ex semper, tempor
+                    justo sit amet, tristique libero. Nulla suscipit non augue ac venenatis. In in massa id odio bibendum facilisis vel eu felis. Ut dictum non nibh et maximus. Vivamus mattis lorem diam, eu elementum lorem dictum placerat. Nulla condimentum
+                    nisl ac diam tristique iaculis in vehicula felis. Praesent in nibh eget velit commodo rhoncus sit amet vitae metus. Donec quis nibh et metus viverra porta eget sed urna. Phasellus vel leo ullamcorper, tristique nunc quis, dignissim
+                    arcu.
+                </p>
+            </div>
+        </div>
+        <!-- TOOLTIP -->
+        <div id="tooltip" class="">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title h5"></div>
+                    <div class="card-subtitle text-gray"></div>
+                </div>
+                <div class="card-body">
+                    <!-- sizeacre -->
+                    <div>
+                        Size in Acres: <span class="h5"></span>
+                    </div>
+                    <!-- structures destroyed -->
+                    <div>
+                        Structures Destroyed: <span class="h5"></span>
+                    </div>
+                    <!-- suppresion cost-->
+                    <div>
+                        Suppresion Cost: <span class="h5"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <!-- JS files at bottom of page: -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <script src="js/leaflet-beautify-marker-icon.js"></script>
+    <script src="js/constants.js"></script>
+    <script src="js/mapView.js"></script>
+    <script src="js/fireInfo.js"></script>
+    <script src="js/compareYears.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+</body>
+
+</html>
