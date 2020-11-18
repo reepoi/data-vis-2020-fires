@@ -4,10 +4,8 @@
  * - Show bar charts of fires on vis-1
  */
 class FireInfo {
-    constructor(data, updateFireInfo, pageChangeFireInfo) {
+    constructor(data) {
         this.datapoints = data.points.features;
-        this.updateFireInfo = updateFireInfo;
-        this.pageChangeFireInfo = pageChangeFireInfo;
         this.dataPrepare();
 
 
@@ -41,6 +39,9 @@ class FireInfo {
         this.attachButtonHandlers();
     }
 
+    ////////////////////////////////////
+    //////Views Drawing Funtions////////
+    ////////////////////////////////////
     /**
      * 
      * 
@@ -95,7 +96,6 @@ class FireInfo {
             .attr("class", "barGroup")
             .attr("transform", (d, i) => `translate(2,${yScale(i)})`);
 
-        console.log(yScale(0));
 
         let rectSelection = bars.selectAll("rect").data(d => [d])
             .join("rect")
@@ -135,13 +135,14 @@ class FireInfo {
     }
 
     /**
-     * 
-     * @param {*} selection 
+     * Draw tool tip for bar charts
+     * @param {HTML <g>} selection - <g> element consist of rect, texts
      */
     drawTooltip(selection) {
         let tooltipSelect = d3.select("#tooltip");
         tooltipSelect
             .style("opacity", 0);
+
         let parent = this;
         selection.on("mouseover", function(event, d) {
                 let fireName = d.properties.IncidentName;
@@ -170,6 +171,7 @@ class FireInfo {
                     .data(tooltipData);
                 attrGroup.selectAll("span").data(d => [d])
                     .text(d => d);
+
                 tooltipSelect
                     .style("left", (event.pageX + 20) + 'px')
                     .style("top", (event.pageY + 20) + 'px')
@@ -198,7 +200,8 @@ class FireInfo {
     }
 
     /**
-     * 
+     * Attach Buttons (Previous, Next) into panel
+     * that lets user navigate through fire charts.
      */
     attachButtonHandlers() {
         let parent = this;
@@ -233,14 +236,32 @@ class FireInfo {
             });
     }
 
+
+    ////////////////////////////////////////////
+    ///////////Coordinated Views Handlers//////
+    ///////////////////////////////////////////
+
     /**
      * Function to update the fire info on side panels
      * - Fired by clicking on a fire in the map
+     * - Features: highlight fire on bar chart, scroll to fire?
+     * 
+     * @param {leaflet e.target} selectedFire - clicked fire from the map
      */
-    updateSelectedFireInfo() {
+    updateSelectedFireInfo(selectedFire) {
+        //TODO: Tells user that we dont have data on this fire
+        //Due to no data 
 
+        //Find Fire in points:
+
+
+        //
     }
 
+
+    /////////////////////////////////////////////
+    ////////////DATA UPDATE/PREPARE/////////////
+    ////////////////////////////////////////////
     /**
      * 
      */
@@ -253,11 +274,9 @@ class FireInfo {
             let incidentName = e.properties.IncidentName;
             e.properties.CompactName = incidentName;
 
-            var matches = incidentName.match(/\b(\w)/g); // ['J','S','O','N']
-            var acronym = matches.join('.'); // JSON
+            let matches = incidentName.match(/\b(\w)/g); // ['J','S','O','N']
+            let acronym = matches.join('.'); // JSON
             let CompactName = incidentName.split(/\s/).reduce((response, word) => response += '.' + word.slice(0, 1));
-            // let acronym = incidentName.split(/\s/).reduce((response, word) => response += word.slice(0, 1) + '.', '.');
-            // acronym = acronym.slice(1, acronym.length);
             e.properties.CompactName = CompactName;
             e.properties.Acronym = acronym;
             //Total Stats:
@@ -290,7 +309,7 @@ class FireInfo {
 
         //Add Ranking by statName:
         for (let i in this.datapoints) {
-            this.datapoints[i].properties.Ranking = +i + 1;
+            this.datapoints[i].properties["Ranking" + statName] = +i + 1;
         }
 
         //Update current Sort:

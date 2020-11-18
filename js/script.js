@@ -16,24 +16,37 @@ function initializeVis() {
     loadData().then(data => {
         console.log(data);
 
-        /*linking functions*/
+        /* TODO: D3 Visualization classes here */
+        /* TODO: D3 Visualizations here */
+        let fireInfo = new FireInfo(data);
+        let compareYears = new CompareYear(data.fireHistory);
+        mapView.drawMapFeatures(data, fireInfo.currentPage);
+
+        /**TODO: Linking Functions go HERE:
+         */
+        /**
+         * 
+         * @param {leaflet e.target} selectedFire - Leaflet e.target
+         */
         function updateFireInfo(selectedFire) {
             console.log("script.js: updateFireInfo fired");
+            console.log(selectedFire);
+            fireInfo.updateSelectedFireInfo(selectedFire);
+
         }
+        mapView.updateFireInfo = updateFireInfo;
+        fireInfo.updateFireInfo = updateFireInfo;
 
         /*
          * Event handler for when left fireInfoPage bar chart
          * changes pages
          */
-        function pageChangeFireInfo(fireInfoPage){
+        function pageChangeFireInfo(fireInfoPage) {
             mapView.drawMapFeatures(data, fireInfoPage);
         }
+        fireInfo.pageChangeFireInfo = pageChangeFireInfo;
 
-        /* TODO: D3 Visualization classes here */
-        /* TODO: D3 Visualizations here */
-        let fireInfo = new FireInfo(data, updateFireInfo, pageChangeFireInfo);
-        let compareYears = new CompareYear(data.fireHistory);
-        mapView.drawMapFeatures(data, fireInfo.currentPage);
+
         /*Set up website handlers (internal) after data load*/
 
     });

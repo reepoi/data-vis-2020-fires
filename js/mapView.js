@@ -55,10 +55,10 @@ class MapView {
         this.fireInfoPage = fireInfoPage;
 
         // remove existing feature layers from map
-        if(this.pointLayer){
+        if (this.pointLayer) {
             this.pointLayer.removeFrom(this.leafletMap);
         }
-        if(this.polygonLayer){
+        if (this.polygonLayer) {
             this.polygonLayer.removeFrom(this.leafletMap);
         }
 
@@ -73,16 +73,17 @@ class MapView {
      */
     initIconColorScale(data) {
         this.iconColorScale = d3.scaleSqrt()
-        .domain([d3.min(data.features, d => d.properties[this.fireInfoPage]),
-                 d3.max(data.features, d => d.properties[this.fireInfoPage])])
-        .range([0,255]);
+            .domain([d3.min(data.features, d => d.properties[this.fireInfoPage]),
+                d3.max(data.features, d => d.properties[this.fireInfoPage])
+            ])
+            .range([0, 255]);
     }
 
     /*
      * Draw point features or polygon features based on Leaflet map's
      * zoom level, and remove the other.
      */
-    addPointsOrPolygonsBasedOnZoom(){
+    addPointsOrPolygonsBasedOnZoom() {
         if (mapView.getLeafletMap().getZoom() >= MAP_SHW_PLYGN_ZOOM) {
             mapView.pointLayer.removeFrom(mapView.getLeafletMap());
             mapView.polygonLayer.addTo(mapView.getLeafletMap());
@@ -136,7 +137,7 @@ class MapView {
      */
     onEachPointFeature(feature, layer) {
         layer.on({
-            click: mapView.zoomToFeature
+            click: mapView.onPointClicked
         });
     }
 
@@ -158,10 +159,10 @@ class MapView {
     /*
      * Event handler to drive all methods to be called when polygon is clicked
      */
-    onPolygonClick(e){
+    onPolygonClick(e) {
         // deselect all other polygons
         mapView.getLeafletMap().eachLayer(function(layer) {
-            if(layer.feature){
+            if (layer.feature) {
                 layer.feature.properties.clicked = false;
                 layer.setStyle(MAP_PLYGN_STYLE());
             }
@@ -171,8 +172,29 @@ class MapView {
         let layer = e.target;
         layer.feature.properties.clicked = true;
         layer.setStyle(MAP_PLYGN_STYLE_HVRD());
+        mapView.updateFireClicked(e);
         mapView.zoomToFeature(e);
     }
+
+    /**
+     * Notify the script.js on fire click 
+     * `huy`: added to include linking clicks
+     * @param {*} e clicked fire
+     */
+    updateFireClicked(e) {
+        this.updateFireInfo(e.target);
+    }
+
+    /**
+     * Added to include linking clicks `huy`
+     * Handle when a Fire (point) is clicked
+     * @param {*} e - Clicked Fire
+     */
+    onPointClicked(e) {
+        mapView.zoomToFeature(e);
+        mapView.updateFireClicked(e);
+    }
+
 
     /*
      * Event handler to zoom map onto feature with defined bounds
@@ -190,7 +212,7 @@ class MapView {
      */
     onPolygonHover(e) {
         let layer = e.target;
-        if(!layer.isPopupOpen()){
+        if (!layer.isPopupOpen()) {
             layer.openPopup(e.latlng);
         }
         layer.setStyle(MAP_PLYGN_STYLE_HVRD());
@@ -205,7 +227,7 @@ class MapView {
      */
     polygonReset(e) {
         let layer = e.target;
-        if(layer.feature.properties.clicked){
+        if (layer.feature.properties.clicked) {
             return;
         }
         layer.closePopup();
@@ -227,14 +249,14 @@ class MapView {
 
     /*
      * Returns the html body of point feature popups on Leaflet map
-    */
-    getPopupContent(feature){
+     */
+    getPopupContent(feature) {
         let props = feature.properties;
-        return "<b>" + props.IncidentName + "</b><br>" + mapView.numberWithCommas(props[mapView.fireInfoPage]) + mapView.getPopupFirePageStatMessage();    
+        return "<b>" + props.IncidentName + "</b><br>" + mapView.numberWithCommas(props[mapView.fireInfoPage]) + mapView.getPopupFirePageStatMessage();
     }
 
-    getPopupFirePageStatMessage(){
-        switch(mapView.fireInfoPage){
+    getPopupFirePageStatMessage() {
+        switch (mapView.fireInfoPage) {
             case "SizeAcre":
                 return " Acres Burned";
             case "StructuresDestroyed":
@@ -249,7 +271,7 @@ class MapView {
      * Modified to handle null values
      */
     numberWithCommas(x) {
-        if(x){
+        if (x) {
             return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         } else {
             return 0;
@@ -263,74 +285,74 @@ class MapView {
  */
 let MapCircleMarker = L.Marker.extend({
     bindPopup: function(htmlContent, options) {
-		if (options && options.showOnMouseOver) {
+        if (options && options.showOnMouseOver) {
 
-			// call the super method
-			L.Marker.prototype.bindPopup.apply(this, [htmlContent, options]);
-			
-			// unbind the click event
-			this.off("click", this.openPopup, this);
-			
-			// bind to mouse over
-			this.on("mouseover", function(e) {
-				
-				// get the element that the mouse hovered onto
-				let target = e.originalEvent.fromElement || e.originalEvent.relatedTarget;
-				let parent = this._getParent(target, "leaflet-popup");
- 
-				// check to see if the element is a popup, and if it is this marker's popup
-				if (parent == this._popup._container)
-					return true;
-				
-				// show the popup
-				this.openPopup();
-			}, this);
-			
-			// and mouse out
-			this.on("mouseout", function(e) {
-				
-				// get the element that the mouse hovered onto
-				let target = e.originalEvent.toElement || e.originalEvent.relatedTarget;
-				
-				// check to see if the element is a popup
-				if (this._getParent(target, "leaflet-popup")) {
-					L.DomEvent.on(this._popup._container, "mouseout", this._popupMouseOut, this);
-					return true;
-				}
-				
-				// hide the popup
-				this.closePopup();
-			}, this);
-		}
-	},
-	_popupMouseOut: function(e) {
-	    
-		// detach the event
-		L.DomEvent.off(this._popup, "mouseout", this._popupMouseOut, this);
- 
-		// get the element that the mouse hovered onto
-		let target = e.toElement || e.relatedTarget;
-		
-		// check to see if the element is a popup
-		if (this._getParent(target, "leaflet-popup"))
-			return true;
-		
-		// check to see if the marker was hovered back onto
-		if (target == this._icon)
-			return true;
-		
-		// hide the popup
-		this.closePopup();
-	},
-	_getParent: function(element, className) {
+            // call the super method
+            L.Marker.prototype.bindPopup.apply(this, [htmlContent, options]);
+
+            // unbind the click event
+            this.off("click", this.openPopup, this);
+
+            // bind to mouse over
+            this.on("mouseover", function(e) {
+
+                // get the element that the mouse hovered onto
+                let target = e.originalEvent.fromElement || e.originalEvent.relatedTarget;
+                let parent = this._getParent(target, "leaflet-popup");
+
+                // check to see if the element is a popup, and if it is this marker's popup
+                if (parent == this._popup._container)
+                    return true;
+
+                // show the popup
+                this.openPopup();
+            }, this);
+
+            // and mouse out
+            this.on("mouseout", function(e) {
+
+                // get the element that the mouse hovered onto
+                let target = e.originalEvent.toElement || e.originalEvent.relatedTarget;
+
+                // check to see if the element is a popup
+                if (this._getParent(target, "leaflet-popup")) {
+                    L.DomEvent.on(this._popup._container, "mouseout", this._popupMouseOut, this);
+                    return true;
+                }
+
+                // hide the popup
+                this.closePopup();
+            }, this);
+        }
+    },
+    _popupMouseOut: function(e) {
+
+        // detach the event
+        L.DomEvent.off(this._popup, "mouseout", this._popupMouseOut, this);
+
+        // get the element that the mouse hovered onto
+        let target = e.toElement || e.relatedTarget;
+
+        // check to see if the element is a popup
+        if (this._getParent(target, "leaflet-popup"))
+            return true;
+
+        // check to see if the marker was hovered back onto
+        if (target == this._icon)
+            return true;
+
+        // hide the popup
+        this.closePopup();
+    },
+    _getParent: function(element, className) {
         let parent;
-        if(element)
-		    parent = element.parentNode;
-		while (parent != null) {
-			if (parent.className && L.DomUtil.hasClass(parent, className))
-				return parent;
-			parent = parent.parentNode;
-		}
-		return false;
-	}
+        if (element)
+            parent = element.parentNode;
+        while (parent != null) {
+            if (parent.className && L.DomUtil.hasClass(parent, className))
+                return parent;
+            parent = parent.parentNode;
+        }
+        return false;
+    }
 });
