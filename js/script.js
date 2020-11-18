@@ -21,6 +21,7 @@ function initializeVis() {
         let fireInfo = new FireInfo(data);
         let compareYears = new CompareYear(data.fireHistory);
         mapView.drawMapFeatures(data, fireInfo.currentPage);
+        //TODO: Demo colorscale sync from MAP
 
         /**TODO: Linking Functions go HERE:
          */
@@ -47,7 +48,7 @@ function initializeVis() {
         fireInfo.pageChangeFireInfo = pageChangeFireInfo;
 
 
-        /*Set up website handlers (internal) after data load*/
+
 
     });
 }

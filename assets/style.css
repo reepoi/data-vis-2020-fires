@@ -37,10 +37,11 @@ li.tab-item {
     box-shadow: none;
 }
 
-.barRect {
+
+/* .barRect {
     color: #ff6361;
     fill: #ff6361;
-}
+} */
 
 .barName {
     fill: white;

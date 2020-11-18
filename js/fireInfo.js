@@ -26,6 +26,8 @@ class FireInfo {
             .domain([0, d3.max(this.datapoints, d => d.properties.SuppresionCost)])
             .range([this.vizBarMinWidth, this.vizBarWidth - 90]);
 
+
+
         //Update showing data:
         this.pages = ["SizeAcre", "StructuresDestroyed", "SuppresionCost"];
         this.pagesScaleX = [scaleSizeAcre, scaleStructuresDestroyed, scaleSuppresionCost];
@@ -34,7 +36,7 @@ class FireInfo {
         this.numShowingFire = this.datapoints.length;
         this.Ascending = true;
 
-        this.drawPanelPage(0);
+        this.drawPanelPage();
         //Initialize buttons:
         this.attachButtonHandlers();
     }
@@ -87,6 +89,10 @@ class FireInfo {
         let svgSelection = d3.select("#vis-1-svg")
             .attr("height", yScale(this.showingData.length - 1));
 
+        //ColorScale Sync:
+        let colorScaleRed = this.colorScaleRed;
+
+
         /* Add RECTANGLES: 
          * -Each rectangle is in one "G" element
          */
@@ -100,6 +106,8 @@ class FireInfo {
         let rectSelection = bars.selectAll("rect").data(d => [d])
             .join("rect")
             .attr("class", "barRect")
+            // TODO: COLORSCALE sync:
+            .style("fill", d => `rgb(${colorScaleRed(d.properties[statName])}, 0,0)`)
             .attr("width", 0)
             .attr("x", 0)
             .attr("height", yScale.bandwidth())
@@ -192,7 +200,7 @@ class FireInfo {
                 d3.select(this).select("rect")
                     .style("stroke", "black")
                     .style("stroke-width", 0)
-                    .style("fill", "#ff6361");
+                    .style("fill", d => `rgb(${parent.colorScaleRed(d.properties[parent.currentPage])}, 0,0)`);
 
                 d3.select(this).selectAll("text")
                     .style("font-weight", 500);
@@ -320,6 +328,13 @@ class FireInfo {
 
         //Update current Sort:
         this.currentPage = statName;
+
+        //Update color Scale:
+        this.colorScaleRed = d3.scaleSqrt()
+            .domain([d3.min(this.showingData, d => d.properties[statName]),
+                d3.max(this.showingData, d => d.properties[statName])
+            ])
+            .range([0, 255]);
     }
 
     /**
