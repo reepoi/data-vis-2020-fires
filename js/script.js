@@ -21,13 +21,19 @@ function initializeVis() {
             console.log("script.js: updateFireInfo fired");
         }
 
+        /*
+         * Event handler for when left fireInfoPage bar chart
+         * changes pages
+         */
+        function pageChangeFireInfo(fireInfoPage){
+            mapView.drawMapFeatures(data, fireInfoPage);
+        }
+
         /* TODO: D3 Visualization classes here */
         /* TODO: D3 Visualizations here */
-        mapView.drawPolygonFeatures(data.perimeters);
-        mapView.drawPointFeatures(data.points);
-
-        let fireInfo = new FireInfo(data, updateFireInfo);
+        let fireInfo = new FireInfo(data, updateFireInfo, pageChangeFireInfo);
         let compareYears = new CompareYear(data.fireHistory);
+        mapView.drawMapFeatures(data, fireInfo.currentPage);
         /*Set up website handlers (internal) after data load*/
 
     });

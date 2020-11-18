@@ -4,9 +4,10 @@
  * - Show bar charts of fires on vis-1
  */
 class FireInfo {
-    constructor(data, updateFireInfo) {
+    constructor(data, updateFireInfo, pageChangeFireInfo) {
         this.datapoints = data.points.features;
         this.updateFireInfo = updateFireInfo;
+        this.pageChangeFireInfo = pageChangeFireInfo;
         this.dataPrepare();
 
 
@@ -210,6 +211,8 @@ class FireInfo {
                     d3.select(this).classed("disabled", true);
                 }
                 d3.select("#vis-1-next").classed("disabled", false);
+
+                parent.pageChangeFireInfo(parent.currentPage);
             });
 
         let nextBtn = d3.select("#vis-1-next")
@@ -223,6 +226,8 @@ class FireInfo {
                     d3.select(this).classed("disabled", true);
                 }
                 d3.select("#vis-1-prev").classed("disabled", false);
+
+                parent.pageChangeFireInfo(parent.currentPage);
             });
     }
 

@@ -3,12 +3,11 @@ class MapView {
     constructor(divContainer, initLatLng, initZoom) {
         this.leafletMap = L.map(divContainer);
 
-        // initialized when drawPolygonFeatures is called
+        // initialized when drawMapFeatures is called
+        this.iconColorScale;
+        this.fireInfoPage;
         this.polygonLayer;
-
-         // initialized when drawPointFeatures is called
         this.pointLayer;
-        this.acresBurnedScale;
 
         this.setMapView(initLatLng, initZoom);
         this.addMapTiling();
@@ -37,7 +36,7 @@ class MapView {
      */
     addMapTiling() {
         L.tileLayer(TILE_API_URL, {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            attribution: MAPBOX_ATTR_STR,
             minZoom: 2,
             maxZoom: 18,
             id: MAPBOX_TILE_STYLE,
@@ -48,31 +47,67 @@ class MapView {
     }
 
     /*
-     * Adds event handler methods to the Leaflet map
+     * Draws point and polygon features from passed data,
+     * colors point icons and change popup content
+     * based on fireInfoPage
      */
-    addMapEventHanlders() {
-        this.leafletMap.on('zoomend', this.onMapZoom);
+    drawMapFeatures(data, fireInfoPage) {
+        this.fireInfoPage = fireInfoPage;
+
+        // remove existing feature layers from map
+        if(this.pointLayer){
+            this.pointLayer.removeFrom(this.leafletMap);
+        }
+        if(this.polygonLayer){
+            this.polygonLayer.removeFrom(this.leafletMap);
+        }
+
+        this.initIconColorScale(data.points);
+        this.initPolygonFeatures(data.perimeters);
+        this.initPointFeatures(data.points);
+        this.addPointsOrPolygonsBasedOnZoom();
     }
 
     /*
-     * Draws polygon features onto the Leaflet map
+     * Set icon color scale
      */
-    drawPolygonFeatures(data) {
+    initIconColorScale(data) {
+        this.iconColorScale = d3.scaleSqrt()
+        .domain([d3.min(data.features, d => d.properties[this.fireInfoPage]),
+                 d3.max(data.features, d => d.properties[this.fireInfoPage])])
+        .range([0,255]);
+    }
+
+    /*
+     * Draw point features or polygon features based on Leaflet map's
+     * zoom level, and remove the other.
+     */
+    addPointsOrPolygonsBasedOnZoom(){
+        if (mapView.getLeafletMap().getZoom() >= MAP_SHW_PLYGN_ZOOM) {
+            mapView.pointLayer.removeFrom(mapView.getLeafletMap());
+            mapView.polygonLayer.addTo(mapView.getLeafletMap());
+        } else {
+            mapView.polygonLayer.removeFrom(mapView.getLeafletMap());
+            mapView.pointLayer.addTo(mapView.getLeafletMap());
+        }
+    }
+
+    /*
+     * Initializes polygon feature layer for Leaflet map
+     */
+    initPolygonFeatures(data) {
         data.features.forEach(d => d.properties['clicked'] = false);
         this.polygonLayer = L.geoJSON(data, {
             onEachFeature: this.onEachPolygonFeature,
-            style: this.getPolygonStyle(),
+            style: MAP_PLYGN_STYLE,
         });
-        if (this.leafletMap.getZoom() >= MAP_SHW_PLYGN_ZOOM) {
-            this.polygonLayer.addTo(this.leafletMap);
-        }
     }
 
     /*
      * Functions and attributes to be added to each polygon drawn on Leaflet map
      */
     onEachPolygonFeature(feature, layer) {
-        layer.bindPopup(mapView.getPointPopupContent(feature)).off('click');
+        layer.bindPopup(mapView.getPopupContent(feature)).off('click');
         layer.on({
             mouseover: mapView.onPolygonHover,
             mouseout: mapView.polygonReset,
@@ -81,26 +116,19 @@ class MapView {
     }
 
     /*
-     * Draws point features onto the Leaflet map
+     * Initializes point feature layer for Leaflet map
      */
-    drawPointFeatures(data) {
-        this.acresBurnedScale = d3.scaleSqrt()
-        .domain([d3.min(data.features, d => d.properties.SizeAcre),
-                 d3.max(data.features, d => d.properties.SizeAcre)])
-        .range([0,255]);
+    initPointFeatures(data) {
         this.pointLayer = L.geoJSON(data, {
             onEachFeature: this.onEachPointFeature,
             pointToLayer: function(feature, latlng) {
-                let marker = new MapCircleMarker(latlng, mapView.getPointMarkerStyle(feature.properties.SizeAcre));
-                marker.bindPopup(mapView.getPointPopupContent(feature), {
+                let marker = new MapCircleMarker(latlng, mapView.getPointMarkerStyle(feature));
+                marker.bindPopup(mapView.getPopupContent(feature), {
                     showOnMouseOver: true
                 });
                 return marker;
             }
         });
-        if (this.leafletMap.getZoom() < MAP_SHW_PLYGN_ZOOM) {
-            this.pointLayer.addTo(this.leafletMap);
-        }
     }
 
     /*
@@ -119,24 +147,10 @@ class MapView {
     /* Map event handler methods */
 
     /*
-     * Event handler to switch out polygon or points layers based on zoom level of Leaflet map
+     * Adds event handler methods to the Leaflet map
      */
-    onMapZoom() {
-        if (mapView.getLeafletMap().getZoom() >= MAP_SHW_PLYGN_ZOOM) {
-            if (mapView.pointLayer) {
-                mapView.pointLayer.removeFrom(mapView.getLeafletMap());
-            }
-            if (mapView.polygonLayer) {
-                mapView.polygonLayer.addTo(mapView.getLeafletMap());
-            }
-        } else {
-            if (mapView.polygonLayer) {
-                mapView.polygonLayer.removeFrom(mapView.getLeafletMap());
-            }
-            if (mapView.pointLayer) {
-                mapView.pointLayer.addTo(mapView.getLeafletMap());
-            }
-        }
+    addMapEventHanlders() {
+        this.leafletMap.on('zoomend', this.addPointsOrPolygonsBasedOnZoom);
     }
 
     /* Polygon event handler methods */
@@ -145,15 +159,18 @@ class MapView {
      * Event handler to drive all methods to be called when polygon is clicked
      */
     onPolygonClick(e){
-        mapView.getLeafletMap().eachLayer(function(layer){
+        // deselect all other polygons
+        mapView.getLeafletMap().eachLayer(function(layer) {
             if(layer.feature){
                 layer.feature.properties.clicked = false;
-                layer.setStyle(mapView.getPolygonStyle());
+                layer.setStyle(MAP_PLYGN_STYLE());
             }
         });
+
+        // select clicked polygon
         let layer = e.target;
         layer.feature.properties.clicked = true;
-        layer.setStyle(mapView.getPolygonStyleHover());
+        layer.setStyle(MAP_PLYGN_STYLE_HVRD());
         mapView.zoomToFeature(e);
     }
 
@@ -176,7 +193,7 @@ class MapView {
         if(!layer.isPopupOpen()){
             layer.openPopup(e.latlng);
         }
-        layer.setStyle(mapView.getPolygonStyleHover());
+        layer.setStyle(MAP_PLYGN_STYLE_HVRD());
 
         if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
             layer.bringToFront();
@@ -192,7 +209,7 @@ class MapView {
             return;
         }
         layer.closePopup();
-        layer.setStyle(mapView.getPolygonStyle());
+        layer.setStyle(MAP_PLYGN_STYLE());
     }
 
     ////////////////////////////////////////////////////////////
@@ -200,47 +217,43 @@ class MapView {
     ////////////////////////////////////////////////////////////
 
     /*
-     * Returns style object for polygons on Leaflet map
-     */
-    getPolygonStyle() {
-        return {
-            color: "#f5cb42",
-            weight: 3,
-            opacity: 0.65
-        }
-    }
-
-    /*
-     * Returns style object for polygons hovered over on Leaflet map
-     */
-    getPolygonStyleHover() {
-        return {
-            color: "#eb4034",
-            weight: 3,
-            opacity: 0.85
-        }
-    }
-
-    /*
      * Returns style object for points on Leaflet map
      */
-    getPointMarkerStyle(acresBurned) {
+    getPointMarkerStyle(feature) {
         return {
-            icon: L.BeautifyIcon.icon({
-                icon: 'fa-burn',
-                backgroundColor: 'rgb(' + mapView.acresBurnedScale(acresBurned) + ',0,0)',
-                borderColor: 'darkorange',
-                textColor: 'white'
-            })
+            icon: L.BeautifyIcon.icon(MAP_POINT_ICON_STYLE('rgb(' + mapView.iconColorScale(feature.properties[mapView.fireInfoPage]) + ',0,0)'))
         };
     }
 
     /*
      * Returns the html body of point feature popups on Leaflet map
     */
-    getPointPopupContent(feature){
+    getPopupContent(feature){
         let props = feature.properties;
-        return "<b>" + props.IncidentName + "</b><br>" + props.SizeAcre + " Acres Burned";    
+        return "<b>" + props.IncidentName + "</b><br>" + mapView.numberWithCommas(props[mapView.fireInfoPage]) + mapView.getPopupFirePageStatMessage();    
+    }
+
+    getPopupFirePageStatMessage(){
+        switch(mapView.fireInfoPage){
+            case "SizeAcre":
+                return " Acres Burned";
+            case "StructuresDestroyed":
+                return " Structures Destroyed";
+            case "SuppresionCost":
+                return " Dollars";
+        }
+    }
+
+    /*
+     * Written by Huy Tran in fireInfo.js
+     * Modified to handle null values
+     */
+    numberWithCommas(x) {
+        if(x){
+            return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        } else {
+            return 0;
+        }
     }
 }
 
