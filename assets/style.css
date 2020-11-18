@@ -30,6 +30,7 @@ li.tab-item {
 #vis-1 .panel-body #vis-1-div {
     height: 350px;
     overflow-y: scroll;
+    scroll-behavior: smooth;
 }
 
 .btn:focus {

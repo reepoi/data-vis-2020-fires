@@ -80,10 +80,11 @@ class FireInfo {
      */
     drawFireChart(scaleX = this.scaleSizeAcre, statName = this.currentPage) {
         //Set up scales:
-        let yScale = d3.scaleBand()
+        this.yTransformScale = d3.scaleBand()
             .domain(d3.range(this.showingData.length))
             .rangeRound([0, 30 * this.showingData.length])
             .paddingInner(0.05);
+        let yScale = this.yTransformScale;
 
         //Setup SVG Size:
         let svgSelection = d3.select("#vis-1-svg")
@@ -274,26 +275,14 @@ class FireInfo {
         let fire = showingFireInfo[0];
         let curScale = this.pagesScaleX[this.currentIndex];
 
-        //YScale to find the transform Y coordinate
-        let yScale = d3.scaleBand()
-            .domain(d3.range(this.showingData.length))
-            .rangeRound([0, 30 * this.showingData.length])
-            .paddingInner(0.05);
-
-
-        //Scroll to Fire's Bar
-        let divScrollbar = d3.select("#vis-1-div");
-        let transformY = yScale(fire.properties[`Ranking${this.currentPage}`] - 1);
-        //Scroll to element:
-        divScrollbar.node().scrollTop = transformY - 100;
-
-
+        //Call a scroll:
+        this.scrollToSelectedFire(fire);
 
         //Unhighlight all bars:
         this.unhighlightAllBars();
         //TODO: Highlight Fire's <g> bar:
-        let rectSelect = d3.select(`.barRect[width='${curScale(fire.properties[this.currentPage])}']`);
-        let gSelect = d3.select(rectSelect.node().parentNode);
+        let transformY = this.yTransformScale(fire.properties[`Ranking${this.currentPage}`] - 1);
+        let gSelect = d3.select(`.barGroup[transform='translate(2,${transformY})']`);
         gSelect.select("rect")
             .style("stroke", "black")
             .style("stroke-width", 1.5)
@@ -302,7 +291,25 @@ class FireInfo {
             .style("font-weight", 700);
     }
 
+    /**
+     * 
+     * @param {fire object} fire - selected Fire to scroll to 
+     */
+    scrollToSelectedFire(fire) {
+        //YScale to find the transform Y coordinate
+        let yScale = this.yTransformScale;
 
+
+        //Scroll to Fire's Bar
+        let divScrollbar = d3.select("#vis-1-div");
+        let transformY = yScale(fire.properties[`Ranking${this.currentPage}`] - 1);
+        //Scroll to element:
+        divScrollbar.node().scrollTop = transformY - 100;
+    }
+
+    /**
+     * helper function: Unhighlight bars
+     */
     unhighlightAllBars() {
         let allGSelect = d3.selectAll(".barGroup").data(this.showingData);
         allGSelect.selectAll(".barRect").data(d => [d])
