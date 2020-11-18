@@ -265,6 +265,7 @@ class FireInfo {
         //Due to no data 
         if (showingFireInfo.length == 0) {
             console.log("No fire data");
+            this.unhighlightAllBars();
             return;
         }
 
@@ -273,8 +274,6 @@ class FireInfo {
         let fire = showingFireInfo[0];
         let curScale = this.pagesScaleX[this.currentIndex];
 
-        //TODO: Scroll to Fire's Bar
-
         //YScale to find the transform Y coordinate
         let yScale = d3.scaleBand()
             .domain(d3.range(this.showingData.length))
@@ -282,6 +281,7 @@ class FireInfo {
             .paddingInner(0.05);
 
 
+        //Scroll to Fire's Bar
         let divScrollbar = d3.select("#vis-1-div");
         let transformY = yScale(fire.properties[`Ranking${this.currentPage}`] - 1);
         //Scroll to element:
@@ -290,13 +290,7 @@ class FireInfo {
 
 
         //Unhighlight all bars:
-        let allGSelect = d3.selectAll(".barGroup").data(this.showingData);
-        allGSelect.selectAll(".barRect").data(d => [d])
-            .style("stroke", "black")
-            .style("stroke-width", 0)
-            .style("fill", d => `rgb(${this.colorScaleRed(d.properties[this.currentPage])}, 0,0)`);
-        allGSelect.selectAll("text")
-            .style("font-weight", 500);
+        this.unhighlightAllBars();
         //TODO: Highlight Fire's <g> bar:
         let rectSelect = d3.select(`.barRect[width='${curScale(fire.properties[this.currentPage])}']`);
         let gSelect = d3.select(rectSelect.node().parentNode);
@@ -306,8 +300,17 @@ class FireInfo {
             .style("fill", "#de425b");
         gSelect.selectAll("text")
             .style("font-weight", 700);
+    }
 
 
+    unhighlightAllBars() {
+        let allGSelect = d3.selectAll(".barGroup").data(this.showingData);
+        allGSelect.selectAll(".barRect").data(d => [d])
+            .style("stroke", "black")
+            .style("stroke-width", 0)
+            .style("fill", d => `rgb(${this.colorScaleRed(d.properties[this.currentPage])}, 0,0)`);
+        allGSelect.selectAll("text")
+            .style("font-weight", 500);
     }
 
 
