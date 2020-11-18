@@ -35,6 +35,7 @@ class FireInfo {
         this.currentIndex = 0;
         this.numShowingFire = this.datapoints.length;
         this.Ascending = true;
+        this.currentSelectedFire = undefined;
 
         this.drawPanelPage();
         //Initialize buttons:
@@ -227,6 +228,12 @@ class FireInfo {
                 d3.select("#vis-1-next").classed("disabled", false);
 
                 parent.pageChangeFireInfo(parent.currentPage);
+
+                //Keep Scrolling to selected Fire:
+                if (parent.curentSelectedFire != undefined) {
+                    parent.updateSelectedFireInfo(parent.curentSelectedFire);
+                }
+
             });
 
         let nextBtn = d3.select("#vis-1-next")
@@ -242,6 +249,11 @@ class FireInfo {
                 d3.select("#vis-1-prev").classed("disabled", false);
 
                 parent.pageChangeFireInfo(parent.currentPage);
+
+                //Keep Scrolling to selected Fire:
+                if (parent.curentSelectedFire != undefined) {
+                    parent.updateSelectedFireInfo(parent.curentSelectedFire);
+                }
             });
     }
 
@@ -262,11 +274,15 @@ class FireInfo {
         let fireFeature = selectedFire.feature;
         let showingFireInfo = this.showingData.filter(d => d.properties.IncidentID == fireFeature.properties.IncidentID);
 
+        //update parent instance:
+        this.curentSelectedFire = selectedFire;
+
         //Tells user that we dont have data on this fire
         //Due to no data 
         if (showingFireInfo.length == 0) {
             console.log("No fire data");
             this.unhighlightAllBars();
+            this.currentSelectedFire = undefined;
             return;
         }
 
@@ -274,6 +290,7 @@ class FireInfo {
 
         let fire = showingFireInfo[0];
         let curScale = this.pagesScaleX[this.currentIndex];
+
 
         //Call a scroll:
         this.scrollToSelectedFire(fire);
