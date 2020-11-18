@@ -249,13 +249,19 @@ class FireInfo {
      * @param {leaflet e.target} selectedFire - clicked fire from the map
      */
     updateSelectedFireInfo(selectedFire) {
-        //TODO: Tells user that we dont have data on this fire
-        //Due to no data 
-
         //Find Fire in points:
+        let fireFeature = selectedFire.feature;
+        showingFireInfo = this.showingData.filter(d => d.properties.IncidentID == fireFeature.properties.IncidentID);
 
+        //Tells user that we dont have data on this fire
+        //Due to no data 
+        if (showingFireInfo.length == 0) {
+            console.log("No fire data");
+            return;
+        }
 
-        //
+        //TODO: Scroll to Fire's Bar
+        //TODO: Highlight Fire's bar 
     }
 
 
