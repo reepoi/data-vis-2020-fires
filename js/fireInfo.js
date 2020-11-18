@@ -286,18 +286,15 @@ class FireInfo {
             return;
         }
 
-
-
+        /**.If have fire data: */
         let fire = showingFireInfo[0];
-        let curScale = this.pagesScaleX[this.currentIndex];
-
 
         //Call a scroll:
         this.scrollToSelectedFire(fire);
 
         //Unhighlight all bars:
         this.unhighlightAllBars();
-        //TODO: Highlight Fire's <g> bar:
+        //Highlight Fire's <g> bar:
         let transformY = this.yTransformScale(fire.properties[`Ranking${this.currentPage}`] - 1);
         let gSelect = d3.select(`.barGroup[transform='translate(2,${transformY})']`);
         gSelect.select("rect")
