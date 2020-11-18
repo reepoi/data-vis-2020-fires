@@ -59,7 +59,7 @@ class FireInfo {
      * 
      * @param {*} statName 
      */
-    drawPanelInfo(statName = "SizeAcre") {
+    drawPanelInfo(statName = this.currentPage) {
         let panelSelection = d3.select("#vis-1").select(".panel");
         //Change Header:
         let headerInfo = this.toDefinition(statName);
@@ -78,7 +78,7 @@ class FireInfo {
      * ONLY DRAW this.showingData
      * Given a scale:
      */
-    drawFireChart(scaleX = this.scaleSizeAcre, statName = "SizeAcre") {
+    drawFireChart(scaleX = this.scaleSizeAcre, statName = this.currentPage) {
         //Set up scales:
         let yScale = d3.scaleBand()
             .domain(d3.range(this.showingData.length))
@@ -259,7 +259,7 @@ class FireInfo {
     updateSelectedFireInfo(selectedFire) {
         //Find Fire in points:
         let fireFeature = selectedFire.feature;
-        showingFireInfo = this.showingData.filter(d => d.properties.IncidentID == fireFeature.properties.IncidentID);
+        let showingFireInfo = this.showingData.filter(d => d.properties.IncidentID == fireFeature.properties.IncidentID);
 
         //Tells user that we dont have data on this fire
         //Due to no data 
@@ -268,8 +268,46 @@ class FireInfo {
             return;
         }
 
+
+
+        let fire = showingFireInfo[0];
+        let curScale = this.pagesScaleX[this.currentIndex];
+
         //TODO: Scroll to Fire's Bar
-        //TODO: Highlight Fire's bar 
+
+        //YScale to find the transform Y coordinate
+        let yScale = d3.scaleBand()
+            .domain(d3.range(this.showingData.length))
+            .rangeRound([0, 30 * this.showingData.length])
+            .paddingInner(0.05);
+
+
+        let divScrollbar = d3.select("#vis-1-div");
+        let transformY = yScale(fire.properties[`Ranking${this.currentPage}`] - 1);
+        //Scroll to element:
+        divScrollbar.node().scrollTop = transformY - 100;
+
+
+
+        //Unhighlight all bars:
+        let allGSelect = d3.selectAll(".barGroup").data(this.showingData);
+        allGSelect.selectAll(".barRect").data(d => [d])
+            .style("stroke", "black")
+            .style("stroke-width", 0)
+            .style("fill", d => `rgb(${this.colorScaleRed(d.properties[this.currentPage])}, 0,0)`);
+        allGSelect.selectAll("text")
+            .style("font-weight", 500);
+        //TODO: Highlight Fire's <g> bar:
+        let rectSelect = d3.select(`.barRect[width='${curScale(fire.properties[this.currentPage])}']`);
+        let gSelect = d3.select(rectSelect.node().parentNode);
+        gSelect.select("rect")
+            .style("stroke", "black")
+            .style("stroke-width", 1.5)
+            .style("fill", "#de425b");
+        gSelect.selectAll("text")
+            .style("font-weight", 700);
+
+
     }
 
 

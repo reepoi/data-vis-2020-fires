@@ -30,8 +30,6 @@ function initializeVis() {
          * @param {leaflet e.target} selectedFire - Leaflet e.target
          */
         function updateFireInfo(selectedFire) {
-            console.log("script.js: updateFireInfo fired");
-            console.log(selectedFire);
             fireInfo.updateSelectedFireInfo(selectedFire);
 
         }
