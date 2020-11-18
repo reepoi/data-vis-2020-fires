@@ -20,20 +20,20 @@ class FireInfo {
         // Scales
         let scaleSizeAcre = d3.scaleLinear()
             .domain([0, d3.max(this.datapoints, d => d.properties.SizeAcre)])
-            .range([this.vizBarMinWidth, this.vizBarWidth - 100]);
+            .range([this.vizBarMinWidth, this.vizBarWidth - 90]);
         let scaleStructuresDestroyed = d3.scaleLinear()
             .domain([0, d3.max(this.datapoints, d => d.properties.StructuresDestroyed)])
-            .range([this.vizBarMinWidth, this.vizBarWidth - 100]);
+            .range([this.vizBarMinWidth, this.vizBarWidth - 90]);
         let scaleSuppresionCost = d3.scaleLinear()
             .domain([0, d3.max(this.datapoints, d => d.properties.SuppresionCost)])
-            .range([this.vizBarMinWidth, this.vizBarWidth - 100]);
+            .range([this.vizBarMinWidth, this.vizBarWidth - 90]);
 
         //Update showing data:
         this.pages = ["SizeAcre", "StructuresDestroyed", "SuppresionCost"];
         this.pagesScaleX = [scaleSizeAcre, scaleStructuresDestroyed, scaleSuppresionCost];
         this.currentPage = "SizeAcre"; //this.pages[0]
         this.currentIndex = 0;
-        this.numShowingFire = 20;
+        this.numShowingFire = this.datapoints.length;
         this.Ascending = true;
 
         this.drawPanelPage(0);
@@ -76,12 +76,11 @@ class FireInfo {
      * Given a scale:
      */
     drawFireChart(scaleX = this.scaleSizeAcre, statName = "SizeAcre") {
-        console.log(this.showingData);
         //Set up scales:
         let yScale = d3.scaleBand()
             .domain(d3.range(this.showingData.length))
             .rangeRound([0, 30 * this.showingData.length])
-            .padding(0.1);
+            .paddingInner(0.05);
 
         //Setup SVG Size:
         let svgSelection = d3.select("#vis-1-svg")
@@ -96,10 +95,13 @@ class FireInfo {
             .attr("class", "barGroup")
             .attr("transform", (d, i) => `translate(2,${yScale(i)})`);
 
+        console.log(yScale(0));
+
         let rectSelection = bars.selectAll("rect").data(d => [d])
             .join("rect")
             .attr("class", "barRect")
             .attr("width", 0)
+            .attr("x", 0)
             .attr("height", yScale.bandwidth())
             .transition()
             .duration(500)
@@ -110,7 +112,7 @@ class FireInfo {
             .join("text")
             .attr("class", "barName")
             .attr("x", function(d) {
-                return 0 + 3;
+                return 0 + 2;
             })
             .attr("y", yScale.bandwidth() / 2 + 4)
             .text(function(d) {
