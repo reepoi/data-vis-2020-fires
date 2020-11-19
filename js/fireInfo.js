@@ -9,9 +9,10 @@ class FireInfo {
         this.dataPrepare();
 
 
-        //Vis sizes:
-        this.vizBarWidth = d3.select("#vis-1-svg").style("width").replace("px", "");
-        this.vizBarHeight = d3.select("#vis-1-svg").style("height").replace("px", "");
+        //Vis sizing:
+        this.vizBarWidth = d3.select("#vis-1-div").style("width").replace("px", "") - 20;
+        d3.select("#vis-1-svg").style("width", `${this.vizBarWidth}px`);
+        // this.vizBarHeight = d3.select("#vis-1-svg").style("height").replace("px", ""); //not using
         this.vizBarMinWidth = 10;
 
 
@@ -94,6 +95,8 @@ class FireInfo {
         //ColorScale Sync:
         let colorScaleRed = this.colorScaleRed;
 
+        //Refer to fireInfo instances:
+        let parent = this;
 
         /* Add RECTANGLES: 
          * -Each rectangle is in one "G" element
@@ -108,7 +111,6 @@ class FireInfo {
         let rectSelection = bars.selectAll("rect").data(d => [d])
             .join("rect")
             .attr("class", "barRect")
-            // TODO: COLORSCALE sync:
             .style("fill", d => `rgb(${colorScaleRed(d.properties[statName])}, 0,0)`)
             .attr("width", 0)
             .attr("x", 0)
@@ -126,9 +128,12 @@ class FireInfo {
             })
             .attr("y", yScale.bandwidth() / 2 + 4)
             .text(function(d) {
-                if (d.properties.CompactName.length > 6)
+                if (d.properties[`Ranking${statName}`] < 6)
+                    return d.properties.IncidentName;
+                else if (d.properties[`Ranking${statName}`] < 20)
+                    return d.properties.CompactName;
+                else
                     return d.properties.Acronym;
-                else return d.properties.CompactName;
             });
         //Add Value Text:
         bars.selectAll(".barValue").data(d => [d])
@@ -199,9 +204,7 @@ class FireInfo {
                 tooltipSelect
                     .classed("d-none", true);
 
-                //FIXME: Only unhighlight if not currentSelectedFire (or there's no selected)
-                console.log(parent.currentSelectedFire);
-                console.log(d);
+                //DONE: Only unhighlight if not currentSelectedFire (or there's no selected)
                 if (parent.currentSelectedFire == undefined ||
                     d.properties.IncidentID != parent.currentSelectedFire.feature.properties.IncidentID) {
                     d3.select(this).select("rect")
@@ -365,15 +368,12 @@ class FireInfo {
             totalAreaBurned += e.properties.SizeAcre;
             totalStructuresDestroyed += e.properties.StructuresDestroyed;
             totalSuppressionCost += e.properties.SuppresionCost;
-
-            //TODO: Calculate Date
         }
 
         //Stats:
         this.totalAreaBurned = Math.round(totalAreaBurned);
         this.totalStructuresDestroyed = Math.round(totalStructuresDestroyed);
         this.totalSuppressionCost = Math.round(totalSuppressionCost);
-
     }
 
     /**
