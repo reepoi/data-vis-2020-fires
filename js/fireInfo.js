@@ -191,7 +191,7 @@ class FireInfo {
                 tooltipSelect.select(".card").raise();
 
             })
-            .on("mouseout", function(d, i) {
+            .on("mouseout", function(event, d) {
                 tooltipSelect
                     .transition()
                     .duration(200)
@@ -199,12 +199,19 @@ class FireInfo {
                 tooltipSelect
                     .classed("d-none", true);
 
-                d3.select(this).select("rect")
-                    .classed("stroke-bold", false)
-                    .style("fill", d => `rgb(${parent.colorScaleRed(d.properties[parent.currentPage])}, 0,0)`);
+                //FIXME: Only unhighlight if not currentSelectedFire (or there's no selected)
+                console.log(parent.currentSelectedFire);
+                console.log(d);
+                if (parent.currentSelectedFire == undefined ||
+                    d.properties.IncidentID != parent.currentSelectedFire.feature.properties.IncidentID) {
+                    d3.select(this).select("rect")
+                        .classed("stroke-bold", false)
+                        .style("fill", d => `rgb(${parent.colorScaleRed(d.properties[parent.currentPage])}, 0,0)`);
 
-                d3.select(this).selectAll("text")
-                    .classed("text-bold", false);
+                    d3.select(this).selectAll("text")
+                        .classed("text-bold", false);
+                }
+
             });
     }
 
@@ -229,8 +236,8 @@ class FireInfo {
                 parent.pageChangeFireInfo(parent.currentPage);
 
                 //Keep Scrolling to selected Fire:
-                if (parent.curentSelectedFire != undefined) {
-                    parent.updateSelectedFireInfo(parent.curentSelectedFire);
+                if (parent.currentSelectedFire != undefined) {
+                    parent.updateSelectedFireInfo(parent.currentSelectedFire);
                 }
 
             });
@@ -250,8 +257,8 @@ class FireInfo {
                 parent.pageChangeFireInfo(parent.currentPage);
 
                 //Keep Scrolling to selected Fire:
-                if (parent.curentSelectedFire != undefined) {
-                    parent.updateSelectedFireInfo(parent.curentSelectedFire);
+                if (parent.currentSelectedFire != undefined) {
+                    parent.updateSelectedFireInfo(parent.currentSelectedFire);
                 }
             });
     }
@@ -274,7 +281,8 @@ class FireInfo {
         let showingFireInfo = this.showingData.filter(d => d.properties.IncidentID == fireFeature.properties.IncidentID);
 
         //update parent instance:
-        this.curentSelectedFire = selectedFire;
+        this.currentSelectedFire = selectedFire;
+
 
         //Tells user that we dont have data on this fire
         //Due to no data 
