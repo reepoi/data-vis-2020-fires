@@ -165,12 +165,10 @@ class FireInfo {
 
                 //Highlight bar
                 d3.select(this).select("rect")
-                    .style("stroke", "black")
-                    .style("stroke-width", 1.5)
-                    .style("fill", "#1fdcd8");
+                    .classed("stroke-bold", true)
+                    .style("fill", "#48cae4");
                 d3.select(this).selectAll("text")
-                    .style("font-weight", 700)
-                    .style("fill", "black");
+                    .classed("text-bold", true);
 
                 //tooltip content
                 tooltipSelect.select(".card-title")
@@ -200,14 +198,13 @@ class FireInfo {
                     .style("opacity", 0);
                 tooltipSelect
                     .classed("d-none", true);
+
                 d3.select(this).select("rect")
-                    .style("stroke", "black")
-                    .style("stroke-width", 0)
+                    .classed("stroke-bold", false)
                     .style("fill", d => `rgb(${parent.colorScaleRed(d.properties[parent.currentPage])}, 0,0)`);
 
                 d3.select(this).selectAll("text")
-                    .style("font-weight", 500)
-                    .style("fill", "white");
+                    .classed("text-bold", false);
             });
     }
 
@@ -300,12 +297,11 @@ class FireInfo {
         let transformY = this.yTransformScale(fire.properties[`Ranking${this.currentPage}`] - 1);
         let gSelect = d3.select(`.barGroup[transform='translate(2,${transformY})']`);
         gSelect.select("rect")
-            .style("stroke", "black")
-            .style("stroke-width", 1.5)
-            .style("fill", "#1fdcd8");
+            .classed("stroke-bold", true)
+            .style("fill", "#48cae4");
+        //#1fdcd8
         gSelect.selectAll("text")
-            .style("font-weight", 700)
-            .style("fill", "black");
+            .classed("text-bold", true)
     }
 
     /**
@@ -330,12 +326,10 @@ class FireInfo {
     unhighlightAllBars() {
         let allGSelect = d3.selectAll(".barGroup").data(this.showingData);
         allGSelect.selectAll(".barRect").data(d => [d])
-            .style("stroke", "black")
-            .style("stroke-width", 0)
+            .classed("stroke-bold", false)
             .style("fill", d => `rgb(${this.colorScaleRed(d.properties[this.currentPage])}, 0,0)`);
         allGSelect.selectAll("text")
-            .style("font-weight", 500)
-            .style("fill", "white");
+            .classed("text-bold", false);
     }
 
 

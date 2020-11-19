@@ -44,6 +44,11 @@ li.tab-item {
     fill: #ff6361;
 } */
 
+.stroke-bold {
+    stroke: black;
+    stroke-width: 1.5;
+}
+
 .barName {
     fill: white;
     font-size: 0.6rem;
