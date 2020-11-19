@@ -2,7 +2,6 @@
 window.addEventListener('load', function() {
     console.log('All assets are loaded');
     pagingHandler();
-    initializeVis();
 });
 window.addEventListener("hashchange", function(e) {
     pagingHandler();
@@ -11,20 +10,23 @@ window.addEventListener("hashchange", function(e) {
 const tabHashes = getTabHashes();
 const mapView = new MapView('vis-2', [MAP_INIT_LAT, MAP_INIT_LONG], MAP_INIT_ZOOM);
 
+
 /* Visualization: After data load */
-function initializeVis() {
+
+////////Visualizations are now first drawn by pagingHandler();//////
+/**
+ * 
+ */
+function fireMapInitialize() {
     loadData().then(data => {
+        console.log("reload data for compareyears");
         console.log(data);
 
-        /* TODO: D3 Visualization classes here */
-        /* TODO: D3 Visualizations here */
+        //Initialize view files:
         let fireInfo = new FireInfo(data);
-        let compareYears = new CompareYear(data.fireHistory);
         mapView.drawMapFeatures(data, fireInfo.currentPage);
-        //TODO: Demo colorscale sync from MAP
 
-        /**TODO: Linking Functions go HERE:
-         */
+        /**TODO: Linking Functions go HERE: */
         /**
          * 
          * @param {leaflet e.target} selectedFire - Leaflet e.target
@@ -44,11 +46,22 @@ function initializeVis() {
             mapView.drawMapFeatures(data, fireInfoPage);
         }
         fireInfo.pageChangeFireInfo = pageChangeFireInfo;
-
-
-
-
     });
+
+
+}
+
+/**
+ * 
+ * @param {Object} data 
+ */
+function compareYearsInitialize() {
+    loadData().then(data => {
+        console.log("reload data for compareyears");
+        console.log(data);
+        let compareYears = new CompareYear(data.fireHistory);
+    });
+
 }
 
 /* Async function to load files that you want */
@@ -64,8 +77,6 @@ async function loadData() {
 }
 
 
-
-
 /* Views Helper Functions */
 
 /**
@@ -74,13 +85,15 @@ async function loadData() {
  * @param {*} givenHash - String - a given hash to relocate. 
  */
 function pagingHandler(hash = "") {
+
     let currentHash = hash;
     if (hash === "")
         currentHash = window.location.hash;
     switch (currentHash) {
-        case "#compare-year":
+        case "#compare-years":
             /* This is just a demo function I made to see how tabbing works */
             /* TODO: Add function to handle this */
+            compareYearsInitialize();
             break;
         case "#stories":
             /* This is just a demo function I made to see how tabbing works */
@@ -88,14 +101,41 @@ function pagingHandler(hash = "") {
             break;
         case "#fire-map":
         default:
-            /* TODO: Add fire map function */
+            fireMapInitialize();
             currentHash = "#fire-map";
             break;
 
     }
     window.location.hash = currentHash;
     /* Update Views (buttons, tabs, enable, selection...) */
+    displayCurrentPagebyHash();
     activeTabHandler(currentHash);
+}
+
+/**
+ * 
+ */
+function displayCurrentPagebyHash() {
+    let currentHash = window.location.hash;
+
+    //Hide all vis divs:
+    d3.selectAll(".hashPage")
+        .classed("d-none", true);
+
+    //Display designated div (==hash+"-div"):
+    d3.select(`${currentHash}-div`)
+        .classed("d-none", false)
+        .style("opacity", 0)
+        .transition()
+        .duration(200)
+        .style("opacity", 1);
+
+
+
+
+
+
+
 }
 
 

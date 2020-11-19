@@ -17,17 +17,20 @@ li.tab-item {
     font-weight: 600;
 }
 
-#vis-1 .panel {
+#vis-1 .panel,
+#vis-4 .panel {
     border: 0px;
     border-right: .05rem solid #dadee4;
     height: 100%;
 }
 
+#vis-4 .panel-body,
 #vis-1 .panel-body {
     max-height: 500px;
 }
 
-#vis-1 .panel-body #vis-1-div {
+#vis-1 .panel-body #vis-1-div,
+#vis-4 .panel-body #vis-4-div {
     height: 350px;
     overflow-y: scroll;
     scroll-behavior: smooth;
@@ -65,20 +68,16 @@ li.tab-item {
 
 #tooltip {
     position: absolute;
-    /* width: 300px;
-    height: 500px; */
     z-index: 1000;
 }
 
-#tooltip .card .card-body {
-    /* white-space: pre; */
-}
-
-#vis-2 {
+#vis-2,
+#vis-4 {
     height: 500px;
 }
 
-#vis-3 .panel {
+#vis-3 .panel,
+#vis-6 .panel {
     border: 0px;
     border-left: .05rem solid #dadee4;
 }
