@@ -18,14 +18,14 @@ const MAP_PLYGN_STYLE = function() {
 }
 const MAP_PLYGN_STYLE_HVRD = function() {
   return {
-    color: '#eb4034',
+    color: '#1fdcd8',
     weight: 3,
     opacity: 0.65
   }
 }
 const MAP_POINT_ICON_STYLE = function (backgroundColor) {
   return {
-    icon: 'fa-burn',
+    icon: 'fa-fire',
     backgroundColor: backgroundColor,
     borderColor: 'darkorange',
     textColor: 'white'
