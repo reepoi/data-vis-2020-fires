@@ -25,7 +25,6 @@ function fireMapInitialize() {
     isFireMapInit = true;
 
     loadData().then(data => {
-        console.log("reload data for compareyears");
         console.log(data);
 
         //Initialize view files:
@@ -68,7 +67,6 @@ function compareYearsInitialize() {
 
     loadData().then(data => {
         console.log("reload data for compareyears");
-        console.log(data);
         let compareYears = new CompareYear(data.fireHistory);
     });
 

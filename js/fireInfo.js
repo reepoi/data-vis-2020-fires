@@ -6,6 +6,8 @@
 class FireInfo {
     constructor(data) {
         this.datapoints = data.points.features;
+        //Keep showing data and actual data (referenced) separately:
+        this.showingData = [...this.datapoints];
         this.dataPrepare();
 
 
@@ -34,13 +36,13 @@ class FireInfo {
         this.pagesScaleX = [scaleSizeAcre, scaleStructuresDestroyed, scaleSuppresionCost];
         this.currentPage = "SizeAcre"; //this.pages[0]
         this.currentIndex = 0;
-        this.numShowingFire = this.datapoints.length;
         this.Ascending = true;
         this.currentSelectedFire = undefined;
 
         this.drawPanelPage();
         //Initialize buttons:
         this.attachButtonHandlers();
+        this.attachDropdownHandlers();
     }
 
     ////////////////////////////////////
@@ -51,7 +53,7 @@ class FireInfo {
      * 
      */
     drawPanelPage() {
-        this.dataUpdate(this.currentPage, this.numShowingFire, this.Ascending);
+        this.dataUpdate(this.currentPage, this.datapoints.length, this.Ascending);
         //Draw Visualization:
         this.drawPanelInfo(this.currentPage);
         this.drawFireChart(this.pagesScaleX[this.currentIndex], this.currentPage);
@@ -80,7 +82,7 @@ class FireInfo {
      * ONLY DRAW this.showingData
      * Given a scale:
      */
-    drawFireChart(scaleX = this.scaleSizeAcre, statName = this.currentPage) {
+    drawFireChart(scaleX = this.pagesScaleX[this.currentIndex], statName = this.currentPage) {
         //Set up scales:
         this.yTransformScale = d3.scaleBand()
             .domain(d3.range(this.showingData.length))
@@ -266,6 +268,27 @@ class FireInfo {
             });
     }
 
+    /**
+     * 
+     */
+    attachDropdownHandlers() {
+        let parent = this;
+        let dropdownSelect = d3.select("select#cause-dropdown")
+            .on("change", function(event) {
+                let causeTag = this.value;
+                console.log(causeTag);
+                if (causeTag.toLowerCase() === "all")
+                    parent.showingData = [...parent.datapoints];
+                else
+                    parent.showingData = parent.datapoints.filter(d => d.properties.Cause == causeTag);
+                parent.drawFireChart();
+
+                //Update number of fires in view:
+                d3.select("label.form-label")
+                    .text(`${parent.showingData.length} Wildfires Caused by`);
+            });
+    }
+
 
     ////////////////////////////////////////////
     ///////////Coordinated Views Handlers//////
@@ -387,12 +410,14 @@ class FireInfo {
         this.datapoints.sort((a, b) => a.properties[statName] - b.properties[statName]);
         if (descending)
             this.datapoints.reverse();
-        this.showingData = this.datapoints.slice(0, numFires);
+
 
         //Add Ranking by statName:
         for (let i in this.datapoints) {
             this.datapoints[i].properties["Ranking" + statName] = +i + 1;
         }
+        //Keep track of ShowingData
+        this.showingData = this.datapoints.slice(0, numFires);
 
         //Update current Sort:
         this.currentPage = statName;
