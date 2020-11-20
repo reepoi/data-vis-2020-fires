@@ -324,6 +324,15 @@ class FireInfo {
                 //Update number of fires in view:
                 d3.select("span#cause-counter")
                     .text(`${parent.showingData.length}`);
+
+                //TODO: Scroll to fire if found in this list? If not, make it undefined
+                if (parent.currentSelectedFire != undefined) {
+                    let currentFireCause = parent.currentSelectedFire.feature.properties.Cause;
+                    if (currentFireCause != causeTag && causeTag != "all") {
+                        parent.currentSelectedFire = undefined;
+                    }
+                    parent.updateSelectedFireInfo(parent.currentSelectedFire);
+                }
             });
     }
 
@@ -340,13 +349,18 @@ class FireInfo {
      * @param {leaflet e.target} selectedFire - clicked fire from the map
      */
     updateSelectedFireInfo(selectedFire) {
+        //Handle undefined:
+        if (selectedFire == undefined) {
+            this.scrollToSelectedFire(undefined);
+            return;
+        }
+
         //Find Fire in points:
         let fireFeature = selectedFire.feature;
         let showingFireInfo = this.showingData.filter(d => d.properties.IncidentID == fireFeature.properties.IncidentID);
 
         //update parent instance:
         this.currentSelectedFire = selectedFire;
-
 
         //Tells user that we dont have data on this fire
         //Due to no data 
@@ -366,7 +380,8 @@ class FireInfo {
         //Unhighlight all bars:
         this.unhighlightAllBars();
         //Highlight Fire's <g> bar:
-        let transformY = this.yTransformScale(fire.properties[`Ranking${this.currentPage}`] - 1);
+        let fireCurrentIndex = this.showingData.findIndex(d => d.properties.IncidentID == fire.properties.IncidentID);
+        let transformY = this.yTransformScale(fireCurrentIndex);
         let gSelect = d3.select(`.barGroup[transform='translate(2,${transformY})']`);
         gSelect.select("rect")
             .classed("stroke-bold", true)
@@ -379,15 +394,21 @@ class FireInfo {
     /**
      * 
      * @param {fire object} fire - selected Fire to scroll to 
+     * if fire == undefined 
      */
     scrollToSelectedFire(fire) {
-        //YScale to find the transform Y coordinate
-        let yScale = this.yTransformScale;
-
-
-        //Scroll to Fire's Bar
+        //SCroller container:
         let divScrollbar = d3.select("#vis-1-div");
-        let transformY = yScale(fire.properties[`Ranking${this.currentPage}`] - 1);
+
+        //Handle Undefined:
+        if (fire == undefined) {
+            divScrollbar.node().scrollTop = 1;
+            return;
+        }
+
+        //YScale to find the transform Y coordinate
+        let fireCurrentIndex = this.showingData.findIndex(d => d.properties.IncidentID == fire.properties.IncidentID);
+        let transformY = this.yTransformScale(fireCurrentIndex);
         //Scroll to element:
         divScrollbar.node().scrollTop = transformY - 100;
     }
@@ -435,6 +456,7 @@ class FireInfo {
         this.totalAreaBurned = Math.round(totalAreaBurned);
         this.totalStructuresDestroyed = Math.round(totalStructuresDestroyed);
         this.totalSuppressionCost = Math.round(totalSuppressionCost);
+
     }
 
     /**
@@ -467,6 +489,8 @@ class FireInfo {
             ])
             .range([0, 255]);
     }
+
+
 
     /**
      * Generate string based on ranking number (1st, 2nd, 3rd)
