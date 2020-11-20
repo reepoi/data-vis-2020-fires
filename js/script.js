@@ -10,6 +10,8 @@ window.addEventListener("hashchange", function(e) {
 const tabHashes = getTabHashes();
 const mapView = new MapView('vis-2', [MAP_INIT_LAT, MAP_INIT_LONG], MAP_INIT_ZOOM);
 
+var isFireMapInit = false;
+var isCompareYearsInit = false;
 
 /* Visualization: After data load */
 
@@ -18,6 +20,10 @@ const mapView = new MapView('vis-2', [MAP_INIT_LAT, MAP_INIT_LONG], MAP_INIT_ZOO
  * 
  */
 function fireMapInitialize() {
+    //Only load and draw once:
+    if (isFireMapInit) return;
+    isFireMapInit = true;
+
     loadData().then(data => {
         console.log("reload data for compareyears");
         console.log(data);
@@ -56,6 +62,10 @@ function fireMapInitialize() {
  * @param {Object} data 
  */
 function compareYearsInitialize() {
+    // /Only load and draw once:
+    if (isCompareYearsInit) return;
+    isCompareYearsInit = true;
+
     loadData().then(data => {
         console.log("reload data for compareyears");
         console.log(data);
