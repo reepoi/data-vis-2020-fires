@@ -109,14 +109,14 @@
                     <div class="panel-header text-center  py-0">
                         <div class="panel-title h3 font-serif">Area Burned:</div>
                         <div class="panel-subtitle h5 text-bold font-serif">Size by Acres</div>
+                        <!-- Pagination on bar chart -->
                         <button id="vis-1-prev" class="btn btn-link disabled">Prev</button>
                         <button id="vis-1-next" class="btn btn-link ">Next</button>
                         <div class="divider"></div>
                     </div>
 
                     <div class="panel-body">
-                        <!-- Pagination on bar chart -->
-                        <!-- TODO: Filtering dropdown: -->
+                        <!-- Filter Dropdown: -->
                         <div class="columns form-group col-gapless">
                             <div class="column col-auto col-xs-10">
                                 <span id="cause-counter" class="text-bold d-inline">341</span>
@@ -130,10 +130,7 @@
                                     <option value="U">U</option>
                                   </select>
                             </div>
-
                         </div>
-
-                        <!-- <div id="vis-1-subtitle" class="column col-8 col-mx-auto">Largest Fire by Area</div> -->
                         <!-- Visualization 1 -->
                         <div id="vis-1-div">
                             <svg id="vis-1-svg"></svg>
@@ -203,9 +200,14 @@
         </div>
         <!-- TOOLTIP -->
         <div id="tooltip" class="">
-            <div class="card">
+            <div class="card text-dark">
                 <div class="card-header">
-                    <div class="card-title h5"></div>
+                    <div class="columns">
+                        <div class="column col-auto card-title h5"></div>
+                        <div class="column rank col-auto col-ml-auto label label-secondary rank text-tiny text-muted">
+                            _a_ in _StatName_
+                        </div>
+                    </div>
                     <div class="card-subtitle text-gray"></div>
                 </div>
                 <div class="card-body">
@@ -220,6 +222,11 @@
                     <!-- suppresion cost-->
                     <div>
                         Suppresion Cost: <span class="h5"></span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-small text-muted">
+                        Start Date: <span id="tooltip-startdate" class="text-bold"></span>
                     </div>
                 </div>
             </div>

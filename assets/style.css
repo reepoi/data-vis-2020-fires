@@ -66,6 +66,10 @@ li.tab-item {
     cursor: default;
 }
 
+.text-bold {
+    font-weight: 700;
+}
+
 #tooltip {
     position: absolute;
     z-index: 1000;

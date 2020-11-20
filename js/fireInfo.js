@@ -49,7 +49,7 @@ class FireInfo {
     //////Views Drawing Funtions////////
     ////////////////////////////////////
     /**
-     * 
+     * Should only call once to draw panel
      * 
      */
     drawPanelPage() {
@@ -136,14 +136,22 @@ class FireInfo {
                     return d.properties.CompactName;
                 else
                     return d.properties.Acronym;
-            });
+            })
+            .style("opacity", 0.1)
+            .transition()
+            .duration(500)
+            .style("opacity", 1);
         //Add Value Text:
         bars.selectAll(".barValue").data(d => [d])
             .join("text")
             .attr("class", "barValue")
             .attr("x", d => scaleX(d.properties[statName]) + 5)
             .attr("y", yScale.bandwidth() / 2 + 4)
-            .text(d => this.numberWithCommas(d.properties[statName]));
+            .text(d => this.numberWithCommas(d.properties[statName]))
+            .style("opacity", 0.1)
+            .transition()
+            .duration(500)
+            .style("opacity", 1);
 
         //Add tooltip :
         //Each tooltip is a Card: https://picturepan2.github.io/spectre/components/cards.html;
@@ -164,11 +172,13 @@ class FireInfo {
         selection.on("mouseover", function(event, d) {
                 let fireName = d.properties.IncidentName;
                 let complexName = d.properties.ComplexName;
-                let ranking = `${parent.nth(+d.properties.Ranking)} in "${parent.currentPage}"\n`;
                 let sizeAcre = `${parent.numberWithCommas(d.properties.SizeAcre)}`;
                 let structuresDestroyed = `${parent.numberWithCommas(d.properties.StructuresDestroyed)}\n`;
                 let suppresionCost = `$${parent.numberWithCommas(d.properties.SuppresionCost)} \n`;
                 let tooltipData = [sizeAcre, structuresDestroyed, suppresionCost];
+
+
+
 
                 //Highlight bar
                 d3.select(this).select("rect")
@@ -177,34 +187,49 @@ class FireInfo {
                 d3.select(this).selectAll("text")
                     .classed("text-bold", true);
 
-                //tooltip content
+                //tooltip header
                 tooltipSelect.select(".card-title")
                     .text(fireName);
                 tooltipSelect.select(".card-subtitle")
                     .text(complexName);
+                //---header ranking:
+                let category = d3.select(".panel-title").text().replace(":", "");
+                let ranking = +d.properties[`Ranking${parent.currentPage}`];
+                let rankText = `${parent.nth(ranking)} in ${category}\n`;
+                tooltipSelect.select(".rank").text(rankText);
 
+                //Populate tooltip body:
                 let attrGroup = tooltipSelect.select(".card-body").selectAll("div")
                     .data(tooltipData);
-                attrGroup.selectAll("span").data(d => [d])
+                attrGroup.selectAll("span.h5").data(d => [d])
                     .text(d => d);
 
+                //Add Ranking:
+                attrGroup.selectAll("span.rank").data()
+
+                //Tooltip footer:
+                let startDate = d.properties.StartDate;
+                tooltipSelect.select("#tooltip-startdate")
+                    .text(startDate);
+
+                //Tooltip transition and position:
                 tooltipSelect
                     .style("left", (event.pageX + 20) + 'px')
                     .style("top", (event.pageY + 20) + 'px')
                     .classed("d-none", false)
+                    .style("transform", "translate(-50px,-50px) scale(0.4)")
                     .transition()
                     .duration(200)
-                    .style("opacity", 1.0);
+                    .style("opacity", 1.0)
+                    .style("transform", "scale(1)");
                 tooltipSelect.select(".card").raise();
 
             })
             .on("mouseout", function(event, d) {
                 tooltipSelect
-                    .transition()
-                    .duration(200)
-                    .style("opacity", 0);
-                tooltipSelect
-                    .classed("d-none", true);
+                    .style("opacity", 0)
+                    .classed("d-none", true)
+                    .style("transform", "");
 
                 //DONE: Only unhighlight if not currentSelectedFire (or there's no selected)
                 if (parent.currentSelectedFire == undefined ||
