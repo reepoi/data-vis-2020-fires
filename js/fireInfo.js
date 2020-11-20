@@ -269,14 +269,13 @@ class FireInfo {
     }
 
     /**
-     * 
+     * Function to attach Dropdown filter by causes
      */
     attachDropdownHandlers() {
         let parent = this;
         let dropdownSelect = d3.select("select#cause-dropdown")
             .on("change", function(event) {
                 let causeTag = this.value;
-                console.log(causeTag);
                 if (causeTag.toLowerCase() === "all")
                     parent.showingData = [...parent.datapoints];
                 else
@@ -284,8 +283,8 @@ class FireInfo {
                 parent.drawFireChart();
 
                 //Update number of fires in view:
-                d3.select("label.form-label")
-                    .text(`${parent.showingData.length} Wildfires Caused by`);
+                d3.select("span#cause-counter")
+                    .text(`${parent.showingData.length}`);
             });
     }
 
