@@ -135,9 +135,9 @@ function displayCurrentPagebyHash() {
     //Display designated div (==hash+"-div"):
     d3.select(`${currentHash}-div`)
         .classed("d-none", false)
-        .style("opacity", 0)
+        .style("transform", "translate(0,2000px) rotate(15deg)")
         .transition()
-        .duration(200)
+        .style("transform", "rotate(0deg)").duration(400)
         .style("opacity", 1);
 
 
