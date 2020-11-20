@@ -248,6 +248,8 @@ class FireInfo {
     /**
      * Attach Buttons (Previous, Next) into panel
      * that lets user navigate through fire charts.
+     * //FIXME: Keep filtering?
+     * //Or TODO: Return to `all` filter
      */
     attachButtonHandlers() {
         let parent = this;
@@ -265,10 +267,17 @@ class FireInfo {
 
                 parent.pageChangeFireInfo(parent.currentPage);
 
+                //return filter to All://TODO: //FIXME: ?
+                let dropdown = d3.select("#cause-dropdown");
+                dropdown.node().value = 'all';
+                dropdown.dispatch("change");
+
                 //Keep Scrolling to selected Fire:
                 if (parent.currentSelectedFire != undefined) {
                     parent.updateSelectedFireInfo(parent.currentSelectedFire);
                 }
+
+
 
             });
 
@@ -285,6 +294,11 @@ class FireInfo {
                 d3.select("#vis-1-prev").classed("disabled", false);
 
                 parent.pageChangeFireInfo(parent.currentPage);
+
+                //return filter to All://TODO: //FIXME: ?
+                let dropdown = d3.select("#cause-dropdown");
+                dropdown.node().value = 'all';
+                dropdown.dispatch("change");
 
                 //Keep Scrolling to selected Fire:
                 if (parent.currentSelectedFire != undefined) {
