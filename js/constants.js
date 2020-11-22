@@ -9,6 +9,10 @@ const MAP_INIT_ZOOM = 4;
 const MAP_SHW_PLYGN_ZOOM = 8;
 const MAP_CLK_PLYGN_ZOOM = 11;
 
+const MAP_CMP_INIT_LAT = 37;
+const MAP_CMP_INIT_LONG = -122;
+const MAP_CMP_INIT_ZOOM = 6;
+
 const MAP_PLYGN_STYLE = function() {
   return {
     color: '#f5cb42',
