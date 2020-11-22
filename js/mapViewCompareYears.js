@@ -55,6 +55,7 @@ class MapViewCompareYears {
       this.polygonLayer.addTo(this.leafletMap);
   }
 
+
   /*
    * Initializes polygon feature layer for Leaflet map
    */
@@ -62,7 +63,7 @@ class MapViewCompareYears {
       data.features.forEach(d => d.properties['clicked'] = false);
       this.polygonLayer = L.geoJSON(data, {
           onEachFeature: this.onEachPolygonFeature,
-          style: MAP_PLYGN_STYLE,
+          style: MAP_PLYGN_STYLE_HISTORY,
       });
   }
 
@@ -92,7 +93,7 @@ class MapViewCompareYears {
       mapViewCompareYears.getLeafletMap().eachLayer(function(layer) {
           if (layer.feature) {
               layer.feature.properties.clicked = false;
-              layer.setStyle(MAP_PLYGN_STYLE());
+              layer.setStyle(MAP_PLYGN_STYLE_HISTORY(layer.feature));
           }
       });
 
@@ -132,7 +133,7 @@ class MapViewCompareYears {
           return;
       }
       layer.closePopup();
-      layer.setStyle(MAP_PLYGN_STYLE());
+      layer.setStyle(MAP_PLYGN_STYLE_HISTORY(layer.feature));
   }
   
 }

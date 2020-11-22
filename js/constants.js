@@ -35,3 +35,18 @@ const MAP_POINT_ICON_STYLE = function (backgroundColor) {
     textColor: 'white'
   }
 }
+const MAP_PLYGN_STYLE_HISTORY = function(feature) {
+  return {
+    fillColor: getColor(feature.properties['Period']),
+    weight: 2,
+    opacity: 1,
+    color: getColor(feature.properties['Period']),
+    //dashArray: '3',
+    fillOpacity: 0.3
+  }
+}
+
+const getColor = function(d) {
+  return d === '1990-2019' ? '#0070FF' :
+         '#267300' ;
+};
