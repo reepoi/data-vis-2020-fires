@@ -242,6 +242,28 @@ class FireInfo {
                         .classed("text-bold", false);
                 }
 
+            })
+            .on("click", function(event, d) {
+                // deselect all other bars
+                if(parent.currentSelectedFire !== undefined){
+                    let bars = d3.select("#vis-1-svg").selectAll('g');
+                    bars.selectAll('rect')
+                        .classed("stroke-bold", false)
+                        .style("fill", d => `rgb(${parent.colorScaleRed(d.properties[parent.currentPage])}, 0,0)`);
+                    bars.selectAll("text")
+                    .classed("text-bold", false);
+                }
+                // set as new selected
+                parent.currentSelectedFire = {feature: d};
+
+                // set visually as selected
+                d3.select(this).select("rect")
+                    .classed("stroke-bold", true)
+                    .style("fill", "#48cae4");
+                d3.select(this).selectAll("text")
+                    .classed("text-bold", true);
+
+                parent.updateMapView(d);
             });
     }
 

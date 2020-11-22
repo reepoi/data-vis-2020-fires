@@ -9,6 +9,7 @@ window.addEventListener("hashchange", function(e) {
 
 const tabHashes = getTabHashes();
 const mapView = new MapView('vis-2', [MAP_INIT_LAT, MAP_INIT_LONG], MAP_INIT_ZOOM);
+const mapViewCompareYears = new MapViewCompareYears('vis-5', [MAP_CMP_INIT_LAT, MAP_CMP_INIT_LONG], MAP_CMP_INIT_ZOOM);
 
 var isFireMapInit = false;
 var isCompareYearsInit = false;
@@ -32,15 +33,18 @@ function fireMapInitialize() {
         mapView.drawMapFeatures(data, fireInfo.currentPage);
 
         /**TODO: Linking Functions go HERE: */
+        function updateMapView(selectedFire){
+            mapView.selectAndZoomToPolygon(selectedFire);
+        }
         /**
          * 
          * @param {leaflet e.target} selectedFire - Leaflet e.target
          */
         function updateFireInfo(selectedFire) {
             fireInfo.updateSelectedFireInfo(selectedFire);
-
         }
         mapView.updateFireInfo = updateFireInfo;
+        fireInfo.updateMapView = updateMapView;
         fireInfo.updateFireInfo = updateFireInfo;
 
         /*
@@ -68,6 +72,7 @@ function compareYearsInitialize() {
     loadData().then(data => {
         console.log("reload data for compareyears");
         let compareYears = new CompareYear(data.fireHistory);
+        mapViewCompareYears.drawMapFeatures(data.fireHistory);
     });
 
 }

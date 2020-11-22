@@ -9,6 +9,9 @@ class MapView {
         this.polygonLayer;
         this.pointLayer;
 
+        this.polygonsLoaded = false;
+        this.polyToSelectOnLayerLoad = null;
+
         this.setMapView(initLatLng, initZoom);
         this.addMapTiling();
         this.addMapEventHanlders();
@@ -84,12 +87,17 @@ class MapView {
      * zoom level, and remove the other.
      */
     addPointsOrPolygonsBasedOnZoom() {
-        if (mapView.getLeafletMap().getZoom() >= MAP_SHW_PLYGN_ZOOM) {
+        if (mapView.getLeafletMap().getZoom() >= MAP_SHW_PLYGN_ZOOM && !mapView.polygonsLoaded) {
             mapView.pointLayer.removeFrom(mapView.getLeafletMap());
             mapView.polygonLayer.addTo(mapView.getLeafletMap());
-        } else {
+            mapView.polygonsLoaded = true;
+            if(mapView.polyToSelectOnLayerLoad){
+                mapView.selectPolygon();
+            }
+        } else if(mapView.getLeafletMap().getZoom() < MAP_SHW_PLYGN_ZOOM) {
             mapView.polygonLayer.removeFrom(mapView.getLeafletMap());
             mapView.pointLayer.addTo(mapView.getLeafletMap());
+            mapView.polygonsLoaded = false;
         }
     }
 
@@ -232,6 +240,44 @@ class MapView {
         }
         layer.closePopup();
         layer.setStyle(MAP_PLYGN_STYLE());
+    }
+
+    /* Outside event handler methods */
+    selectAndZoomToPolygon(selection){
+        mapView.polyToSelectOnLayerLoad = selection.id;
+        let latitude = selection.geometry.coordinates[1];
+        let longitude = selection.geometry.coordinates[0];
+        if(mapView.polygonsLoaded){
+            mapView.getLeafletMap().setView([latitude, longitude], MAP_SHW_PLYGN_ZOOM);
+            this.selectPolygon();
+        } else {
+            mapView.getLeafletMap().setView([latitude, longitude], MAP_SHW_PLYGN_ZOOM);
+            /* here the polygon is selected when the 'zoomend' leaflet map event handler
+             * calls addPointsOrPolygonsBasedOnZoom. This is to make sure selectPolygon
+             * is only called when the polygon layer is loaded on the map.
+             */
+        }
+    }
+
+    selectPolygon(){
+        // deselect all others
+        mapView.getLeafletMap().eachLayer(function(layer) {
+            if (layer.feature) {
+                layer.feature.properties.clicked = false;
+                layer.setStyle(MAP_PLYGN_STYLE());
+                layer.closePopup();
+            }
+        });
+        mapView.getLeafletMap().eachLayer(function(layer) {
+            if(layer.feature) {
+                if(layer.feature.id === mapView.polyToSelectOnLayerLoad){
+                    layer.feature.properties.clicked = true;
+                    layer.setStyle(MAP_PLYGN_STYLE_HVRD());
+                    layer.openPopup();
+                }
+            }
+        });
+        mapView.polyToSelectOnLayerLoad = null;
     }
 
     ////////////////////////////////////////////////////////////
