@@ -245,16 +245,13 @@ class MapView {
     /* Outside event handler methods */
     selectAndZoomToPolygon(selection) {
         mapView.polyToSelectOnLayerLoad = selection.id;
-        let latitude = selection.geometry.coordinates[1];
-        let longitude = selection.geometry.coordinates[0];
-        //If selection is a multipolygon type: redefine lat and long `huy`
-        if (typeof latitude == "object" || typeof longitude == "object") {
-            latitude = selection.geometry.coordinates[0][0][0][1];
-            longitude = selection.geometry.coordinates[0][0][0][0];
-        }
-
+        let fireCoordinates = getCoordinates(selection.geometry);
+        let longitude = fireCoordinates[0];
+        let latitude = fireCoordinates[1];
         if (mapView.polygonsLoaded) {
+            console.log("polygon loaded", longitude, latitude);
             mapView.getLeafletMap().setView([latitude, longitude], MAP_SHW_PLYGN_ZOOM);
+            console.log(mapView.getLeafletMap().getZoom());
             this.selectPolygon();
         } else {
             mapView.getLeafletMap().setView([latitude, longitude], MAP_SHW_PLYGN_ZOOM);
@@ -263,7 +260,25 @@ class MapView {
              * is only called when the polygon layer is loaded on the map.
              */
         }
+
+        function getCoordinates(geometry) {
+            let latitude = geometry.coordinates[1];
+            let longitude = geometry.coordinates[0];
+            //If selection is a multipolygon type: redefine lat and long `huy`
+            if (typeof latitude == "object" || typeof longitude == "object") {
+                latitude = geometry.coordinates[0][0][0][1];
+                longitude = geometry.coordinates[0][0][0][0];
+                // even smaller fire 
+                if (latitude == undefined || longitude == undefined) {
+                    latitude = geometry.coordinates[0][0][1];
+                    longitude = geometry.coordinates[0][0][0];
+                }
+            }
+            return [longitude, latitude];
+        }
     }
+
+
 
     selectPolygon() {
         // deselect all others
@@ -283,7 +298,8 @@ class MapView {
                 }
             }
         });
-        mapView.polyToSelectOnLayerLoad = null;
+        //FIXME: What does this do?
+        // mapView.polyToSelectOnLayerLoad = null;
     }
 
     ////////////////////////////////////////////////////////////
