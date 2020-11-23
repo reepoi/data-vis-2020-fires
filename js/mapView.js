@@ -247,11 +247,12 @@ class MapView {
         mapView.polyToSelectOnLayerLoad = selection.id;
         let latitude = selection.geometry.coordinates[1];
         let longitude = selection.geometry.coordinates[0];
-        /* if (typeof latitude == "object" || typeof longitude == "object") {
+        //If selection is a multipolygon type: redefine lat and long `huy`
+        if (typeof latitude == "object" || typeof longitude == "object") {
             latitude = selection.geometry.coordinates[0][0][0][1];
             longitude = selection.geometry.coordinates[0][0][0][0];
-            console.log(latitude, longitude);
-        } */
+        }
+
         if (mapView.polygonsLoaded) {
             mapView.getLeafletMap().setView([latitude, longitude], MAP_SHW_PLYGN_ZOOM);
             this.selectPolygon();
