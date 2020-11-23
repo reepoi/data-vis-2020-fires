@@ -91,9 +91,9 @@ class MapView {
             mapView.pointLayer.removeFrom(mapView.getLeafletMap());
             mapView.polygonLayer.addTo(mapView.getLeafletMap());
             mapView.polygonsLoaded = true;
-            if (mapView.polyToSelectOnLayerLoad) {
-                mapView.selectPolygon();
-            }
+            /*  if (mapView.polyToSelectOnLayerLoad) {
+                 mapView.selectPolygon();
+             } */
         } else if (mapView.getLeafletMap().getZoom() < MAP_SHW_PLYGN_ZOOM) {
             mapView.polygonLayer.removeFrom(mapView.getLeafletMap());
             mapView.pointLayer.addTo(mapView.getLeafletMap());
