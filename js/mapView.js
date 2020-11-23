@@ -87,14 +87,14 @@ class MapView {
      * zoom level, and remove the other.
      */
     addPointsOrPolygonsBasedOnZoom() {
-        if (mapView.getLeafletMap().getZoom() >= MAP_SHW_PLYGN_ZOOM && !mapView.polygonsLoaded) {
+        if (mapView.getLeafletMap().getZoom() >= MAP_SHW_PLYGN_ZOOM) {
             mapView.pointLayer.removeFrom(mapView.getLeafletMap());
             mapView.polygonLayer.addTo(mapView.getLeafletMap());
             mapView.polygonsLoaded = true;
-            if(mapView.polyToSelectOnLayerLoad){
+            if (mapView.polyToSelectOnLayerLoad) {
                 mapView.selectPolygon();
             }
-        } else if(mapView.getLeafletMap().getZoom() < MAP_SHW_PLYGN_ZOOM) {
+        } else if (mapView.getLeafletMap().getZoom() < MAP_SHW_PLYGN_ZOOM) {
             mapView.polygonLayer.removeFrom(mapView.getLeafletMap());
             mapView.pointLayer.addTo(mapView.getLeafletMap());
             mapView.polygonsLoaded = false;
@@ -243,11 +243,16 @@ class MapView {
     }
 
     /* Outside event handler methods */
-    selectAndZoomToPolygon(selection){
+    selectAndZoomToPolygon(selection) {
         mapView.polyToSelectOnLayerLoad = selection.id;
         let latitude = selection.geometry.coordinates[1];
         let longitude = selection.geometry.coordinates[0];
-        if(mapView.polygonsLoaded){
+        /* if (typeof latitude == "object" || typeof longitude == "object") {
+            latitude = selection.geometry.coordinates[0][0][0][1];
+            longitude = selection.geometry.coordinates[0][0][0][0];
+            console.log(latitude, longitude);
+        } */
+        if (mapView.polygonsLoaded) {
             mapView.getLeafletMap().setView([latitude, longitude], MAP_SHW_PLYGN_ZOOM);
             this.selectPolygon();
         } else {
@@ -259,7 +264,7 @@ class MapView {
         }
     }
 
-    selectPolygon(){
+    selectPolygon() {
         // deselect all others
         mapView.getLeafletMap().eachLayer(function(layer) {
             if (layer.feature) {
@@ -269,8 +274,8 @@ class MapView {
             }
         });
         mapView.getLeafletMap().eachLayer(function(layer) {
-            if(layer.feature) {
-                if(layer.feature.id === mapView.polyToSelectOnLayerLoad){
+            if (layer.feature) {
+                if (layer.feature.id === mapView.polyToSelectOnLayerLoad) {
                     layer.feature.properties.clicked = true;
                     layer.setStyle(MAP_PLYGN_STYLE_HVRD());
                     layer.openPopup();
