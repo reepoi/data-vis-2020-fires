@@ -65,6 +65,8 @@ class MapView {
             this.polygonLayer.removeFrom(this.leafletMap);
         }
 
+        this.polygonsLoaded = false;
+
         this.initIconColorScale(data.points);
         this.initPolygonFeatures(data.perimeters);
         this.initPointFeatures(data.points);
@@ -87,13 +89,14 @@ class MapView {
      * zoom level, and remove the other.
      */
     addPointsOrPolygonsBasedOnZoom() {
-        if (mapView.getLeafletMap().getZoom() >= MAP_SHW_PLYGN_ZOOM) {
+        if (mapView.getLeafletMap().getZoom() >= MAP_SHW_PLYGN_ZOOM && !mapView.polygonsLoaded) {
             mapView.pointLayer.removeFrom(mapView.getLeafletMap());
             mapView.polygonLayer.addTo(mapView.getLeafletMap());
             mapView.polygonsLoaded = true;
-            /*  if (mapView.polyToSelectOnLayerLoad) {
-                 mapView.selectPolygon();
-             } */
+            // && mapView.getLeafletMap().getZoom() == MAP_SHW_PLYGN_ZOOM
+            if (mapView.polyToSelectOnLayerLoad) {
+                mapView.selectPolygon();
+            }
         } else if (mapView.getLeafletMap().getZoom() < MAP_SHW_PLYGN_ZOOM) {
             mapView.polygonLayer.removeFrom(mapView.getLeafletMap());
             mapView.pointLayer.addTo(mapView.getLeafletMap());
@@ -199,8 +202,8 @@ class MapView {
      * @param {*} e - Clicked Fire
      */
     onPointClicked(e) {
-        mapView.zoomToFeature(e);
         mapView.updateFireClicked(e);
+        mapView.zoomToFeature(e);
     }
 
 
@@ -249,9 +252,7 @@ class MapView {
         let longitude = fireCoordinates[0];
         let latitude = fireCoordinates[1];
         if (mapView.polygonsLoaded) {
-            console.log("polygon loaded", longitude, latitude);
             mapView.getLeafletMap().setView([latitude, longitude], MAP_SHW_PLYGN_ZOOM);
-            console.log(mapView.getLeafletMap().getZoom());
             this.selectPolygon();
         } else {
             mapView.getLeafletMap().setView([latitude, longitude], MAP_SHW_PLYGN_ZOOM);
@@ -284,22 +285,17 @@ class MapView {
         // deselect all others
         mapView.getLeafletMap().eachLayer(function(layer) {
             if (layer.feature) {
-                layer.feature.properties.clicked = false;
-                layer.setStyle(MAP_PLYGN_STYLE());
-                layer.closePopup();
-            }
-        });
-        mapView.getLeafletMap().eachLayer(function(layer) {
-            if (layer.feature) {
                 if (layer.feature.id === mapView.polyToSelectOnLayerLoad) {
                     layer.feature.properties.clicked = true;
                     layer.setStyle(MAP_PLYGN_STYLE_HVRD());
                     layer.openPopup();
+                } else {
+                    layer.feature.properties.clicked = false;
+                    layer.setStyle(MAP_PLYGN_STYLE());
+                    layer.closePopup();
                 }
             }
         });
-        //FIXME: What does this do?
-        // mapView.polyToSelectOnLayerLoad = null;
     }
 
     ////////////////////////////////////////////////////////////

@@ -33,15 +33,21 @@ function fireMapInitialize() {
         mapView.drawMapFeatures(data, fireInfo.currentPage);
 
         /**TODO: Linking Functions go HERE: */
+        /**
+         * 
+         * @param {Object} selectedFire - fire's feature
+         */
         function updateMapView(selectedFire) {
             mapView.selectAndZoomToPolygon(selectedFire);
         }
         /**
          * 
-         * @param {leaflet e.target} selectedFire - Leaflet e.target
+         * @param {leaflet e.target} selectedFire - Leaflet e.target 
+         * --> Refer to selectedFire.feature for fire info
          */
         function updateFireInfo(selectedFire) {
             fireInfo.updateSelectedFireInfo(selectedFire);
+            updateMapView(selectedFire.feature);
         }
         mapView.updateFireInfo = updateFireInfo;
         fireInfo.updateMapView = updateMapView;
