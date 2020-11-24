@@ -33,7 +33,7 @@ function fireMapInitialize() {
         mapView.drawMapFeatures(data, fireInfo.currentPage);
 
         /**TODO: Linking Functions go HERE: */
-        function updateMapView(selectedFire){
+        function updateMapView(selectedFire) {
             mapView.selectAndZoomToPolygon(selectedFire);
         }
         /**
@@ -53,6 +53,10 @@ function fireMapInitialize() {
          */
         function pageChangeFireInfo(fireInfoPage) {
             mapView.drawMapFeatures(data, fireInfoPage);
+            if (fireInfo.currentSelectedFire != undefined) {
+                updateMapView(fireInfo.currentSelectedFire.feature);
+            }
+
         }
         fireInfo.pageChangeFireInfo = pageChangeFireInfo;
     });

@@ -245,16 +245,16 @@ class FireInfo {
             })
             .on("click", function(event, d) {
                 // deselect all other bars
-                if(parent.currentSelectedFire !== undefined){
+                if (parent.currentSelectedFire !== undefined) {
                     let bars = d3.select("#vis-1-svg").selectAll('g');
                     bars.selectAll('rect')
                         .classed("stroke-bold", false)
                         .style("fill", d => `rgb(${parent.colorScaleRed(d.properties[parent.currentPage])}, 0,0)`);
                     bars.selectAll("text")
-                    .classed("text-bold", false);
+                        .classed("text-bold", false);
                 }
                 // set as new selected
-                parent.currentSelectedFire = {feature: d};
+                parent.currentSelectedFire = { feature: d };
 
                 // set visually as selected
                 d3.select(this).select("rect")
@@ -384,8 +384,10 @@ class FireInfo {
         //update parent instance:
         this.currentSelectedFire = selectedFire;
 
-        //Tells user that we dont have data on this fire
-        //Due to no data 
+        //Clicked fire not found in current showing bars:
+        // Could be fire was filtered out
+        // or Fire is too small and we have no data
+        //TODO:
         if (showingFireInfo.length == 0) {
             console.log("No fire data");
             this.unhighlightAllBars();
