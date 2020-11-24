@@ -1,0 +1,21 @@
+﻿rank,fireName,cause,date,county,acres,structures,deaths
+1,August Complex,Under Investigation,2020,"Mendocino, Humboldt, Trinity, Tehama, Glenn, Lake, & Colusa","1,032,649",935,1
+2,Mendocino Complex,Under Investigation,2018,"Colusa, Lake, Mendocino & Glenn","459,123",280,1
+3,SCU Lightning Complex,Under Investigation,2020,"Stanislaus, Santa Clara, Alameda, Contra Costa, & San Joaquin","396,624",222,0
+4,Creek Fire,Under Investigation,2020,Fresno & Madera,"377,693",853,0
+5,LNU Lightning Complex,Under Investigation,2020,"Sonoma, Lake, Napa, Yolo & Solano","363,220","1,491",6
+6,North Complex,Under Investigation,2020,"Butte, Plumas & Yuba","318,930","2,352",15
+7,Thomas,Powerlines,2017,Ventura & Santa Barbara,"281,893","1,063",2
+8,Cedar, Human Related,2003,San Diego,"273,246","2,820",15
+9,Rush ,Lightning ,2012,Lassen,"271,911",0,0
+10,Rim,Human Related,2013,Tuolumne,"257,314",112,0
+11,Zaca,Human Related,2007,Santa Barbara,"240,207",1,0
+12,Carr,Human Related,2018,Shasta County & Trinity,"229,651","1,614",8
+13,Matilija,Undetermined,1932,Ventura,"220,000",0,0
+14,Witch,Powerlines,2007,San Diego,"197,990","1,650",2
+15,Klamath Theater Complex,Lightning,2008,Siskiyou,"192,038",0,2
+16,Marble Cone,Lightning,1977,Monterey,"177,866",0,0
+17,Laguna,Powerlines,1970,San Diego,"175,425",382,5
+18,SQF Complex,Lightning,2020,Tulare,"170,384",228,0
+19,Basin Complex,Lightning,2008,Monterey,"162,818",58,0
+20,Day Fire,Human Related,2006,Ventura,"162,702",11,0
