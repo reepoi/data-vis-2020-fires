@@ -115,13 +115,23 @@ class FireMapStory {
         let storyX = this.stories[step].position[0];
         let storyY = this.stories[step].position[1];
 
-        console.log(storyX, storyY);
         d3.select("#story-card")
             .style("top", (storyY + 0) + "px")
             .style("left", (storyX + 0) + "px");
 
         //TODO: Highlight Story:
         //Notes use a low-opacity filled rect 
+        let rectPosition = this.stories[step].rectPosition;
+        let svgSelect = d3.select("#storybox-svg")
+        svgSelect.selectAll("highlighRect").data([rectPosition])
+            .join("rect")
+            .classed("highlightRect", true)
+            .attr("x", d => d.left - 30)
+            .attr("y", d => d.top - 30)
+            .transition()
+            .duration(200)
+            .attr("width", d => d.width + 30)
+            .attr("height", d => d.height + 30)
     }
 
 
@@ -132,9 +142,9 @@ class FireMapStory {
          Area burned, Structures Destroyed and Suppression Cost. 
         `;
         let s1Position = this.getRightPosition(this.getDocumentPosition("#vis-1"));
-        console.log(this.getDocumentPosition("#vis-1"));
-        console.log(s1Position);
-        let s1 = { text: s1Text, position: s1Position };
+        let s1RectPosition = this.getDocumentPosition("#vis-1");
+        console.log(s1RectPosition);
+        let s1 = { text: s1Text, position: s1Position, rectPosition: s1RectPosition };
 
         //TODO: Story-2 content:
         let s2Text = `s-2 Content

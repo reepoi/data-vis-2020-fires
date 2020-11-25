@@ -70,33 +70,7 @@
                     </li>
 
                 </ul>
-                <!-- Brief Data column -->
-                <div id="intro-div" class="columns">
-                    <div class="column col-3 col-mx-auto text-center text-dark">
-                        <h4 class="text-bold mb-0">8.28</h4>
-                        <p class="text-italic mb-0">
-                            millions acres <br> burned
-                        </p>
-                    </div>
-                    <div class="column col-3 col-mx-auto text-center text-dark">
-                        <h4 class="text-bold mb-0">$2.65</h4>
-                        <p class="text-italic mb-0">
-                            billion in <br> suppresion costs
-                        </p>
-                    </div>
-                    <div class="column col-3 col-mx-auto text-center text-dark">
-                        <h4 class="text-bold mb-0">16,116</h4>
-                        <p class="text-italic mb-0">
-                            structures <br> burned
-                        </p>
-                    </div>
-                    <div class="column col-3 col-mx-auto text-center text-dark">
-                        <h4 class="text-bold mb-0">46</h4>
-                        <p class="text-italic mb-0">
-                            fatalities
-                        </p>
-                    </div>
-                </div>
+
             </div>
             <div class="column col-3"></div>
         </div>
@@ -104,82 +78,144 @@
         <!-- Visualization content -->
         <!-- USE spectre.css class: `d-none` to hide container -->
         <!-- https://picturepan2.github.io/spectre/utilities/display.html -->
-        <div id="fire-map-div" class="hashPage columns">
-            <div id="vis-1" class="column col-5 col-mr-auto col-sm-10">
-                <div class="panel">
-                    <div class="panel-header text-center  py-0">
-                        <button id="storybox-btn-activate" class="btn btn-primary s-circle float-right disabled">
-                            <i class="icon icon-message"></i>
-                        </button>
-                        <div class="panel-title h3 font-serif">Area Burned:</div>
-                        <div class="panel-subtitle h5 text-bold font-serif">Size by Acres</div>
-                        <!-- Pagination on bar chart -->
-                        <button id="vis-1-prev" class="btn btn-link disabled">Prev</button>
-                        <button id="vis-1-next" class="btn btn-link ">Next</button>
-                        <div class="divider"></div>
-                        <div id="vis-1-toast" class="toast d-none">
-                            <button class="btn btn-clear float-right"></button>
-                            <p id="vis-1-toast-msg"></p>
-                        </div>
-                    </div>
-
-                    <div class="panel-body">
-                        <!-- Filter Dropdown: -->
-                        <div class="columns form-group col-gapless">
-                            <div class="column col-auto col-xs-10">
-                                <span id="cause-counter" class="text-bold d-inline">341</span>
-                                <label for="cause-dropdown" class="form-label label-sm d-inline"> Major Wildfires Caused by  </label>
-                            </div>
-                            <div class="column col-5 col-xs-10 mx-2">
-                                <select id="cause-dropdown" name="cause" class="form-select select-sm">
-                                    <option value="all">All</option>
-                                    <option value="H">Human</option>
-                                    <option value="L">Lightning</option>
-                                    <option value="U">Undetermined</option>
-                                  </select>
-                            </div>
-                        </div>
-                        <!-- Visualization 1 -->
-                        <div id="vis-1-div">
-                            <svg id="vis-1-svg"></svg>
-                        </div>
-
-                    </div>
+        <div id="fire-map-div" class="hashPage">
+            <!-- Brief Data column -->
+            <div id="intro-div" class="columns font-serif">
+                <div class="column col-1 col-mx-auto text-center text-dark">
+                    <h4 class="text-bold mb-0">8.28</h4>
+                    <p class="text-italic mb-0">
+                        millions acres <br> burned
+                    </p>
+                </div>
+                <div class="column col-1 col-mx-auto text-center text-dark">
+                    <h4 class="text-bold mb-0">$2.65</h4>
+                    <p class="text-italic mb-0">
+                        billion in <br> suppresion costs
+                    </p>
+                </div>
+                <div class="column col-1 col-mx-auto text-center text-dark">
+                    <h4 class="text-bold mb-0">16,116</h4>
+                    <p class="text-italic mb-0">
+                        structures <br> burned
+                    </p>
+                </div>
+                <div class="column col-1 col-mx-auto text-center text-dark">
+                    <h4 class="text-bold mb-0">46</h4>
+                    <p class="text-italic mb-0">
+                        fatalities
+                    </p>
                 </div>
             </div>
-            <div id="vis-2" class="column col-7 col-sm-11">
-                <!-- Visualization 2 -->
-                <svg id="vis-2-svg"></svg>
+            <!-- FIRE MAP MAIN VISUALIZATIONS -->
+            <div class="columns">
+                <div id="vis-1" class="column col-5 col-mr-auto col-sm-10">
+                    <div class="panel">
+                        <div class="panel-header text-center  py-0">
+                            <button id="storybox-btn-activate" class="btn btn-primary s-circle float-right disabled">
+                                <i class="icon icon-message"></i>
+                            </button>
+                            <div class="panel-title h3 font-serif">Area Burned:</div>
+                            <div class="panel-subtitle h5 text-bold font-serif">Size by Acres</div>
+                            <!-- Pagination on bar chart -->
+                            <button id="vis-1-prev" class="btn btn-link disabled">Prev</button>
+                            <button id="vis-1-next" class="btn btn-link ">Next</button>
+                            <div class="divider"></div>
+                            <div id="vis-1-toast" class="toast d-none">
+                                <button class="btn btn-clear float-right"></button>
+                                <p id="vis-1-toast-msg"></p>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <!-- Filter Dropdown: -->
+                            <div class="columns form-group col-gapless">
+                                <div class="column col-auto col-xs-10">
+                                    <span id="cause-counter" class="text-bold d-inline">341</span>
+                                    <label for="cause-dropdown" class="form-label label-sm d-inline"> Major Wildfires Caused by  </label>
+                                </div>
+                                <div class="column col-5 col-xs-10 mx-2">
+                                    <select id="cause-dropdown" name="cause" class="form-select select-sm">
+                                        <option value="all">All</option>
+                                        <option value="H">Human</option>
+                                        <option value="L">Lightning</option>
+                                        <option value="U">Undetermined</option>
+                                      </select>
+                                </div>
+                            </div>
+                            <!-- Visualization 1 -->
+                            <div id="vis-1-div">
+                                <svg id="vis-1-svg"></svg>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div id="vis-2" class="column col-7 col-sm-11">
+                    <!-- Visualization 2 -->
+                    <svg id="vis-2-svg"></svg>
+                </div>
+                <!-- Deleted Vis-3 -->
+                <div id="vis-3" class="d-none"></div>
             </div>
-            <!-- Deleted Vis-3 -->
-            <div id="vis-3" class="d-none"></div>
+
         </div>
 
         <!--  Compare years Visualization-->
         <!-- ids: #vis-4 #vis-5 #vis-6 -->
-        <div id="compare-years-div" class="hashPage columns">
-            <div id="vis-4" class="column col-5 col-mr-auto col-sm-12">
-                <div class="panel">
-                    <div class="panel-header text-center  py-0">
-                        <div class="panel-title h3 font-serif">Ratio Area Burned:</div>
-                        <div class="panel-subtitle h5 text-bold font-serif">1960-1989 vs. 1990-2019</div>
-                        <!-- <button id="vis-4-prev" class="btn btn-link disabled">Prev</button>
-                        <button id="vis-4-next" class="btn btn-link ">Next</button> -->
-                        <div class="divider"></div>
-                    </div>
-                    <div class="panel-body">
-                        <div id="vis-4-div">
-                            <svg id="vis-4-svg"></svg>
-                        </div>
-
-                    </div>
+        <div id="compare-years-div" class="hashPage">
+            <!-- Brief Data column compare Years -->
+            <div id="compareyears-intro-div" class="columns font-serif">
+                <div class="column col-1 col-mx-auto text-center text-dark">
+                    <h4 class="text-bold mb-0">8.28</h4>
+                    <p class="text-italic mb-0">
+                        millions acres <br> burned
+                    </p>
+                </div>
+                <div class="column col-1 col-mx-auto text-center text-dark">
+                    <h4 class="text-bold mb-0">$2.65</h4>
+                    <p class="text-italic mb-0">
+                        billion in <br> suppresion costs
+                    </p>
+                </div>
+                <div class="column col-1 col-mx-auto text-center text-dark">
+                    <h4 class="text-bold mb-0">16,116</h4>
+                    <p class="text-italic mb-0">
+                        structures <br> burned
+                    </p>
+                </div>
+                <div class="column col-1 col-mx-auto text-center text-dark">
+                    <h4 class="text-bold mb-0">46</h4>
+                    <p class="text-italic mb-0">
+                        fatalities
+                    </p>
                 </div>
             </div>
-            <div id="vis-5" class="column col-7 col-sm-12">
-                <!-- Visualization 5 -->
+            <!-- COMPARE YEARS MAIN VISUALIZATIONS -->
+            <div class="columns">
+                <div id="vis-4" class="column col-5 col-mr-auto col-sm-12">
+                    <div class="panel">
+                        <div class="panel-header text-center  py-0">
+                            <div class="panel-title h3 font-serif">Ratio Area Burned:</div>
+                            <div class="panel-subtitle h5 text-bold font-serif">1960-1989 vs. 1990-2019</div>
+                            <!-- <button id="vis-4-prev" class="btn btn-link disabled">Prev</button>
+                            <button id="vis-4-next" class="btn btn-link ">Next</button> -->
+                            <div class="divider"></div>
+                        </div>
+                        <div class="panel-body">
+                            <div id="vis-4-div">
+                                <svg id="vis-4-svg"></svg>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div id="vis-5" class="column col-7 col-sm-12">
+                    <!-- Visualization 5 -->
+                </div>
+                <!-- Deleted Vis-6 -->
+                <div id="vis-6" class="d-none"></div>
             </div>
-            <!-- Deleted Vis-6 -->
-            <div id="vis-6" class="d-none"></div>
+
         </div>
 
 
