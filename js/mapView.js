@@ -73,7 +73,6 @@ class MapView {
     }
 
     drawMapFeaturesFiltered(filteredData, fireInfoPage) {
-        console.log(filteredData);
         this.fireInfoPage = fireInfoPage;
         // remove existing feature layers from map
         if (this.pointLayer) {

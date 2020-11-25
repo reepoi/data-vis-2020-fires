@@ -193,36 +193,44 @@
 
 
         <!-- Storytelling content -->
-        <div id="storybox" class="">
-            <svg id="storybox-svg"></svg>
-            <div class="card text-dark">
-                <div class="card-header">
-                    <ul class="step">
-                        <li class="step-item active">
-                            <a role="button" class="tooltip" data-tooltip="Step-1">Step 1</a>
-                        </li>
-                        <li class="step-item">
-                            <a role="button" class="tooltip" data-tooltip="Step-2">Step 2</a>
-                        </li>
-                        <li class="step-item">
-                            <a role="button" class="tooltip" data-tooltip="Step-3">Step 3</a>
-                        </li>
-                        <li class="step-item">
-                            <a role="button" class="tooltip" data-tooltip="Step-4">Step 4</a>
-                        </li>
-                    </ul>
-                </div>
 
-                <div class="card-body">
+        <div id="story-container">
+            <div id="storybox" class="columns d-none">
+                <div id="story-card" class="column col-3 card text-dark">
+                    <div id="story-header" class="card-header">
+                        <button id="story-btn-exit" class="btn btn-clear float-right"></button>
+                    </div>
 
-                </div>
+                    <div id="story-body" class="card-body">
+                        <p id="story-text"></p>
 
-                <div class="card-footer">
-                    <button id="storybox-btn-prev" class="btn btn-primary s-circle float-left"><i class="icon icon-arrow-left"></i></button>
-                    <button id="storybox-btn-next" class="btn btn-primary s-circle float-right"><i class="icon icon-arrow-right"></i></button>
+                    </div>
+
+                    <div class="card-footer">
+                        <ul class="step">
+                            <li class="step-item active">
+                                <a role="button" class="tooltip" data-tooltip="Step-1">1</a>
+                            </li>
+                            <li class="step-item">
+                                <a role="button" class="tooltip" data-tooltip="Step-2">2</a>
+                            </li>
+                            <li class="step-item">
+                                <a role="button" class="tooltip" data-tooltip="Step-3">3</a>
+                            </li>
+                            <li class="step-item">
+                                <a role="button" class="tooltip" data-tooltip="Step-4">4</a>
+                            </li>
+                        </ul>
+                        <button id="storybox-btn-prev" class="btn btn-primary s-circle float-left"><i class="icon icon-arrow-left"></i></button>
+                        <button id="storybox-btn-next" class="btn btn-primary s-circle float-right"><i class="icon icon-arrow-right"></i></button>
+                    </div>
                 </div>
             </div>
+            <div id="story-svg-container" class="d-none">
+                <svg id="storybox-svg"></svg>
+            </div>
         </div>
+
 
         <!-- <div class="columns">
             <div class="column col-6 col-mx-auto text-center text-dark">

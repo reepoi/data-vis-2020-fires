@@ -410,7 +410,6 @@ class FireInfo {
                 //turn off on time
                 toastSelect.transition().duration(2000).style("opacity", 1.0)
                     .end().then(() => {
-                        console.log("he");
                         toastSelect.select(".btn").dispatch("click");
                     });
             })
