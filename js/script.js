@@ -110,8 +110,12 @@ function compareYearsInitialize() {
 
     loadData().then(data => {
         console.log("reload data for compareyears");
-        let compareYears = new CompareYear(data.fireHistory);
-        mapViewCompareYears.drawMapFeatures(data.fireHistory);
+        function updateCompareYears(selectedCounty){
+            compareYears.setPieData(selectedCounty);
+        }
+        mapViewCompareYears.updateCompareYears = updateCompareYears;
+        let compareYears = new CompareYear('vis-4-svg', data.CACounty);
+        mapViewCompareYears.drawMapFeatures(data);
     });
 
 }
@@ -121,10 +125,12 @@ async function loadData() {
     let perimeters = await d3.json("./data/WF_Perimeters.geojson");
     let points = await d3.json("./data/WF_Points.geojson");
     let fireHistory = await d3.json("./data/CA_fire_history.geojson");
+    let CACounty = await d3.json("./data/CA_counties.geojson");
     return {
         'perimeters': perimeters,
         'points': points,
-        'fireHistory': fireHistory
+        'fireHistory': fireHistory,
+        'CACounty' : CACounty
     };
 }
 

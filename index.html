@@ -160,14 +160,13 @@
             <div id="vis-4" class="column col-5 col-mr-auto col-sm-12">
                 <div class="panel">
                     <div class="panel-header text-center  py-0">
-                        <div class="panel-title h3 font-serif">Area Burned:</div>
-                        <div class="panel-subtitle h5 text-bold font-serif">Size by Acres</div>
-                        <button id="vis-4-prev" class="btn btn-link disabled">Prev</button>
-                        <button id="vis-4-next" class="btn btn-link ">Next</button>
+                        <div class="panel-title h3 font-serif">Ratio Area Burned:</div>
+                        <div class="panel-subtitle h5 text-bold font-serif">1960-1989 vs. 1990-2019</div>
+                        <!-- <button id="vis-4-prev" class="btn btn-link disabled">Prev</button>
+                        <button id="vis-4-next" class="btn btn-link ">Next</button> -->
                         <div class="divider"></div>
                     </div>
                     <div class="panel-body">
-                        <div id="vis-4-subtitle" class="column col-8 col-mx-auto">Largest Fire by Area</div>
                         <div id="vis-4-div">
                             <svg id="vis-4-svg"></svg>
                         </div>
@@ -266,7 +265,31 @@
                 </div>
             </div>
         </div>
-
+        <!-- TOOLTIPCMPYEAR -->
+        <div id="tooltipcmpyear" class="">
+            <div class="card text-dark">
+                <div class="card-header">
+                    <div class="columns">
+                        <div class="column col-auto card-title h5"></div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- sizeacre -->
+                    <div>
+                        Total Acres Burned: <span class="h5"></span>
+                    </div>
+                    <!-- structures destroyed -->
+                    <div>
+                        Percentage Burned: <span class="h5"></span>%
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="text-small text-muted">
+                    Period: <span id="tooltipcmpyear-period" class="text-bold"></span>
+                </div>
+            </div>
+        </div>
     </div>
 
 

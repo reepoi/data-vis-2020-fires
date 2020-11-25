@@ -9,9 +9,12 @@ const MAP_INIT_ZOOM = 4;
 const MAP_SHW_PLYGN_ZOOM = 8;
 const MAP_CLK_PLYGN_ZOOM = 11;
 
-const MAP_CMP_INIT_LAT = 37;
-const MAP_CMP_INIT_LONG = -122;
+const MAP_CMP_INIT_LAT = 37.5;
+const MAP_CMP_INIT_LONG = -118;
 const MAP_CMP_INIT_ZOOM = 6;
+
+const CMP_YEAR_LGND_1989 = "1960-1989";
+const CMP_YEAR_LGND_2019 = "1990-2019";
 
 const MAP_PLYGN_STYLE = function() {
   return {
@@ -41,12 +44,24 @@ const MAP_PLYGN_STYLE_HISTORY = function(feature) {
     weight: 2,
     opacity: 1,
     color: getColor(feature.properties['Period']),
-    //dashArray: '3',
     fillOpacity: 0.3
   }
 }
-
+const CMP_YEAR_COLORS = ['#267300', '#0070FF']
 const getColor = function(d) {
-  return d === '1990-2019' ? '#0070FF' :
-         '#267300' ;
+  return d === '1960-1989' ? CMP_YEAR_COLORS[0] : CMP_YEAR_COLORS[1] ;
+};
+const MAP_PLYGN_STYLE_CACOUNTY = function(){
+  return {
+    color: '#FFFFFF',
+    weight: 2,
+    fillOpacity: 0
+  }
+};
+const MAP_PLYGN_STYLE_CACOUNTY_CLKD = function(){
+  return {
+    color: '#FFFFFF',
+    weight: 2,
+    fillOpacity: 0.25
+  }
 };
