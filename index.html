@@ -113,6 +113,10 @@
                         <button id="vis-1-prev" class="btn btn-link disabled">Prev</button>
                         <button id="vis-1-next" class="btn btn-link ">Next</button>
                         <div class="divider"></div>
+                        <div id="vis-1-toast" class="toast d-none">
+                            <button class="btn btn-clear float-right"></button>
+                            <p id="vis-1-toast-msg"></p>
+                        </div>
                     </div>
 
                     <div class="panel-body">
@@ -120,7 +124,7 @@
                         <div class="columns form-group col-gapless">
                             <div class="column col-auto col-xs-10">
                                 <span id="cause-counter" class="text-bold d-inline">341</span>
-                                <label for="cause-dropdown" class="form-label label-sm d-inline"> Wildfires Caused by  </label>
+                                <label for="cause-dropdown" class="form-label label-sm d-inline"> Major Wildfires Caused by  </label>
                             </div>
                             <div class="column col-5 col-xs-10 mx-2">
                                 <select id="cause-dropdown" name="cause" class="form-select select-sm">

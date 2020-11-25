@@ -156,12 +156,6 @@ function displayCurrentPagebyHash() {
         .duration(200)
         .style("opacity", 1);
 
-
-
-
-
-
-
 }
 
 
