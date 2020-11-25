@@ -1,7 +1,7 @@
 class MapViewCompareYears {
 
     constructor(divContainer, initLatLng, initZoom) {
-        this.leafletMap = L.map(divContainer);
+        this.leafletMap = L.map(divContainer, {zoomControl: false});
 
         // initialized when drawMapFeatures is called
         this.firePolygonLayer;
@@ -11,6 +11,7 @@ class MapViewCompareYears {
         this.addMapTiling();
 
         L.control.scale().addTo(this.leafletMap);
+        L.Control.zoomHome().addTo(this.leafletMap);
     }
 
     /*

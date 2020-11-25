@@ -1,7 +1,7 @@
 class MapView {
 
     constructor(divContainer, initLatLng, initZoom) {
-        this.leafletMap = L.map(divContainer);
+        this.leafletMap = L.map(divContainer, {zoomControl: false});
 
         // initialized when drawMapFeatures is called
         this.iconColorScale;
@@ -17,6 +17,7 @@ class MapView {
         this.addMapEventHanlders();
 
         L.control.scale().addTo(this.leafletMap);
+        L.Control.zoomHome().addTo(this.leafletMap);
     }
 
     /*
@@ -108,7 +109,6 @@ class MapView {
             mapView.pointLayer.removeFrom(mapView.getLeafletMap());
             mapView.polygonLayer.addTo(mapView.getLeafletMap());
             mapView.polygonsLoaded = true;
-            // && mapView.getLeafletMap().getZoom() == MAP_SHW_PLYGN_ZOOM
             if (mapView.polyToSelectOnLayerLoad) {
                 mapView.selectPolygon();
             }
