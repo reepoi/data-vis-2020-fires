@@ -2,6 +2,10 @@ class FireMapStory {
     constructor() {
         this.storyBox = d3.select("#storybox");
 
+
+    }
+
+    initStoryInstances() {
         this.stories = this.storyContentCreate();
         this.currentStoryIndex = 0;
         this.attachActivateButton();
@@ -14,6 +18,7 @@ class FireMapStory {
      */
     attachActivateButton() {
         let activateBtnSelect = d3.select("#storybox-btn-activate");
+        activateBtnSelect.classed("disabled", false);
         activateBtnSelect
             .on("click", (event) => this.displayStorybox(event));
     }
@@ -109,6 +114,7 @@ class FireMapStory {
         //Positioning Text Box:
         let storyX = this.stories[step].position[0];
         let storyY = this.stories[step].position[1];
+
         console.log(storyX, storyY);
         d3.select("#story-card")
             .style("top", (storyY + 0) + "px")
@@ -126,6 +132,8 @@ class FireMapStory {
          Area burned, Structures Destroyed and Suppression Cost. 
         `;
         let s1Position = this.getRightPosition(this.getDocumentPosition("#vis-1"));
+        console.log(this.getDocumentPosition("#vis-1"));
+        console.log(s1Position);
         let s1 = { text: s1Text, position: s1Position };
 
         //TODO: Story-2 content:

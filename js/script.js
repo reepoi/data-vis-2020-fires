@@ -14,6 +14,8 @@ const mapViewCompareYears = new MapViewCompareYears('vis-5', [MAP_CMP_INIT_LAT, 
 var isFireMapInit = false;
 var isCompareYearsInit = false;
 
+const pageTransition = [];
+
 /* Visualization: After data load */
 
 ////////Visualizations are now first drawn by pagingHandler();//////
@@ -34,6 +36,10 @@ function fireMapInitialize() {
 
         //Storytelling:
         let fireMapStory = new FireMapStory();
+        Promise.all(pageTransition).then(() => {
+            console.log("pagetransition done");
+            fireMapStory.initStoryInstances();
+        })
 
         /**TODO: Linking Functions go HERE: */
         /**
@@ -110,7 +116,8 @@ function compareYearsInitialize() {
 
     loadData().then(data => {
         console.log("reload data for compareyears");
-        function updateCompareYears(selectedCounty){
+
+        function updateCompareYears(selectedCounty) {
             compareYears.setPieData(selectedCounty);
         }
         mapViewCompareYears.updateCompareYears = updateCompareYears;
@@ -130,7 +137,7 @@ async function loadData() {
         'perimeters': perimeters,
         'points': points,
         'fireHistory': fireHistory,
-        'CACounty' : CACounty
+        'CACounty': CACounty
     };
 }
 
@@ -185,12 +192,15 @@ function displayCurrentPagebyHash() {
         .classed("d-none", false)
         .style("transform", "translate(0,-2000px) rotate(0deg)")
         .style("opacity", 0.5)
-        .transition()
-        .style("transform", "rotate(0deg)").duration(500)
-        .transition()
-        .duration(200)
-        .style("opacity", 1);
-
+        .call(enter =>
+            pageTransition.push(
+                enter.transition()
+                .style("transform", "rotate(0deg)").duration(500)
+                .transition()
+                .duration(200)
+                .style("opacity", 1)
+                .end())
+        );
 }
 
 
