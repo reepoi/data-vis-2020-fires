@@ -82,6 +82,9 @@ class FireMapStory {
         d3.select("#story-card")
             .style("top", (storyY + 0) + "px")
             .style("left", (storyX + 0) + "px");
+
+        //TODO: Highlight Story:
+        //Notes use a low-opacity filled rect 
     }
 
 
