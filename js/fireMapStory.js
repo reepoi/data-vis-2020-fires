@@ -3,7 +3,7 @@ class FireMapStory {
         this.storyBox = d3.select("#storybox");
 
         this.stories = this.storyContentCreate();
-
+        this.currentStoryIndex = 0;
         this.attachActivateButton();
         this.attachExitButton();
         this.attachNavigateSteps();
@@ -53,24 +53,57 @@ class FireMapStory {
             .each(function(d, i) {
                 d3.select(this)
                     .on("click", function() {
-                        parent.displayStorybyStep(i, this);
+                        parent.displayStorybyStep(i);
                     })
             });
+
+        //Navigate button (next and previous):
+        d3.select("#storybox-btn-prev")
+            .on("click", function() {
+                console.log("hello");
+                parent.storyNavigate(parent.currentStoryIndex - 1)
+            });
+        d3.select("#storybox-btn-next")
+            .on("click", function() {
+                console.log("hello");
+                parent.storyNavigate(parent.currentStoryIndex + 1)
+            });
+    }
+
+    /**
+     * 
+     * @param {*} newStoryIndex 
+     */
+    storyNavigate(newStoryIndex) {
+        console.log("onclick");
+        if (newStoryIndex == this.stories.length - 1) {
+            d3.select("#storybox-btn-next").classed("disabled", true);
+        } else d3.select("#storybox-btn-next").classed("disabled", false);
+
+        if (newStoryIndex == 0) {
+            d3.select("#storybox-btn-prev").classed("disabled", true);
+        } else d3.select("#storybox-btn-prev").classed("disabled", false);
+
+        this.displayStorybyStep(newStoryIndex);
 
     }
 
     /**
      * 
      * @param {number} step - 
-     * @param {html Element} instance - select by d3.select(instance)
      */
-    displayStorybyStep(step, instance) {
+    displayStorybyStep(step) {
+        if (step < 0) return;
+        this.currentStoryIndex = step;
         console.log("display step:", step);
 
 
         //change display progress bar:
-        d3.selectAll(".step-item").classed("active", false);
-        d3.select(instance.parentNode).classed("active", true);
+        let stepsSelect = d3.selectAll(".step-item")
+        stepsSelect.each(function(d, i) {
+            if (i == step) d3.select(this).classed("active", true);
+            else d3.select(this).classed("active", false);
+        })
 
         //TODO: Display prperly content:
         let storyText = this.stories[step].text;
