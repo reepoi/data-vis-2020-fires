@@ -60,12 +60,10 @@ class FireMapStory {
         //Navigate button (next and previous):
         d3.select("#storybox-btn-prev")
             .on("click", function() {
-                console.log("hello");
                 parent.storyNavigate(parent.currentStoryIndex - 1)
             });
         d3.select("#storybox-btn-next")
             .on("click", function() {
-                console.log("hello");
                 parent.storyNavigate(parent.currentStoryIndex + 1)
             });
     }

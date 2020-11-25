@@ -70,7 +70,8 @@ li.tab-item {
     font-weight: 700;
 }
 
-#tooltip {
+#tooltip,
+#tooltipcmpyear {
     position: absolute;
     z-index: 1000;
 }
