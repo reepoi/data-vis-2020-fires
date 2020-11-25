@@ -107,6 +107,9 @@
             <div id="vis-1" class="column col-5 col-mr-auto col-sm-10">
                 <div class="panel">
                     <div class="panel-header text-center  py-0">
+                        <button id="storybox-btn-activate" class="btn btn-primary s-circle float-right">
+                            <i class="icon icon-message"></i>
+                        </button>
                         <div class="panel-title h3 font-serif">Area Burned:</div>
                         <div class="panel-subtitle h5 text-bold font-serif">Size by Acres</div>
                         <!-- Pagination on bar chart -->
@@ -190,7 +193,38 @@
 
 
         <!-- Storytelling content -->
-        <div class="columns">
+        <div id="storybox" class="">
+            <svg id="storybox-svg"></svg>
+            <div class="card text-dark">
+                <div class="card-header">
+                    <ul class="step">
+                        <li class="step-item active">
+                            <a role="button" class="tooltip" data-tooltip="Step-1">Step 1</a>
+                        </li>
+                        <li class="step-item">
+                            <a role="button" class="tooltip" data-tooltip="Step-2">Step 2</a>
+                        </li>
+                        <li class="step-item">
+                            <a role="button" class="tooltip" data-tooltip="Step-3">Step 3</a>
+                        </li>
+                        <li class="step-item">
+                            <a role="button" class="tooltip" data-tooltip="Step-4">Step 4</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+
+                </div>
+
+                <div class="card-footer">
+                    <button id="storybox-btn-prev" class="btn btn-primary s-circle float-left"><i class="icon icon-arrow-left"></i></button>
+                    <button id="storybox-btn-next" class="btn btn-primary s-circle float-right"><i class="icon icon-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="columns">
             <div class="column col-6 col-mx-auto text-center text-dark">
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et vehicula felis. Cras id risus sollicitudin, pulvinar sapien sed, vehicula augue. Quisque odio tortor, lobortis viverra finibus id, tincidunt a sapien. Vestibulum vitae ex semper, tempor
@@ -199,7 +233,7 @@
                     arcu.
                 </p>
             </div>
-        </div>
+        </div> -->
         <!-- TOOLTIP -->
         <div id="tooltip" class="">
             <div class="card text-dark">
@@ -249,6 +283,7 @@
     <script src="js/mapView.js"></script>
     <script src="js/mapViewCompareYears.js"></script>
     <script src="js/fireInfo.js"></script>
+    <script src="js/fireMapStory.js"></script>
     <script src="js/compareYears.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
 </body>

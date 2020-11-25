@@ -343,6 +343,7 @@ class FireInfo {
                 else
                     parent.showingData = parent.datapoints.filter(d => d.properties.Cause == causeTag);
                 parent.drawFireChart();
+                parent.updateMapFiltering(causeTag);
 
                 //Update number of fires in view:
                 d3.select("span#cause-counter")
@@ -359,6 +360,14 @@ class FireInfo {
                     parent.updateSelectedFireInfo(parent.currentSelectedFire);
                 }
             });
+    }
+
+    /**
+     * 
+     * @param {*} causeTag 
+     */
+    updateMapFiltering(causeTag) {
+        this.updateFireFilter(causeTag);
     }
 
     /**
@@ -439,6 +448,7 @@ class FireInfo {
         // or Fire is too small and we have no data
         if (showingFireInfo.length == 0) {
             this.showToastMessage(`${fireFeature.properties.IncidentName} is not in current filter or it is a fire we don't have enough data`);
+            this.scrollToSelectedFire(undefined);
             this.unhighlightAllBars();
             return;
         }

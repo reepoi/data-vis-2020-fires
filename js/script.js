@@ -32,6 +32,9 @@ function fireMapInitialize() {
         let fireInfo = new FireInfo(data);
         mapView.drawMapFeatures(data, fireInfo.currentPage);
 
+        //Storytelling:
+        let fireMapStory = new FireMapStory();
+
         /**TODO: Linking Functions go HERE: */
         /**
          * 
@@ -65,6 +68,32 @@ function fireMapInitialize() {
 
         }
         fireInfo.pageChangeFireInfo = pageChangeFireInfo;
+
+        /**
+         * 
+         * @param {string} causeTag - `all, `H`, `L`, `U` 
+         */
+        function updateFireFilter(causeTag) {
+            function isCauseTag(causeTag, fireCause) {
+                if (causeTag === "all") return true;
+                else return (causeTag === fireCause)
+            }
+            let newPolygons = {
+                features: data.perimeters.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
+                type: "FeatureCollection"
+            };
+            let newPoints = {
+                features: data.points.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
+                type: "FeatureCollection"
+            }
+            let newData = {
+                points: newPoints,
+                perimeters: newPolygons
+            }
+
+            mapView.drawMapFeaturesFiltered(newData, fireInfo.currentPage);
+        }
+        fireInfo.updateFireFilter = updateFireFilter;
     });
 
 

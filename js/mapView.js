@@ -56,7 +56,6 @@ class MapView {
      */
     drawMapFeatures(data, fireInfoPage) {
         this.fireInfoPage = fireInfoPage;
-
         // remove existing feature layers from map
         if (this.pointLayer) {
             this.pointLayer.removeFrom(this.leafletMap);
@@ -72,6 +71,23 @@ class MapView {
         this.initPointFeatures(data.points);
         this.addPointsOrPolygonsBasedOnZoom();
     }
+
+    drawMapFeaturesFiltered(filteredData, fireInfoPage) {
+        console.log(filteredData);
+        this.fireInfoPage = fireInfoPage;
+        // remove existing feature layers from map
+        if (this.pointLayer) {
+            this.pointLayer.removeFrom(this.leafletMap);
+        }
+        if (this.polygonLayer) {
+            this.polygonLayer.removeFrom(this.leafletMap);
+        }
+        this.polygonsLoaded = false;
+        this.initPolygonFeatures(filteredData.perimeters);
+        this.initPointFeatures(filteredData.points);
+        this.addPointsOrPolygonsBasedOnZoom();
+    }
+
 
     /*
      * Set icon color scale
@@ -297,6 +313,8 @@ class MapView {
             }
         });
     }
+
+
 
     ////////////////////////////////////////////////////////////
     // Style methods ///////////////////////////////////////////
