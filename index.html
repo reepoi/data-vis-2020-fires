@@ -107,12 +107,19 @@
             <div id="vis-1" class="column col-5 col-mr-auto col-sm-10">
                 <div class="panel">
                     <div class="panel-header text-center  py-0">
+                        <button id="storybox-btn-activate" class="btn btn-primary s-circle float-right">
+                            <i class="icon icon-message"></i>
+                        </button>
                         <div class="panel-title h3 font-serif">Area Burned:</div>
                         <div class="panel-subtitle h5 text-bold font-serif">Size by Acres</div>
                         <!-- Pagination on bar chart -->
                         <button id="vis-1-prev" class="btn btn-link disabled">Prev</button>
                         <button id="vis-1-next" class="btn btn-link ">Next</button>
                         <div class="divider"></div>
+                        <div id="vis-1-toast" class="toast d-none">
+                            <button class="btn btn-clear float-right"></button>
+                            <p id="vis-1-toast-msg"></p>
+                        </div>
                     </div>
 
                     <div class="panel-body">
@@ -120,14 +127,14 @@
                         <div class="columns form-group col-gapless">
                             <div class="column col-auto col-xs-10">
                                 <span id="cause-counter" class="text-bold d-inline">341</span>
-                                <label for="cause-dropdown" class="form-label label-sm d-inline"> Wildfires Caused by  </label>
+                                <label for="cause-dropdown" class="form-label label-sm d-inline"> Major Wildfires Caused by  </label>
                             </div>
                             <div class="column col-5 col-xs-10 mx-2">
                                 <select id="cause-dropdown" name="cause" class="form-select select-sm">
                                     <option value="all">All</option>
-                                    <option value="H">H</option>
-                                    <option value="L">L</option>
-                                    <option value="U">U</option>
+                                    <option value="H">Human</option>
+                                    <option value="L">Lightning</option>
+                                    <option value="U">Undetermined</option>
                                   </select>
                             </div>
                         </div>
@@ -177,7 +184,46 @@
 
 
         <!-- Storytelling content -->
-        <div class="columns">
+
+        <div id="story-container">
+            <div id="storybox" class="columns d-none">
+                <div id="story-card" class="column col-3 card text-dark">
+                    <div id="story-header" class="card-header">
+                        <button id="story-btn-exit" class="btn btn-clear float-right"></button>
+                    </div>
+
+                    <div id="story-body" class="card-body">
+                        <p id="story-text"></p>
+
+                    </div>
+
+                    <div class="card-footer">
+                        <ul class="step">
+                            <li class="step-item active">
+                                <a role="button" class="tooltip" data-tooltip="Step-1">1</a>
+                            </li>
+                            <li class="step-item">
+                                <a role="button" class="tooltip" data-tooltip="Step-2">2</a>
+                            </li>
+                            <li class="step-item">
+                                <a role="button" class="tooltip" data-tooltip="Step-3">3</a>
+                            </li>
+                            <li class="step-item">
+                                <a role="button" class="tooltip" data-tooltip="Step-4">4</a>
+                            </li>
+                        </ul>
+                        <button id="storybox-btn-prev" class="btn btn-primary s-circle float-left disabled"><i class="icon icon-arrow-left"></i></button>
+                        <button id="storybox-btn-next" class="btn btn-primary s-circle float-right"><i class="icon icon-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div id="story-svg-container" class="d-none">
+                <svg id="storybox-svg"></svg>
+            </div>
+        </div>
+
+
+        <!-- <div class="columns">
             <div class="column col-6 col-mx-auto text-center text-dark">
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et vehicula felis. Cras id risus sollicitudin, pulvinar sapien sed, vehicula augue. Quisque odio tortor, lobortis viverra finibus id, tincidunt a sapien. Vestibulum vitae ex semper, tempor
@@ -186,7 +232,7 @@
                     arcu.
                 </p>
             </div>
-        </div>
+        </div> -->
         <!-- TOOLTIP -->
         <div id="tooltip" class="">
             <div class="card text-dark">
@@ -236,6 +282,7 @@
     <script src="js/mapView.js"></script>
     <script src="js/mapViewCompareYears.js"></script>
     <script src="js/fireInfo.js"></script>
+    <script src="js/fireMapStory.js"></script>
     <script src="js/compareYears.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
 </body>

@@ -43,6 +43,7 @@ class FireInfo {
         //Initialize buttons:
         this.attachButtonHandlers();
         this.attachDropdownHandlers();
+        this.attachToastClearButton();
     }
 
     ////////////////////////////////////
@@ -342,20 +343,77 @@ class FireInfo {
                 else
                     parent.showingData = parent.datapoints.filter(d => d.properties.Cause == causeTag);
                 parent.drawFireChart();
+                parent.updateMapFiltering(causeTag);
 
                 //Update number of fires in view:
                 d3.select("span#cause-counter")
                     .text(`${parent.showingData.length}`);
 
-                //TODO: Scroll to fire if found in this list? If not, make it undefined
+                // Scroll to fire if found in this list? If not, make it undefined
                 if (parent.currentSelectedFire != undefined) {
                     let currentFireCause = parent.currentSelectedFire.feature.properties.Cause;
-                    if (currentFireCause != causeTag && causeTag != "all") {
+                    /* if (currentFireCause != causeTag && causeTag != "all") {
                         parent.currentSelectedFire = undefined;
-                    }
+                    } */
+                    // Keep fire on filter
+
                     parent.updateSelectedFireInfo(parent.currentSelectedFire);
                 }
             });
+    }
+
+    /**
+     * 
+     * @param {*} causeTag 
+     */
+    updateMapFiltering(causeTag) {
+        this.updateFireFilter(causeTag);
+    }
+
+    /**
+     * 
+     */
+    attachToastClearButton() {
+        let toastSelect = d3.select("#vis-1-toast");
+        toastSelect.select(".btn")
+            .on("click", function(event) {
+                console.log("clicked");
+                toastSelect
+                    .style("opacity", 1)
+                toastSelect
+                    .transition()
+                    .duration(300)
+                    .style("opacity", 0)
+                    .end()
+                    .then(() => {
+                        toastSelect.classed("d-none", true);
+                    });
+
+
+            });
+    }
+
+    /**
+     * 
+     * @param {String} message 
+     */
+    showToastMessage(message) {
+        let toastSelect = d3.select("#vis-1-toast");
+        toastSelect.select("#vis-1-toast-msg").text(message).classed("text-small", true);
+        //Display Toast
+        toastSelect
+            .classed("d-none", false)
+            .style("opacity", 0.0)
+            .transition().duration(400)
+            .style("opacity", 0.99)
+            .end().then(() => {
+                //turn off on time
+                toastSelect.transition().duration(2000).style("opacity", 1.0)
+                    .end().then(() => {
+                        toastSelect.select(".btn").dispatch("click");
+                    });
+            })
+
     }
 
 
@@ -387,11 +445,10 @@ class FireInfo {
         //Clicked fire not found in current showing bars:
         // Could be fire was filtered out
         // or Fire is too small and we have no data
-        //TODO:
         if (showingFireInfo.length == 0) {
-            console.log("No fire data");
+            this.showToastMessage(`${fireFeature.properties.IncidentName} is not in current filter or it is a fire we don't have enough data`);
+            this.scrollToSelectedFire(undefined);
             this.unhighlightAllBars();
-            this.currentSelectedFire = undefined;
             return;
         }
 

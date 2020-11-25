@@ -32,16 +32,25 @@ function fireMapInitialize() {
         let fireInfo = new FireInfo(data);
         mapView.drawMapFeatures(data, fireInfo.currentPage);
 
+        //Storytelling:
+        let fireMapStory = new FireMapStory();
+
         /**TODO: Linking Functions go HERE: */
+        /**
+         * 
+         * @param {Object} selectedFire - fire's feature
+         */
         function updateMapView(selectedFire) {
             mapView.selectAndZoomToPolygon(selectedFire);
         }
         /**
          * 
-         * @param {leaflet e.target} selectedFire - Leaflet e.target
+         * @param {leaflet e.target} selectedFire - Leaflet e.target 
+         * --> Refer to selectedFire.feature for fire info
          */
         function updateFireInfo(selectedFire) {
             fireInfo.updateSelectedFireInfo(selectedFire);
+            updateMapView(selectedFire.feature);
         }
         mapView.updateFireInfo = updateFireInfo;
         fireInfo.updateMapView = updateMapView;
@@ -59,6 +68,32 @@ function fireMapInitialize() {
 
         }
         fireInfo.pageChangeFireInfo = pageChangeFireInfo;
+
+        /**
+         * 
+         * @param {string} causeTag - `all, `H`, `L`, `U` 
+         */
+        function updateFireFilter(causeTag) {
+            function isCauseTag(causeTag, fireCause) {
+                if (causeTag === "all") return true;
+                else return (causeTag === fireCause)
+            }
+            let newPolygons = {
+                features: data.perimeters.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
+                type: "FeatureCollection"
+            };
+            let newPoints = {
+                features: data.points.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
+                type: "FeatureCollection"
+            }
+            let newData = {
+                points: newPoints,
+                perimeters: newPolygons
+            }
+
+            mapView.drawMapFeaturesFiltered(newData, fireInfo.currentPage);
+        }
+        fireInfo.updateFireFilter = updateFireFilter;
     });
 
 
@@ -149,12 +184,6 @@ function displayCurrentPagebyHash() {
         .transition()
         .duration(200)
         .style("opacity", 1);
-
-
-
-
-
-
 
 }
 
