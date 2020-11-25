@@ -28,81 +28,81 @@ function fireMapInitialize() {
     isFireMapInit = true;
 
     loadData().then(data => {
-        console.log(data);
-
-        //Initialize view files:
-        let fireInfo = new FireInfo(data);
-        mapView.drawMapFeatures(data, fireInfo.currentPage);
-
-        //Storytelling:
-        let fireMapStory = new FireMapStory();
         Promise.all(pageTransition).then(() => {
             console.log("pagetransition done");
+            console.log(data);
+
+            //Initialize view files:
+            let fireInfo = new FireInfo(data);
+            mapView.drawMapFeatures(data, fireInfo.currentPage);
+
+            //Storytelling:
+            let fireMapStory = new FireMapStory();
             fireMapStory.initStoryInstances();
-        })
 
-        /**TODO: Linking Functions go HERE: */
-        /**
-         * 
-         * @param {Object} selectedFire - fire's feature
-         */
-        function updateMapView(selectedFire) {
-            mapView.selectAndZoomToPolygon(selectedFire);
-        }
-        /**
-         * 
-         * @param {leaflet e.target} selectedFire - Leaflet e.target 
-         * --> Refer to selectedFire.feature for fire info
-         */
-        function updateFireInfo(selectedFire) {
-            fireInfo.updateSelectedFireInfo(selectedFire);
-            updateMapView(selectedFire.feature);
-        }
-        mapView.updateFireInfo = updateFireInfo;
-        fireInfo.updateMapView = updateMapView;
-        fireInfo.updateFireInfo = updateFireInfo;
-
-        /*
-         * Event handler for when left fireInfoPage bar chart
-         * changes pages
-         */
-        function pageChangeFireInfo(fireInfoPage) {
-            mapView.drawMapFeatures(data, fireInfoPage);
-            if (fireInfo.currentSelectedFire != undefined) {
-                updateMapView(fireInfo.currentSelectedFire.feature);
+            /**TODO: Linking Functions go HERE: */
+            /**
+             * 
+             * @param {Object} selectedFire - fire's feature
+             */
+            function updateMapView(selectedFire) {
+                mapView.selectAndZoomToPolygon(selectedFire);
             }
-
-        }
-        fireInfo.pageChangeFireInfo = pageChangeFireInfo;
-
-        /**
-         * 
-         * @param {string} causeTag - `all, `H`, `L`, `U` 
-         */
-        function updateFireFilter(causeTag) {
-            function isCauseTag(causeTag, fireCause) {
-                if (causeTag === "all") return true;
-                else return (causeTag === fireCause)
+            /**
+             * 
+             * @param {leaflet e.target} selectedFire - Leaflet e.target 
+             * --> Refer to selectedFire.feature for fire info
+             */
+            function updateFireInfo(selectedFire) {
+                fireInfo.updateSelectedFireInfo(selectedFire);
+                updateMapView(selectedFire.feature);
             }
-            let newPolygons = {
-                features: data.perimeters.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
-                type: "FeatureCollection"
-            };
-            let newPoints = {
-                features: data.points.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
-                type: "FeatureCollection"
+            mapView.updateFireInfo = updateFireInfo;
+            fireInfo.updateMapView = updateMapView;
+            fireInfo.updateFireInfo = updateFireInfo;
+
+            /*
+             * Event handler for when left fireInfoPage bar chart
+             * changes pages
+             */
+            function pageChangeFireInfo(fireInfoPage) {
+                mapView.drawMapFeatures(data, fireInfoPage);
+                if (fireInfo.currentSelectedFire != undefined) {
+                    updateMapView(fireInfo.currentSelectedFire.feature);
+                }
+
             }
-            let newData = {
-                points: newPoints,
-                perimeters: newPolygons
+            fireInfo.pageChangeFireInfo = pageChangeFireInfo;
+
+            /**
+             * 
+             * @param {string} causeTag - `all, `H`, `L`, `U` 
+             */
+            function updateFireFilter(causeTag) {
+                function isCauseTag(causeTag, fireCause) {
+                    if (causeTag === "all") return true;
+                    else return (causeTag === fireCause)
+                }
+                let newPolygons = {
+                    features: data.perimeters.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
+                    type: "FeatureCollection"
+                };
+                let newPoints = {
+                    features: data.points.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
+                    type: "FeatureCollection"
+                }
+                let newData = {
+                    points: newPoints,
+                    perimeters: newPolygons
+                }
+
+                mapView.drawMapFeaturesFiltered(newData, fireInfo.currentPage);
             }
-
-            mapView.drawMapFeaturesFiltered(newData, fireInfo.currentPage);
-        }
-        fireInfo.updateFireFilter = updateFireFilter;
-    });
+            fireInfo.updateFireFilter = updateFireFilter;
+        });
 
 
+    })
 }
 
 /**
@@ -115,14 +115,17 @@ function compareYearsInitialize() {
     isCompareYearsInit = true;
 
     loadData().then(data => {
-        console.log("reload data for compareyears");
+        Promise.all(pageTransition).then(() => {
+            console.log("reload data for compareyears");
 
-        function updateCompareYears(selectedCounty) {
-            compareYears.setPieData(selectedCounty);
-        }
-        mapViewCompareYears.updateCompareYears = updateCompareYears;
-        let compareYears = new CompareYear('vis-4-svg', data.CACounty);
-        mapViewCompareYears.drawMapFeatures(data);
+            function updateCompareYears(selectedCounty) {
+                compareYears.setPieData(selectedCounty);
+            }
+            mapViewCompareYears.updateCompareYears = updateCompareYears;
+            let compareYears = new CompareYear('vis-4-svg', data.CACounty);
+            mapViewCompareYears.drawMapFeatures(data);
+        })
+
     });
 
 }
