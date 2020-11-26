@@ -179,8 +179,6 @@ class FireInfo {
                 let tooltipData = [sizeAcre, structuresDestroyed, suppresionCost];
 
 
-
-
                 //Highlight bar
                 d3.select(this).select("rect")
                     .classed("stroke-bold", true)

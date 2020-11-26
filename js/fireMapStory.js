@@ -30,6 +30,7 @@ class FireMapStory {
                 //TODO: turnoff box display
                 d3.select("#storybox").classed("d-none", true);
                 d3.select("#story-svg-container").classed("d-none", true);
+
             });
     }
 
@@ -45,6 +46,7 @@ class FireMapStory {
         //go to step 1:
         d3.select(".step-item").select("a").dispatch("click");
 
+
     }
 
     /**
@@ -58,7 +60,7 @@ class FireMapStory {
             .each(function(d, i) {
                 d3.select(this)
                     .on("click", function() {
-                        parent.displayStorybyStep(i);
+                        parent.storyNavigate(i);
                     })
             });
 
@@ -117,21 +119,40 @@ class FireMapStory {
 
         d3.select("#story-card")
             .style("top", (storyY + 0) + "px")
-            .style("left", (storyX + 0) + "px");
+            .style("left", (storyX + 0) + "px")
+            .classed("d-none", false)
+            .style("transform", "translate(-100px,-50px) scale(0.4)")
+            .transition()
+            .duration(500)
+            .style("opacity", 1.0)
+            .style("transform", "scale(1)");
 
         //TODO: Highlight Story:
         //Notes use a low-opacity filled rect 
         let rectPosition = this.stories[step].rectPosition;
-        let svgSelect = d3.select("#storybox-svg")
-        svgSelect.selectAll("highlighRect").data([rectPosition])
+        console.log(rectPosition);
+        let svgSelect = d3.selectAll("#storybox-svg")
+        svgSelect.data([rectPosition])
+            .selectAll("rect").data(d => [d])
             .join("rect")
             .classed("highlightRect", true)
-            .attr("x", d => d.left - 30)
-            .attr("y", d => d.top - 30)
+            .attr("x", d => d.offsetX - 100)
+            .attr("y", d => d.offsetY - 100)
+            .attr("rx", 30)
+            .attr("ry", 30)
             .transition()
-            .duration(200)
+            .duration(500)
+            .attr("x", d => d.offsetX - 20)
+            .attr("y", d => d.offsetY - 20)
             .attr("width", d => d.width + 30)
             .attr("height", d => d.height + 30)
+
+        //Dehighlight all other vis (classed highligh-vis = false)
+        d3.selectAll(".highlight-vis")
+            .classed("highlight-vis", false);
+        //Highlight this vis: 
+        d3.select(this.stories[step].whichVis)
+            .classed("highlight-vis", true);
     }
 
 
@@ -142,15 +163,18 @@ class FireMapStory {
          Area burned, Structures Destroyed and Suppression Cost. 
         `;
         let s1Position = this.getRightPosition(this.getDocumentPosition("#vis-1"));
-        let s1RectPosition = this.getDocumentPosition("#vis-1");
+        let s1RectPosition = this.getOffsetFromParent("#vis-1", "#fire-map-div");
         console.log(s1RectPosition);
-        let s1 = { text: s1Text, position: s1Position, rectPosition: s1RectPosition };
+        let s1 = { text: s1Text, position: s1Position, rectPosition: s1RectPosition, whichVis: "#vis-1" };
 
         //TODO: Story-2 content:
-        let s2Text = `s-2 Content
+        let s2Text = `This Map displays the reported wildfires in the U.S. this year\n
+        .You can choose to pan in and out of the map, try selecting a fire and see where 
+        it stands on our bar chart. 
         `;
         let s2Position = this.getLeftPosition(this.getDocumentPosition("#vis-2-svg"));
-        let s2 = { text: s2Text, position: s2Position };
+        let s2RectPosition = this.getOffsetFromParent("#vis-2", "#fire-map-div");
+        let s2 = { text: s2Text, position: s2Position, rectPosition: s2RectPosition, whichVis: "#vis-2" };
 
 
         //TODO: Story-3 content:
@@ -186,6 +210,14 @@ class FireMapStory {
 
     getDocumentPosition(documentId) {
         return d3.select(documentId).node().getBoundingClientRect();
+    }
+
+    getOffsetFromParent(child, parent) {
+        let childPos = this.getDocumentPosition(child);
+        let parentPos = this.getDocumentPosition(parent);
+        childPos.offsetY = childPos.top - parentPos.top;
+        childPos.offsetX = childPos.left - parentPos.left;
+        return childPos;
     }
 
     getRightPosition(clientRect) {

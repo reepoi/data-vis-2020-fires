@@ -100,6 +100,7 @@ button:focus {
     position: absolute;
     z-index: 1002;
     height: fit-content;
+    border-radius: 12px;
     top: 5px;
     left: 5px;
     right: 0;
@@ -116,18 +117,30 @@ button:focus {
     width: 3000px;
     height: 3000px;
     z-index: 1001;
-    background-color: rgba(0, 0, 0, 0.3);
+    /* background-color: rgba(0, 0, 0, 0.1); */
 }
 
 #story-svg-container svg {
     width: 100%;
     height: 100%;
+    z-index: inherit;
 }
 
 .highlightRect {
-    fill: white;
-    fill-opacity: 0.6;
-    z-index: 1002;
+    fill: #66758c;
+    fill-opacity: 0.3;
+    z-index: inherit;
+}
+
+.highlight-vis {
+    position: relative;
+    z-index: 1002 !important;
+}
+
+.highlight-disabled {
+    cursor: default;
+    /* opacity: .8; */
+    pointer-events: none;
 }
 
 
