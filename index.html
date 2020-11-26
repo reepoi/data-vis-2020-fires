@@ -31,15 +31,15 @@
     <header class="navbar text-bold text-large font-serif px-2 py-0">
         <section class="navbar-section">
             <a href="#" class="btn btn-link text-dark">Project Proposal</a>
-            <a href="#" class="btn btn-link text-dark">About</a>
+            <a href="/about.html" class="btn btn-link text-dark">About</a>
         </section>
         <section class="navbar-center">
             <!-- centered logo or brand -->
-            <a id="title" href="#" class="text-dark text-large">U.S. Wildfires 2020 Visualization</a>
+            <a id="title" href="/index.html#fire-map" class="text-dark text-large">U.S. Wildfires 2020 Visualization</a>
         </section>
         <section class="navbar-section">
             <a href="#" class="btn btn-link text-dark">Process Book</a>
-            <a href="https://github.com/reepoi/data-vis-2020-fires/tree/develop" class="btn btn-link text-dark">GitHub</a>
+            <a href="https://github.com/reepoi/data-vis-2020-fires/tree/main" class="btn btn-link text-dark">GitHub</a>
         </section>
     </header>
 
@@ -60,7 +60,7 @@
                         <a href="#fire-map" class="active">U.S. Fire Map</a>
                     </li>
                     <li class="tab-item">
-                        <a href="#compare-years" class="">Compare Years</a>
+                        <a href="#compare-years" class="">California Wildfire History</a>
                     </li>
                     <li class="tab-item">
                         <a href="#stories">Stories</a>
@@ -165,29 +165,20 @@
         <div id="compare-years-div" class="hashPage">
             <!-- Brief Data column compare Years -->
             <div id="compareyears-intro-div" class="columns font-serif">
-                <div class="column col-1 col-mx-auto text-center text-dark">
-                    <h4 class="text-bold mb-0">8.28</h4>
-                    <p class="text-italic mb-0">
-                        millions acres <br> burned
+                <div class="column col-4 col-mx-auto text-dark">
+                    <br>
+                    <h4 class="text-bold mb-0">Comparing the past two climate periods in California</h4>
+                    <p class="text-justify">
+                        A climate period is typically defined as a 30 year period to measure average weather.
+                        It is important to consider long-term trends because certain meteorological events, 
+                        like the El Niño-Southern Oscillation, can cause major shifts in weather patterns in 3-7 year periods,
+                        and therefore influence the number of wildfires. Cal Fire, California's fire agency, keeps comprehensive
+                        wildfire records dating as far back as 1889. The visualization below shows fires aggregated into two periods,
+                        1960-1989 and 1990-2019. For the State of California, the period of 1990-2019 has had <strong>2.18x more area 
+                        burned by wildfires</strong> compared to 1960-1989. Most counties have seen a significant increase in area 
+                        burned in the recent climate period.
                     </p>
-                </div>
-                <div class="column col-1 col-mx-auto text-center text-dark">
-                    <h4 class="text-bold mb-0">$2.65</h4>
-                    <p class="text-italic mb-0">
-                        billion in <br> suppresion costs
-                    </p>
-                </div>
-                <div class="column col-1 col-mx-auto text-center text-dark">
-                    <h4 class="text-bold mb-0">16,116</h4>
-                    <p class="text-italic mb-0">
-                        structures <br> burned
-                    </p>
-                </div>
-                <div class="column col-1 col-mx-auto text-center text-dark">
-                    <h4 class="text-bold mb-0">46</h4>
-                    <p class="text-italic mb-0">
-                        fatalities
-                    </p>
+                    <br>
                 </div>
             </div>
             <!-- COMPARE YEARS MAIN VISUALIZATIONS -->
