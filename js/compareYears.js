@@ -6,8 +6,8 @@ class CompareYear {
         this.totalBurned2019 = d3.sum(this.data.features, d => d.properties.burned2019);
         this.totalAreaCA = d3.sum(this.data.features, d => d.properties.totalArea);
         this.pieData = [
-            { period: CMP_YEAR_LGND_1989, totalBurned: this.totalBurned1989 },
-            { period: CMP_YEAR_LGND_2019, totalBurned: this.totalBurned2019 }
+            { period: CMP_YEAR_LGND_1989, totalBurned: this.totalBurned1989, relProportion: (this.totalBurned1989 / this.totalBurned2019).toFixed(2) },
+            { period: CMP_YEAR_LGND_2019, totalBurned: this.totalBurned2019, relProportion: (this.totalBurned2019 / this.totalBurned1989).toFixed(2) }
         ];
         this.selectedRegion = { region: "California", totalArea: this.totalAreaCA }
         this.width = 350;
@@ -25,6 +25,8 @@ class CompareYear {
         this.selectedRegion.totalArea = selectedCounty.properties.totalArea;
         this.pieData[0].totalBurned = selectedCounty.properties.burned1989;
         this.pieData[1].totalBurned = selectedCounty.properties.burned2019;
+        this.pieData[0].relProportion = (this.pieData[0].totalBurned / this.pieData[1].totalBurned).toFixed(2);
+        this.pieData[1].relProportion = (this.pieData[1].totalBurned / this.pieData[0].totalBurned).toFixed(2);
         this.updatePieChart();
     }
 
@@ -32,9 +34,9 @@ class CompareYear {
         let that = this;
         this.svg
             .attr('width', 600)
-            .attr('height', this.height)
+            .attr('height', this.height + 40)
             .append('g')
-            .attr('transform', 'translate(' + (715 / 2) + ',' + (this.height / 2) + ')');
+            .attr('transform', 'translate(' + (715 / 2) + ',' + (this.height / 2 + 10) + ')');
         let arc = d3.arc()
             .innerRadius(this.radius - this.donutWidth)
             .outerRadius(this.radius);
@@ -51,7 +53,8 @@ class CompareYear {
             .attr('fill', function (d, i) {
                 return that.color(d.value);
             })
-            .attr('transform', 'translate(0, 0)');
+            .attr('transform', 'translate(0, 0)')
+            .classed('pie-slice', true);
         this.addTooltip(path);
     }
 
@@ -60,7 +63,7 @@ class CompareYear {
         let legendRectSize = 13;
         let legendSpacing = 7;
         let legend = this.svg.selectAll('.legend')
-            .data(this.pieData, d => d.period)
+            .data([this.selectedRegion.region, ...this.pieData], d => d.period)
             .enter()
             .append('g')
             .attr('class', 'circle-legend')
@@ -71,7 +74,8 @@ class CompareYear {
                 let vert = i * (height + 5) - offset;
                 return 'translate(' + (that.width / 2 + horz) + ',' + (that.height / 2 + vert) + ')';
             });
-        legend.append('circle')
+        legend.filter(d => d.period)
+            .append('circle')
             .style('fill', d => this.color(d.totalBurned))
             .style('stroke', this.color)
             .attr('cx', 0)
@@ -81,8 +85,15 @@ class CompareYear {
             .attr('x', legendRectSize + legendSpacing)
             .attr('y', legendRectSize - legendSpacing)
             .text(function (d) {
-                console.log(d);
-                return d.period;
+                if (d.period) {
+                    return d.period
+                } else {
+                    let regionTitle = d3.select(this);
+                    regionTitle.attr('x', legendRectSize - d.length);
+                    regionTitle.classed('regionTitle', true);
+                    regionTitle.classed('text-bold', true);
+                    return d;
+                }
             });
     }
 
@@ -95,8 +106,8 @@ class CompareYear {
             let data = d.data;
             let countyName = that.selectedRegion.region;
             let totalBurned = that.numberWithCommas(data.totalBurned.toFixed(2));
-            let percentageOfCounty = ((data.totalBurned / that.selectedRegion.totalArea) * 100).toFixed(2);
-            let tooltipData = [totalBurned, percentageOfCounty];
+            let relProportion = data.relProportion;
+            let tooltipData = [totalBurned, `${relProportion}x`];
             // tooltip header
             tooltipSelect.select(".card-title")
                 .text(countyName);
@@ -118,11 +129,15 @@ class CompareYear {
                 .style("opacity", 1.0)
                 .style("transform", "scale(1)");
             tooltipSelect.select(".card").raise();
+
+            d3.select(this).classed('pie-slice-hover', true);
         }).on("mouseout", function (e, d) {
             tooltipSelect
                 .style("opacity", 0)
                 .classed("d-none", true)
                 .style("transform", "");
+
+            d3.select(this).classed('pie-slice-hover', false);
         });
     }
 
@@ -138,9 +153,27 @@ class CompareYear {
         let arc = d3.arc()
             .innerRadius(this.radius - this.donutWidth)
             .outerRadius(this.radius);
-        path.attr("d", arc);
+
+        /* custom interpolation function for arcs
+         * source: http://jsfiddle.net/Qh9X5/18/
+         */
+        function arcTween(a) {
+            let i = d3.interpolate(this._current, a);
+            this._current = i(0);
+            return function (t) {
+                return arc(i(t));
+            };
+        }
+
+        path.attr("d", arc)
+            .transition()
+            .duration(1000)
+            .attrTween("d", arcTween);
+
         this.addTooltip(path);
-        // path.transition().duration(500).attr("d", arc);
+        this.svg.selectAll('.regionTitle')
+            .attr('x', 13 - this.selectedRegion.region.length)
+            .text(this.selectedRegion.region);
     }
 
     /*
