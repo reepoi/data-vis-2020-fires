@@ -29,11 +29,26 @@ li.tab-item {
     max-height: 500px;
 }
 
-#vis-1 .panel-body #vis-1-div,
-#vis-4 .panel-body #vis-4-div {
+#vis-1 .panel-body #vis-1-div {
     height: 350px;
     overflow-y: scroll;
     scroll-behavior: smooth;
+}
+
+#vis-4 .panel-body #vis-4-div {
+    height: 400px;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+
+.pie-slice {
+    stroke: black;
+    stroke-width: 1px;
+}
+
+.pie-slice-hover {
+    stroke: black;
+    stroke-width: 3px;
 }
 
 .btn:focus {
