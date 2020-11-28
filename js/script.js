@@ -117,7 +117,7 @@ function compareYearsInitialize() {
     loadData().then(data => {
         Promise.all(pageTransition).then(() => {
             console.log("reload data for compareyears");
-
+            let top20fires = new Top20Fires('vis-7-svg', data.top20Fires);
             function updateCompareYears(selectedCounty) {
                 compareYears.setPieData(selectedCounty);
             }
@@ -136,11 +136,13 @@ async function loadData() {
     let points = await d3.json("./data/WF_Points.geojson");
     let fireHistory = await d3.json("./data/CA_fire_history.geojson");
     let CACounty = await d3.json("./data/CA_counties.geojson");
+    let top20Fires = await d3.csv("./data/CAtop20Acres.csv");
     return {
         'perimeters': perimeters,
         'points': points,
         'fireHistory': fireHistory,
-        'CACounty': CACounty
+        'CACounty': CACounty,
+        'top20Fires': top20Fires
     };
 }
 

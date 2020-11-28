@@ -86,7 +86,8 @@ li.tab-item {
 }
 
 #tooltip,
-#tooltipcmpyear {
+#tooltipcmpyear,
+#tooltipcmpyearfire {
     position: absolute;
     z-index: 1000;
 }
@@ -156,6 +157,34 @@ button:focus {
     cursor: default;
     /* opacity: .8; */
     pointer-events: none;
+}
+
+/* Top 20 Fires */
+.fireCircle {
+    stroke-width: 1px;
+    stroke: #000000;
+    fill: lightgray;
+}
+
+.period2020 {
+    fill: red;
+}
+
+.period1990-2019 {
+    fill: #0070FF;
+}
+
+.period1960-1989 {
+    fill: #1abd46;
+}
+
+.fireCircle-hover {
+    stroke-width: 3px;
+}
+
+.fireCircleLine {
+    stroke: gray;
+    stroke-width: 1px;
 }
 
 

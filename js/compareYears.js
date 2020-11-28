@@ -76,8 +76,8 @@ class CompareYear {
             });
         legend.filter(d => d.period)
             .append('circle')
+            .attr('class', 'fireCircle')
             .style('fill', d => this.color(d.totalBurned))
-            .style('stroke', this.color)
             .attr('cx', 0)
             .attr('cy', 0)
             .attr('r', '.5rem');

@@ -213,6 +213,9 @@
                         impacted by wildfires</strong> compared to 1960-1989. Most counties have seen a significant increase in area impacted in the recent climate period.
                     </p>
                 </div>
+                <div id="vis-7" class="column col-5 col-mr-auto col-sm-12">
+                    <svg id="vis-7-svg"></svg>
+                </div>
             </div>
             <!-- COMPARE YEARS MAIN VISUALIZATIONS -->
             <div class="columns">
@@ -316,6 +319,27 @@
                 </div>
             </div>
         </div>
+        <!-- TOOLTIPCMPYEAR fire bubbles -->
+        <div id="tooltipcmpyearfire" class="d-none">
+            <div class="card text-dark">
+                <div class="card-header">
+                    <div class="columns">
+                        <div class="column col-auto card-title h5"></div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- sizeacre -->
+                    <div>
+                        Total Acres Burned: <span class="h5"></span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="text-small text-muted">
+                        Year: <span id="tooltipcmpyearfire-period" class="text-bold"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -333,6 +357,7 @@
     <script src="js/mapViewCompareYears.js"></script>
     <script src="js/fireInfo.js"></script>
     <script src="js/fireMapStory.js"></script>
+    <script src="js/top20fires.js"></script>
     <script src="js/compareYears.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
 </body>

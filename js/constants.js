@@ -47,7 +47,7 @@ const MAP_PLYGN_STYLE_HISTORY = function(feature) {
     fillOpacity: 0.3
   }
 }
-const CMP_YEAR_COLORS = ['#267300', '#0070FF']
+const CMP_YEAR_COLORS = ['#1abd46', '#0070FF'];
 const getColor = function(d) {
   return d === '1960-1989' ? CMP_YEAR_COLORS[0] : CMP_YEAR_COLORS[1] ;
 };
