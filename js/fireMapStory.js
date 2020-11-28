@@ -153,6 +153,10 @@ class FireMapStory {
         //Highlight this vis: 
         d3.select(this.stories[step].whichVis)
             .classed("highlight-vis", true);
+
+        //
+        if (this.stories[step].highlightFunction)
+            this.stories[step].highlightFunction();
     }
 
 
@@ -167,31 +171,80 @@ class FireMapStory {
         console.log(s1RectPosition);
         let s1 = { text: s1Text, position: s1Position, rectPosition: s1RectPosition, whichVis: "#vis-1" };
 
+
+
         //TODO: Story-2 content:
         let s2Text = `This Map displays the reported wildfires in the U.S. this year\n
         .You can choose to pan in and out of the map, try selecting a fire and see where 
         it stands on our bar chart. 
         `;
-        let s2Position = this.getLeftPosition(this.getDocumentPosition("#vis-2-svg"));
+        let s2Position = this.getLeftPosition(this.getDocumentPosition("#vis-2-svg"), -500, -50);
         let s2RectPosition = this.getOffsetFromParent("#vis-2", "#fire-map-div");
         let s2 = { text: s2Text, position: s2Position, rectPosition: s2RectPosition, whichVis: "#vis-2" };
 
 
-        //TODO: Story-3 content:
-        let s3Text = `S-3 content
+        //TODO: Story 3 content:
+        let s3Text = `We can click on the August Complex on either visualizations
+        to zoom into the detailed area it covers and hover over that bar to 
+        see statistics for this fire.
         `;
-        let s3Position = this.getOffset(d3.select("#vis-1").node());
-        let s3 = { text: s3Text, position: s3Position };
+        let s3Position = this.getLeftPosition(this.getDocumentPosition("#vis-2"), -200, -300);
+        let s3RectPosition = this.getOffsetFromParent("#vis-1-div", "#fire-map-div");
+        let s3 = {
+            text: s3Text,
+            position: s3Position,
+            rectPosition: s3RectPosition,
+            whichVis: "#vis-1-div",
+            highlightFunction: this.selectAndHighlightAugustComplex
+        }
 
-        //TODO: Story-4 content:
-        let s4Text = `s-4 content
-        `;
-        let s4Position = this.getOffset(d3.select("#vis-1").node());
-        let s4 = { text: s4Text, position: s4Position };
+        let s4Text = `While the August Complex is currently the 
+        largest fire this year, it stands fourth and third on number of structures destroyed and 
+        suppression cost`;
+        let s4RectPosition = this.getOffsetFromParent("#vis-1-div", "#fire-map-div");
+        let s4 = {
+            text: s4Text,
+            position: s3Position,
+            rectPosition: s4RectPosition,
+            whichVis: "#vis-1",
+            highlightFunction: this.navigateAugustComplexStat
+        }
 
-        let storyArray = [s1, s2, s3, s4];
+        let storyArray = [s2, s1, s3, s4];
 
         return storyArray;
+    }
+
+    selectAndHighlightAugustComplex() {
+        //dispatch a click on august complex from the barchart:
+        let fireTextSelect = d3.selectAll(".barName").filter(d => {
+            return d.properties.IncidentName === "August Complex";
+        });
+        let fireGroupSelect = d3.select(fireTextSelect.node().parentNode);
+        fireGroupSelect.classed("highlighting", true);
+        fireGroupSelect.dispatch("click");
+
+    }
+
+    navigateAugustComplexStat() {
+        let prevBtn = d3.select("#vis-1-prev");
+        let nextBtn = d3.select("#vis-1-next");
+        //Reset bar Chart:
+        while (!prevBtn.classed("disabled")) {
+            prevBtn.dispatch("click");
+        }
+        //Navigate with timeout
+        setTimeout(function() {
+            //Navigate to Structure destroyed first:
+            nextBtn.dispatch("click");
+
+            setTimeout(function() {
+                //navigate to suppression cost
+                nextBtn.dispatch("click");
+            }, 3000);
+        }, 1000);
+
+
     }
 
     /**
@@ -220,12 +273,12 @@ class FireMapStory {
         return childPos;
     }
 
-    getRightPosition(clientRect) {
+    getRightPosition(clientRect, offsetX = +150, offsetY = 0) {
         //Return [X, Y]
-        return [clientRect.right + 90, clientRect.top + 15];
+        return [clientRect.right + offsetX, clientRect.top + offsetY];
     }
-    getLeftPosition(clientRect) {
+    getLeftPosition(clientRect, offsetX = -500, offsetY = 0) {
         //Return [X, Y]
-        return [clientRect.left - 400, clientRect.top + 15];
+        return [clientRect.left + offsetX, clientRect.top + offsetY];
     }
 }

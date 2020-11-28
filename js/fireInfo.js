@@ -119,7 +119,7 @@ class FireInfo {
             .attr("x", 0)
             .attr("height", yScale.bandwidth())
             .transition()
-            .duration(500)
+            .duration(900)
             .attr("width", d => scaleX(d.properties[statName]));
 
         //Add Name Text:
@@ -254,14 +254,12 @@ class FireInfo {
                 }
                 // set as new selected
                 parent.currentSelectedFire = { feature: d };
-
                 // set visually as selected
                 d3.select(this).select("rect")
                     .classed("stroke-bold", true)
                     .style("fill", "#48cae4");
                 d3.select(this).selectAll("text")
                     .classed("text-bold", true);
-
                 parent.updateMapView(d);
             });
     }
@@ -304,6 +302,7 @@ class FireInfo {
 
         let nextBtn = d3.select("#vis-1-next")
             .on("click", function(event) {
+                console.log("clicked");
                 parent.currentIndex += 1;
                 //Change Info display:
                 parent.currentPage = parent.pages[parent.currentIndex];
