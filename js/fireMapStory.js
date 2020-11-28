@@ -188,7 +188,7 @@ class FireMapStory {
         to zoom into the detailed area it covers and hover over that bar to 
         see statistics for this fire.
         `;
-        let s3Position = this.getLeftPosition(this.getDocumentPosition("#vis-2"), -200, -300);
+        let s3Position = this.getLeftPosition(this.getDocumentPosition("#vis-2"), -200, -250);
         let s3RectPosition = this.getOffsetFromParent("#vis-1-div", "#fire-map-div");
         let s3 = {
             text: s3Text,
@@ -201,10 +201,11 @@ class FireMapStory {
         let s4Text = `While the August Complex is currently the 
         largest fire this year, it stands fourth and third on number of structures destroyed and 
         suppression cost`;
+        let s4Position = this.getLeftPosition(this.getDocumentPosition("#vis-2"), -100, +150);
         let s4RectPosition = this.getOffsetFromParent("#vis-1-div", "#fire-map-div");
         let s4 = {
             text: s4Text,
-            position: s3Position,
+            position: s4Position,
             rectPosition: s4RectPosition,
             whichVis: "#vis-1",
             highlightFunction: this.navigateAugustComplexStat
@@ -241,7 +242,7 @@ class FireMapStory {
             setTimeout(function() {
                 //navigate to suppression cost
                 nextBtn.dispatch("click");
-            }, 3000);
+            }, 1500);
         }, 1000);
 
 
