@@ -19,8 +19,8 @@ class Top20Fires {
   drawTitle() {
     this.svg.append('text')
       .attr('class', 'fireCircleTitle text-bold h5')
-      .text('Top 20 Fires in California History')
-      .attr('transform', 'translate(150, 30)');
+      .text('Top 20 Fires in California History by Acres Burned')
+      .attr('transform', 'translate(95, 30)');
   }
 
   initCircleObjs() {
@@ -30,6 +30,7 @@ class Top20Fires {
       obj.year = this.data[i].date;
       obj.acres = this.data[i].acres;
       obj.cradius = this.cScale(Number(obj.acres.replace(/,/g, '')));
+      obj.rank = this.data[i].rank;
       this.circleObjs.push(obj);
     }
     this.circleObjs = this.circleObjs.sort((a, b) => +a.year - +b.year);
@@ -115,7 +116,6 @@ class Top20Fires {
       yearSum += obj.cradius * 2;
     });
     heights[lastYear] = yearSum;
-    console.log(heights);
     let lastX = 20;
     lastYear = this.circleObjs[0].year;
     let lastY = 55 - heights[lastYear] / 2 - this.circleObjs[0].cradius * 2;
@@ -146,7 +146,7 @@ class Top20Fires {
         let tooltipSelect = d3.select("#tooltipcmpyearfire");
         tooltipSelect
           .style("opacity", 0);
-        let tooltipData = [d.acres];
+        let tooltipData = [d.rank, d.acres];
         // tooltip header
         tooltipSelect.select(".card-title")
           .text(d.name);
