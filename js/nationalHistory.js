@@ -40,7 +40,7 @@ class NationalHistory {
         let svgSelect = d3.select("#vis-8-svg");
         svgSelect.append("g")
             .attr("class", "year-axis")
-            .attr("transform", `translate(100,${this.vizHeight - 100})`)
+            .attr("transform", `translate(0,${this.vizHeight - 50})`)
             .call(this.xAxis);
     }
 
