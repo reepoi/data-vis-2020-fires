@@ -133,6 +133,7 @@ function compareYearsInitialize() {
 
 }
 
+
 /**
  * 
  */
@@ -141,6 +142,7 @@ function nationalHistoryInitialize() {
     isNationalHistoryInit = true;
     loadData().then(data => {
         console.log(data);
+
     })
 }
 
