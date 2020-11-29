@@ -222,7 +222,7 @@ function displayCurrentPagebyHash() {
     d3.select(`${currentHash}-div`)
         .classed("d-none", false)
         .style("opacity", 0.7)
-        .style("transform", "translate(0,-1000px) rotate(0deg)")
+        .style("transform", "translate(0px,+2000px) rotate(0deg)")
         .transition()
         .duration(500)
         .style("transform", "rotate(0deg)")
