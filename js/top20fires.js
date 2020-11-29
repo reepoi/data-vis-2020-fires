@@ -19,7 +19,7 @@ class Top20Fires {
   drawTitle() {
     this.svg.append('text')
       .attr('class', 'fireCircleTitle text-bold h5')
-      .text('Top 20 Fires of Californian History')
+      .text('Top 20 Fires in California History')
       .attr('transform', 'translate(150, 30)');
   }
 
