@@ -159,7 +159,7 @@ class Top20Fires {
         tooltipSelect.select("#tooltipcmpyearfire-period")
           .text(d.year);
         tooltipSelect
-          .style("left", (e.pageX + 20) + 'px')
+          .style("left", (e.pageX - 245) + 'px')
           .style("top", (e.pageY + 20) + 'px')
           .classed("d-none", false)
           .style("transform", "translate(-50px,-50px) scale(0.4)")
