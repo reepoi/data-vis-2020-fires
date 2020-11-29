@@ -39,7 +39,7 @@
         </section>
         <section class="navbar-section">
             <a href="#" class="btn btn-link text-dark">Process Book</a>
-            <a href="https://github.com/reepoi/data-vis-2020-fires/tree/develop" class="btn btn-link text-dark">GitHub</a>
+            <a href="https://github.com/reepoi/data-vis-2020-fires/tree/main" class="btn btn-link text-dark">GitHub</a>
         </section>
     </header>
 
@@ -57,7 +57,7 @@
                         <button id="menu-back" onclick="tabBackClicked()" class="btn disabled btn-link btn-lg icon icon-back"></button>
                     </li>
                     <li class="tab-item">
-                        <a href="#fire-map" class="active">U.S. Fire Map</a>
+                        <a href="#fire-map" class="active">2020 U.S. Fire Map</a>
                     </li>
                     <li class="tab-item">
                         <a href="#compare-years" class="">California Wildfire History</a>
@@ -81,7 +81,7 @@
         <div id="fire-map-div" class="hashPage">
             <!-- Brief Data column -->
             <br>
-            <div id="us2020-fire-text" class="col-6 col-mx-auto text-justify">
+            <div id="us2020-fire-text" class="col-6 col-mx-auto text-justify font-serif">
                 <h4 class="text-bold mb-0">
                     The 2020 wildfire season was another record breaker in the US
                 </h4>
@@ -222,7 +222,8 @@
                         A climate period is typically defined as a 30 year period to measure average weather. It is important to consider long-term trends because certain events, like the El Niño-Southern Oscillation, can cause major shifts in weather patterns in 3-7 year periods,
                         and therefore influence the number of wildfires. Cal Fire, California's fire agency, keeps comprehensive wildfire records dating as far back as 1878. The visualization below shows fires aggregated into two periods, 1960-1989 and
                         1990-2019. For the State of California, the period of 1990-2019 has had <strong>2.18x more area 
-                        impacted by wildfires</strong> compared to 1960-1989. Most counties have seen a significant increase in area impacted in the recent climate period.
+                        impacted by wildfires</strong> compared to 1960-1989. Most counties have seen a significant increase in area impacted in the recent climate period. Of the top 20 wildfires in California history, only 1 occurred pre-1960, 2 occurred
+                        between 1960-1989, and 11 occurred between 1990-2019. The other 6 have occurred in 2020 alone.
                     </p>
                 </div>
                 <div id="vis-7" class="column col-5 col-mr-auto col-sm-12">
@@ -340,6 +341,10 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <!-- CA fire rank -->
+                    <div>
+                        Rank: <span class="h5"></span>
+                    </div>
                     <!-- sizeacre -->
                     <div>
                         Total Acres Burned: <span class="h5"></span>

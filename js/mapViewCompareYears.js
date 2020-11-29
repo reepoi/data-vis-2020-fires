@@ -97,7 +97,7 @@ class MapViewCompareYears {
             return;
         }
         mapViewCompareYears.getLeafletMap().eachLayer(function (layer) {
-            if (layer.feature && layer.feature.properties.burned1989) {
+            if (layer.feature && layer.feature.properties.burned1989 >= 0) {
                 layer.feature.properties.clicked = false;
                 layer.setStyle(MAP_PLYGN_STYLE_CACOUNTY(layer.feature));
             }
