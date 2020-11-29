@@ -13,8 +13,8 @@ const mapViewCompareYears = new MapViewCompareYears('vis-5', [MAP_CMP_INIT_LAT, 
 
 var isFireMapInit = false;
 var isCompareYearsInit = false;
+var isNationalHistoryInit = false;
 
-const pageTransition = [];
 
 /* Visualization: After data load */
 
@@ -24,85 +24,88 @@ const pageTransition = [];
  */
 function fireMapInitialize() {
     //Only load and draw once:
-    if (isFireMapInit) return;
+    if (isFireMapInit) {
+        // turnoff box display
+        d3.select("#storybox").classed("d-none", true);
+        d3.select("#story-svg-container").classed("d-none", true);
+        return;
+    }
     isFireMapInit = true;
 
+    // loadData().then(data => {
     loadData().then(data => {
-        Promise.all(pageTransition).then(() => {
-            console.log("pagetransition done");
-            console.log(data);
+        console.log(data);
 
-            //Initialize view files:
-            let fireInfo = new FireInfo(data);
-            mapView.drawMapFeatures(data, fireInfo.currentPage);
+        //Initialize view files:
+        let fireInfo = new FireInfo(data);
+        mapView.drawMapFeatures(data, fireInfo.currentPage);
+        /**
+         * 
+         * @param {Object} selectedFire - fire's feature
+         */
+        function updateMapView(selectedFire) {
+            mapView.selectAndZoomToPolygon(selectedFire);
+        }
+        /**
+         * 
+         * @param {leaflet e.target} selectedFire - Leaflet e.target 
+         * --> Refer to selectedFire.feature for fire info
+         */
+        function updateFireInfo(selectedFire) {
+            fireInfo.updateSelectedFireInfo(selectedFire);
+            updateMapView(selectedFire.feature);
+        }
+        mapView.updateFireInfo = updateFireInfo;
+        fireInfo.updateMapView = updateMapView;
+        fireInfo.updateFireInfo = updateFireInfo;
 
-            //Storytelling:
-            let fireMapStory = new FireMapStory();
-            fireMapStory.initStoryInstances();
-
-            /**TODO: Linking Functions go HERE: */
-            /**
-             * 
-             * @param {Object} selectedFire - fire's feature
-             */
-            function updateMapView(selectedFire) {
-                mapView.selectAndZoomToPolygon(selectedFire);
+        /*
+         * Event handler for when left fireInfoPage bar chart
+         * changes pages
+         */
+        function pageChangeFireInfo(fireInfoPage) {
+            mapView.drawMapFeatures(data, fireInfoPage);
+            if (fireInfo.currentSelectedFire != undefined) {
+                updateMapView(fireInfo.currentSelectedFire.feature);
             }
-            /**
-             * 
-             * @param {leaflet e.target} selectedFire - Leaflet e.target 
-             * --> Refer to selectedFire.feature for fire info
-             */
-            function updateFireInfo(selectedFire) {
-                fireInfo.updateSelectedFireInfo(selectedFire);
-                updateMapView(selectedFire.feature);
+
+        }
+        fireInfo.pageChangeFireInfo = pageChangeFireInfo;
+
+        /**
+         * 
+         * @param {string} causeTag - `all, `H`, `L`, `U` 
+         */
+        function updateFireFilter(causeTag) {
+            function isCauseTag(causeTag, fireCause) {
+                if (causeTag === "all") return true;
+                else return (causeTag === fireCause)
             }
-            mapView.updateFireInfo = updateFireInfo;
-            fireInfo.updateMapView = updateMapView;
-            fireInfo.updateFireInfo = updateFireInfo;
-
-            /*
-             * Event handler for when left fireInfoPage bar chart
-             * changes pages
-             */
-            function pageChangeFireInfo(fireInfoPage) {
-                mapView.drawMapFeatures(data, fireInfoPage);
-                if (fireInfo.currentSelectedFire != undefined) {
-                    updateMapView(fireInfo.currentSelectedFire.feature);
-                }
-
+            let newPolygons = {
+                features: data.perimeters.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
+                type: "FeatureCollection"
+            };
+            let newPoints = {
+                features: data.points.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
+                type: "FeatureCollection"
             }
-            fireInfo.pageChangeFireInfo = pageChangeFireInfo;
-
-            /**
-             * 
-             * @param {string} causeTag - `all, `H`, `L`, `U` 
-             */
-            function updateFireFilter(causeTag) {
-                function isCauseTag(causeTag, fireCause) {
-                    if (causeTag === "all") return true;
-                    else return (causeTag === fireCause)
-                }
-                let newPolygons = {
-                    features: data.perimeters.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
-                    type: "FeatureCollection"
-                };
-                let newPoints = {
-                    features: data.points.features.filter(d => isCauseTag(causeTag, d.properties.Cause)),
-                    type: "FeatureCollection"
-                }
-                let newData = {
-                    points: newPoints,
-                    perimeters: newPolygons
-                }
-
-                mapView.drawMapFeaturesFiltered(newData, fireInfo.currentPage);
+            let newData = {
+                points: newPoints,
+                perimeters: newPolygons
             }
-            fireInfo.updateFireFilter = updateFireFilter;
-        });
 
+            mapView.drawMapFeaturesFiltered(newData, fireInfo.currentPage);
+        }
+        fireInfo.updateFireFilter = updateFireFilter;
+    });
+}
 
-    })
+function fireMapStoryInitialize() {
+    if (d3.select("#fire-map-div").classed("d-none"))
+        return;
+    //Storytelling:
+    let fireMapStory = new FireMapStory();
+    fireMapStory.initStoryInstances();
 }
 
 /**
@@ -115,35 +118,58 @@ function compareYearsInitialize() {
     isCompareYearsInit = true;
 
     loadData().then(data => {
-        Promise.all(pageTransition).then(() => {
-            console.log("reload data for compareyears");
-            let top20fires = new Top20Fires('vis-7-svg', data.top20Fires);
-            function updateCompareYears(selectedCounty) {
-                compareYears.setPieData(selectedCounty);
-            }
-            mapViewCompareYears.updateCompareYears = updateCompareYears;
-            let compareYears = new CompareYear('vis-4-svg', data.CACounty);
-            mapViewCompareYears.drawMapFeatures(data);
-        })
+        console.log(data);
+        let top20fires = new Top20Fires('vis-7-svg', data.top20Fires);
+
+        function updateCompareYears(selectedCounty) {
+            compareYears.setPieData(selectedCounty);
+        }
+        mapViewCompareYears.updateCompareYears = updateCompareYears;
+        let compareYears = new CompareYear('vis-4-svg', data.CACounty);
+        mapViewCompareYears.drawMapFeatures(data);
+
 
     });
 
 }
 
+/**
+ * 
+ */
+function nationalHistoryInitialize() {
+    if (isNationalHistoryInit) return;
+    isNationalHistoryInit = true;
+    loadData().then(data => {
+        console.log(data);
+    })
+}
+
 /* Async function to load files that you want */
 async function loadData() {
-    let perimeters = await d3.json("./data/WF_Perimeters.geojson");
-    let points = await d3.json("./data/WF_Points.geojson");
-    let fireHistory = await d3.json("./data/CA_fire_history.geojson");
-    let CACounty = await d3.json("./data/CA_counties.geojson");
-    let top20Fires = await d3.csv("./data/CAtop20Acres.csv");
-    return {
-        'perimeters': perimeters,
-        'points': points,
-        'fireHistory': fireHistory,
-        'CACounty': CACounty,
-        'top20Fires': top20Fires
-    };
+    let currentHash = window.location.hash;
+    switch (currentHash) {
+        case "#compare-years":
+            let fireHistory = await d3.json("./data/CA_fire_history.geojson");
+            let CACounty = await d3.json("./data/CA_counties.geojson");
+            let top20Fires = await d3.csv("./data/CAtop20Acres.csv");
+            return {
+                'fireHistory': fireHistory,
+                'CACounty': CACounty,
+                'top20Fires': top20Fires
+            }
+        case "#stories":
+            let nationalHistory = await d3.json("./data/nationalAnnualAcresBurned.csv");
+            return {
+                'nationalHistory': nationalHistory,
+            }
+        case "#fire-map":
+            let perimeters = await d3.json("./data/WF_Perimeters.geojson");
+            let points = await d3.json("./data/WF_Points.geojson");
+            return {
+                'perimeters': perimeters,
+                'points': points,
+            }
+    }
 }
 
 
@@ -166,12 +192,12 @@ function pagingHandler(hash = "") {
             compareYearsInitialize();
             break;
         case "#stories":
-            /* This is just a demo function I made to see how tabbing works */
-            /* TODO: Add stories function*/
+
             break;
         case "#fire-map":
-        default:
             fireMapInitialize();
+            break;
+        default:
             currentHash = "#fire-map";
             break;
 
@@ -195,17 +221,23 @@ function displayCurrentPagebyHash() {
     //Display designated div (==hash+"-div"):
     d3.select(`${currentHash}-div`)
         .classed("d-none", false)
-        .style("transform", "translate(0,-2000px) rotate(0deg)")
-        .style("opacity", 0.5)
-        .call(enter =>
-            pageTransition.push(
-                enter.transition()
-                .style("transform", "rotate(0deg)").duration(500)
+        .style("opacity", 0.7)
+        .style("transform", "translate(0,-1000px) rotate(0deg)")
+        .transition()
+        .duration(500)
+        .style("transform", "rotate(0deg)")
+        .on("end", () => {
+            d3.select(`${currentHash}-div`)
                 .transition()
                 .duration(200)
                 .style("opacity", 1)
-                .end())
-        );
+                .on("end", () => {
+                    fireMapStoryInitialize()
+                });
+        });
+
+    // .then(() => fireMapStoryInitialize());
+
 }
 
 

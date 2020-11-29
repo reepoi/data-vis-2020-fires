@@ -27,7 +27,7 @@ class FireMapStory {
         let exitBtnSelect = d3.select("#story-btn-exit");
         exitBtnSelect
             .on("click", function(event) {
-                //TODO: turnoff box display
+                // turnoff box display
                 d3.select("#storybox").classed("d-none", true);
                 d3.select("#story-svg-container").classed("d-none", true);
 
@@ -39,8 +39,7 @@ class FireMapStory {
      * @param {*} event 
      */
     displayStorybox(event) {
-        console.log(event);
-        //TODO: Display box:
+        //Display box:
         d3.select("#storybox").classed("d-none", false);
         d3.select("#story-svg-container").classed("d-none", false);
         //go to step 1:
@@ -80,7 +79,6 @@ class FireMapStory {
      * @param {*} newStoryIndex 
      */
     storyNavigate(newStoryIndex) {
-        console.log("onclick");
         if (newStoryIndex == this.stories.length - 1) {
             d3.select("#storybox-btn-next").classed("disabled", true);
         } else d3.select("#storybox-btn-next").classed("disabled", false);
@@ -100,7 +98,6 @@ class FireMapStory {
     displayStorybyStep(step) {
         if (step < 0) return;
         this.currentStoryIndex = step;
-        console.log("display step:", step);
 
 
         //change display progress bar:
@@ -130,7 +127,7 @@ class FireMapStory {
         //TODO: Highlight Story:
         //Notes use a low-opacity filled rect 
         let rectPosition = this.stories[step].rectPosition;
-        console.log(rectPosition);
+        // console.log(rectPosition);
         let svgSelect = d3.selectAll("#storybox-svg")
         svgSelect.data([rectPosition])
             .selectAll("rect").data(d => [d])
@@ -166,11 +163,10 @@ class FireMapStory {
         User can select \`Prev\` and \`Next\` buttons to sort the fires by \n
          Area burned, Structures Destroyed and Suppression Cost. 
         `;
-        let s1Position = this.getRightPosition(this.getDocumentPosition("#vis-1"));
+        let s1Position = this.getRightPosition(this.getOffset("#vis-1.column"), +150, 0);
         let s1RectPosition = this.getOffsetFromParent("#vis-1", "#fire-map-div");
-        console.log(s1RectPosition);
         let s1 = { text: s1Text, position: s1Position, rectPosition: s1RectPosition, whichVis: "#vis-1" };
-
+        console.log(s1Position);
 
 
         //TODO: Story-2 content:
@@ -178,7 +174,7 @@ class FireMapStory {
         .You can choose to pan in and out of the map, try selecting a fire and see where 
         it stands on our bar chart. 
         `;
-        let s2Position = this.getLeftPosition(this.getDocumentPosition("#vis-2-svg"), -500, -50);
+        let s2Position = this.getLeftPosition(this.getOffset("#vis-2-svg"), -500, -50);
         let s2RectPosition = this.getOffsetFromParent("#vis-2", "#fire-map-div");
         let s2 = { text: s2Text, position: s2Position, rectPosition: s2RectPosition, whichVis: "#vis-2" };
 
@@ -188,7 +184,7 @@ class FireMapStory {
         to zoom into the detailed area it covers and hover over that bar to 
         see statistics for this fire.
         `;
-        let s3Position = this.getLeftPosition(this.getDocumentPosition("#vis-2"), -200, -250);
+        let s3Position = this.getLeftPosition(this.getOffset("#vis-2"), -200, -90);
         let s3RectPosition = this.getOffsetFromParent("#vis-1-div", "#fire-map-div");
         let s3 = {
             text: s3Text,
@@ -201,7 +197,7 @@ class FireMapStory {
         let s4Text = `While the August Complex is currently the 
         largest fire this year, it stands fourth and third on number of structures destroyed and 
         suppression cost`;
-        let s4Position = this.getLeftPosition(this.getDocumentPosition("#vis-2"), -100, +150);
+        let s4Position = this.getLeftPosition(this.getOffset("#vis-2"), -100, +90);
         let s4RectPosition = this.getOffsetFromParent("#vis-1-div", "#fire-map-div");
         let s4 = {
             text: s4Text,
@@ -252,14 +248,16 @@ class FireMapStory {
      * Get DOM element position on page
      * @param {HTML DOM element} element 
      */
-    getOffset(element) {
-        var bound = element.getBoundingClientRect();
+    getOffset(documentId) {
+        var bound = d3.select(documentId).node().getBoundingClientRect();
         var html = document.documentElement;
 
+
         return {
-            y: bound.top + window.pageYOffset - html.clientTop + 5,
-            x: bound.left + window.pageXOffset - html.clientLeft + 5
-        };
+            top: bound.top + window.pageYOffset - html.clientTop + 5,
+            left: bound.left + window.pageXOffset - html.clientLeft + 5,
+            right: bound.right
+        }
     }
 
     getDocumentPosition(documentId) {
