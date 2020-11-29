@@ -63,7 +63,7 @@
                         <a href="#compare-years" class="">California Wildfire History</a>
                     </li>
                     <li class="tab-item">
-                        <a href="#stories">Stories</a>
+                        <a href="#national">Stories</a>
                     </li>
                     <li class="">
                         <button id="menu-forward" onclick="tabForwardClicked()" class="btn btn-link btn-lg icon icon-forward"></button>
@@ -211,7 +211,7 @@
         </div>
 
         <!--  Compare years Visualization-->
-        <!-- ids: #vis-4 #vis-5 #vis-6 -->
+        <!-- ids: #vis-4 #vis-5 #vis-6 #vis-7 -->
         <div id="compare-years-div" class="hashPage">
             <!-- Brief Data column compare Years -->
             <div id="compareyears-intro-div" class="columns font-serif">
@@ -237,8 +237,6 @@
                         <div class="panel-header text-center  py-0">
                             <div class="panel-title h3 font-serif">Ratio of Area Impacted Per Period:</div>
                             <div class="panel-subtitle h5 text-bold font-serif">1960-1989 vs. 1990-2019</div>
-                            <!-- <button id="vis-4-prev" class="btn btn-link disabled">Prev</button>
-                            <button id="vis-4-next" class="btn btn-link ">Next</button> -->
                             <div class="divider"></div>
                         </div>
                         <div class="panel-body">
@@ -258,22 +256,29 @@
 
         </div>
 
-
-
-
-
-
-
-        <!-- <div class="columns">
-            <div class="column col-6 col-mx-auto text-center text-dark">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et vehicula felis. Cras id risus sollicitudin, pulvinar sapien sed, vehicula augue. Quisque odio tortor, lobortis viverra finibus id, tincidunt a sapien. Vestibulum vitae ex semper, tempor
-                    justo sit amet, tristique libero. Nulla suscipit non augue ac venenatis. In in massa id odio bibendum facilisis vel eu felis. Ut dictum non nibh et maximus. Vivamus mattis lorem diam, eu elementum lorem dictum placerat. Nulla condimentum
-                    nisl ac diam tristique iaculis in vehicula felis. Praesent in nibh eget velit commodo rhoncus sit amet vitae metus. Donec quis nibh et metus viverra porta eget sed urna. Phasellus vel leo ullamcorper, tristique nunc quis, dignissim
-                    arcu.
-                </p>
+        <div id="national-div" class="hashPage">
+            <div class="columns">
+                <div id="national-text" class="col-6 col-mx-auto text-justify font-serif">
+                    <h4 class="text-bold mb-0">
+                        The 2020 wildfire season was another record breaker in the US
+                    </h4>
+                    <p>
+                        As of October 27th, the estimated area burned is 8.28 million acres which is 127% of the 10-year average of 6.54 million acres <em>(<a href="https://www.nifc.gov/fireInfo/nfn.htm">NIFC</a>)</em>. California was particularly hard
+                        hit, accounting for about half of the area burned and shattering records, including the August Complex fire which is pushing a million acres alone. The visual below shows major fires across the United States, their causes, the
+                        area burned, suppression cost, and structures destroyed. This is not an off-year, while the number of fires is not increasing, the sizes of fires are. As the climate warms and dries, wildfires are likely to continue increasing
+                        in size <em>(<a href="https://www.pnas.org/content/113/42/11770.short">Abatzoglou & Williams 2016</a>)</em>.
+                    </p>
+                </div>
             </div>
-        </div> -->
+
+            <div class="columns">
+                <div id="vis-8" class="column col-10 col-mx-auto">
+                    <svg id="vis-8-svg"></svg>
+                </div>
+            </div>
+
+
+        </div>
         <!-- TOOLTIP -->
         <div id="tooltip" class="d-none">
             <div class="card text-dark">
@@ -377,6 +382,7 @@
     <script src="js/fireMapStory.js"></script>
     <script src="js/top20fires.js"></script>
     <script src="js/compareYears.js"></script>
+    <script src="js/nationalHistory.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
 </body>
 

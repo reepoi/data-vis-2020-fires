@@ -142,7 +142,7 @@ function nationalHistoryInitialize() {
     isNationalHistoryInit = true;
     loadData().then(data => {
         console.log(data);
-
+        nationalHistory = new NationalHistory(data.nationalHistory);
     })
 }
 
@@ -159,8 +159,8 @@ async function loadData() {
                 'CACounty': CACounty,
                 'top20Fires': top20Fires
             }
-        case "#stories":
-            let nationalHistory = await d3.json("./data/nationalAnnualAcresBurned.csv");
+        case "#national":
+            let nationalHistory = await d3.csv("./data/nationalAnnualAcresBurned.csv");
             return {
                 'nationalHistory': nationalHistory,
             }
@@ -193,8 +193,8 @@ function pagingHandler(hash = "") {
             /* TODO: Add function to handle this */
             compareYearsInitialize();
             break;
-        case "#stories":
-
+        case "#national":
+            nationalHistoryInitialize();
             break;
         case "#fire-map":
             fireMapInitialize();

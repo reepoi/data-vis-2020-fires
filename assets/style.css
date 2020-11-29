@@ -93,7 +93,8 @@ li.tab-item {
 }
 
 #vis-2,
-#vis-4 {
+#vis-4,
+#vis-8 {
     height: 500px;
 }
 
@@ -101,6 +102,10 @@ li.tab-item {
 #vis-6 .panel {
     border: 0px;
     border-left: .05rem solid #dadee4;
+}
+
+#vis-7 {
+    overflow-x: scroll;
 }
 
 a:focus,
@@ -159,7 +164,9 @@ button:focus {
     pointer-events: none;
 }
 
+
 /* Top 20 Fires */
+
 .fireCircle {
     stroke-width: 1px;
     stroke: #000000;
