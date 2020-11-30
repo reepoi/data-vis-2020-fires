@@ -32,7 +32,12 @@ class NationalHistory {
         this.xAxis = d3.axisBottom(this.scaleYears)
             .tickFormat(d3.timeFormat("%Y"));
 
+        //Init states:
+        this.isHighlightNumFires = false;
+        this.isHighlightTotalAcres = false;
 
+
+        //Draw:
         this.drawAxis();
         this.drawTrendline();
         this.drawPlot();
@@ -163,10 +168,10 @@ class NationalHistory {
             .on("mouseout", function(event, d) {
                 d3.select(this).selectAll(".numFires")
                     .classed("numFires-hover", false)
-                    .attr("r", 6);
+                    .attr("r", () => parent.isHighlightNumFires ? 10 : 6);
                 d3.select(this).selectAll(".totalAcres")
                     .classed("totalAcres-hover", false)
-                    .attr("r", 6);
+                    .attr("r", () => parent.isHighlightTotalAcres ? 10 : 6);
                 d3.select(this).selectAll(".yearLine")
                     .classed("yearLine-hover", false);
                 d3.select(this).selectAll(".yearNumber")
@@ -185,6 +190,7 @@ class NationalHistory {
      * 
      */
     drawLegend() {
+        let parent = this;
         let svgSelect = d3.select("#vis-8-svg");
         let numFireLegend = svgSelect.append("g")
             .attr("class", "legend")
@@ -195,42 +201,41 @@ class NationalHistory {
             .attr("cy", 0)
             .attr("r", ".5rem");
         numFireLegend.append("text")
-            .attr("class", "")
+            .attr("class", "numFiresLegendText")
             .attr("x", 17)
             .attr("y", 4)
             .text("Number of Wildfires")
             .classed("text-small", true);
 
         numFireLegend.on("mouseover", function(event, d) {
-                //Hide all total acres:
-                d3.selectAll(".totalAcres")
-                    .classed("quarter-opacity", true);
-                d3.selectAll(".trendTotalAcres")
-                    .classed("quarter-opacity", true);
-                //Highlight numfires stuffs:
-                d3.selectAll(".numFires")
-                    .transition()
-                    .duration(100)
-                    .attr("r", 10)
-                d3.selectAll(".trendNumFires")
-                    .transition().duration(200)
-                    .style("stroke-dasharray", "2,2,2,2,2");
+                d3.select(".numFiresLegendCircle")
+                    .attr("r", "0.7rem")
+                    .style("");
+                d3.select(".numFiresLegendText")
+                    .classed("h5", true)
+                    .classed("text-large", true);
             })
             .on("mouseout", function(event, d) {
-                //unHide all total acres:
-                d3.selectAll(".totalAcres")
-                    .classed("quarter-opacity", false);
-                d3.selectAll(".trendTotalAcres")
-                    .classed("quarter-opacity", false);
-                //unHighlight numfires stuffs:
-                d3.selectAll(".numFires")
-                    .transition()
-                    .duration(100)
-                    .attr("r", 6)
-                d3.selectAll(".trendNumFires")
-                    .transition().duration(200)
-                    .style("stroke-dasharray", "5,5");
+                if (!parent.isHighlightNumFires) {
+                    d3.select(".numFiresLegendCircle")
+                        .attr("r", "0.5rem");
+                    d3.select(".numFiresLegendText")
+                        .classed("h5", false)
+                        .classed("text-large", false);
+                }
 
+            })
+            .on("click", function(event, d) {
+                if (!parent.isHighlightNumFires) {
+                    parent.isHighlightTotalAcres = false;
+                    parent.unhighlightTotalAcres();
+
+                    parent.isHighlightNumFires = true;
+                    parent.highlightNumFires();
+                } else {
+                    parent.isHighlightNumFires = false;
+                    parent.unhighlightNumFires();
+                }
             });
 
         let AcresLegend = svgSelect.append("g")
@@ -242,43 +247,46 @@ class NationalHistory {
             .attr("cy", 0)
             .attr("r", ".5rem");
         AcresLegend.append("text")
-            .attr("class", "")
+            .attr("class", "totalAcresLegendText")
             .attr("x", 17)
             .attr("y", 4)
             .text("Total Acres Burned")
             .classed("text-small", true);
 
         AcresLegend.on("mouseover", function(event, d) {
-                //Hide all total acres:
-                d3.selectAll(".numFires")
-                    .classed("quarter-opacity", true);
-                d3.selectAll(".trendNumFires")
-                    .classed("quarter-opacity", true);
-                //Highlight numfires stuffs:
-                d3.selectAll(".totalAcres")
-                    .transition()
-                    .duration(100)
-                    .attr("r", 10)
-                d3.selectAll(".trendTotalAcres")
-                    .transition().duration(200)
-                    .style("stroke-dasharray", "2,2,2,2,2");
+                d3.select(".totalAcresLegendCircle")
+                    .attr("r", "0.7rem")
+                    .style("stroke", "#3b4351")
+                    .style("stroke-width", "1px");
+                d3.select(".totalAcresLegendText")
+                    .classed("h5", true)
+                    .classed("text-large", true);
             })
             .on("mouseout", function(event, d) {
-                //unHide all total acres:
-                d3.selectAll(".numFires")
-                    .classed("quarter-opacity", false);
-                d3.selectAll(".trendNumFires")
-                    .classed("quarter-opacity", false);
-                //unHighlight numfires stuffs:
-                d3.selectAll(".totalAcres")
-                    .transition()
-                    .duration(100)
-                    .attr("r", 6)
-                d3.selectAll(".trendTotalAcres")
-                    .transition().duration(200)
-                    .style("stroke-dasharray", "5,5");
-
+                if (!parent.isHighlightTotalAcres) {
+                    d3.select(".totalAcresLegendCircle")
+                        .attr("r", "0.5rem")
+                        .style("stroke", "")
+                        .style("stroke-width", "0px");
+                    d3.select(".totalAcresLegendText")
+                        .classed("h5", false)
+                        .classed("text-large", false);
+                }
             })
+            .on("click", function(event, d) {
+                if (!parent.isHighlightTotalAcres) {
+                    parent.isHighlightNumFires = false;
+                    parent.unhighlightNumFires();
+
+                    parent.isHighlightTotalAcres = true;
+                    parent.highlightTotalAcres();
+                } else {
+                    parent.isHighlightTotalAcres = false;
+                    parent.unhighlightTotalAcres();
+                }
+            });
+        //Add Highlight when click:
+
 
     }
 
@@ -361,5 +369,89 @@ class NationalHistory {
 
     numberWithCommas(x) {
         return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    highlightTotalAcres() {
+        //Hide all numfires:
+        d3.selectAll(".numFires")
+            .classed("quarter-opacity", true);
+        d3.selectAll(".trendNumFires")
+            .classed("quarter-opacity", true);
+        //Highlight totalacres stuffs:
+        d3.selectAll(".totalAcres")
+            .transition()
+            .duration(100)
+            .attr("r", 10)
+            .style("stroke", "#3b4351")
+            .style("stroke-width", "1px");
+        d3.selectAll(".trendTotalAcres")
+            .transition().duration(200)
+            .style("stroke-dasharray", "2,2,2,2,2");
+    }
+    unhighlightTotalAcres() {
+        //unHide all numfires:
+        d3.selectAll(".numFires")
+            .classed("quarter-opacity", false);
+        d3.selectAll(".trendNumFires")
+            .classed("quarter-opacity", false);
+        //unHighlight totalacres stuffs:
+        d3.selectAll(".totalAcres")
+            .transition()
+            .duration(100)
+            .attr("r", 6)
+            .style("stroke-width", "0px")
+        d3.selectAll(".trendTotalAcres")
+            .transition().duration(200)
+            .style("stroke-dasharray", "5,5");
+
+        //unhighlight its legend:
+        d3.select(".totalAcresLegendCircle")
+            .attr("r", "0.5rem")
+            .style("stroke", "")
+            .style("stroke-width", "0px");
+        d3.select(".totalAcresLegendText")
+            .classed("h5", false)
+            .classed("text-large", false);
+    }
+
+    highlightNumFires() {
+        //Hide all total acres:
+        d3.selectAll(".totalAcres")
+            .classed("quarter-opacity", true);
+        d3.selectAll(".trendTotalAcres")
+            .classed("quarter-opacity", true);
+        //Highlight numfires stuffs:
+        d3.selectAll(".numFires")
+            .transition()
+            .duration(100)
+            .attr("r", 10)
+            .style("stroke", "#3b4351")
+            .style("stroke-width", "1px");
+        d3.selectAll(".trendNumFires")
+            .transition().duration(200)
+            .style("stroke-dasharray", "2,2,2,2,2");
+        //unhighlight its legend:
+        d3.select(".numFiresLegendCircle")
+            .attr("r", "0.5rem");
+        d3.select(".numFiresLegendText")
+            .classed("h5", false)
+            .classed("text-large", false);
+    }
+    unhighlightNumFires() {
+        //unHide all total acres:
+        d3.selectAll(".totalAcres")
+            .classed("quarter-opacity", false);
+        d3.selectAll(".trendTotalAcres")
+            .classed("quarter-opacity", false);
+        //unHighlight numfires stuffs:
+        d3.selectAll(".numFires")
+            .transition()
+            .duration(100)
+            .attr("r", 6)
+            .style("stroke", "#3b4351")
+            .style("stroke-width", "0px");
+        d3.selectAll(".trendNumFires")
+            .transition().duration(200)
+            .style("stroke-dasharray", "5,5");
     }
 }
