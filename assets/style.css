@@ -114,6 +114,14 @@ button:focus {
     box-shadow: none;
 }
 
+.numFires {
+    fill: #ef4043;
+}
+
+.totalAcres {
+    fill: #72bad5;
+}
+
 
 /* Storytelling overlay */
 
