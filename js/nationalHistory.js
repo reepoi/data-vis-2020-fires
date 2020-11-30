@@ -34,9 +34,9 @@ class NationalHistory {
 
 
         this.drawAxis();
+        this.drawTrendline();
         this.drawPlot();
         this.drawLegend();
-        this.drawTrendline();
     }
 
 
@@ -190,7 +190,7 @@ class NationalHistory {
             .attr("class", "legend")
             .attr("transform", (d, i) => `translate(${this.vizWidth - this.vizMaxWidth - 120},${0 + 20})`);
         numFireLegend.append("circle")
-            .attr("class", "numFires")
+            .attr("class", "numFiresLegendCircle")
             .attr("cx", 0)
             .attr("cy", 0)
             .attr("r", ".5rem");
@@ -201,11 +201,43 @@ class NationalHistory {
             .text("Number of Wildfires")
             .classed("text-small", true);
 
+        numFireLegend.on("mouseover", function(event, d) {
+                //Hide all total acres:
+                d3.selectAll(".totalAcres")
+                    .classed("quarter-opacity", true);
+                d3.selectAll(".trendTotalAcres")
+                    .classed("quarter-opacity", true);
+                //Highlight numfires stuffs:
+                d3.selectAll(".numFires")
+                    .transition()
+                    .duration(100)
+                    .attr("r", 10)
+                d3.selectAll(".trendNumFires")
+                    .transition().duration(200)
+                    .style("stroke-dasharray", "2,2,2,2,2");
+            })
+            .on("mouseout", function(event, d) {
+                //unHide all total acres:
+                d3.selectAll(".totalAcres")
+                    .classed("quarter-opacity", false);
+                d3.selectAll(".trendTotalAcres")
+                    .classed("quarter-opacity", false);
+                //unHighlight numfires stuffs:
+                d3.selectAll(".numFires")
+                    .transition()
+                    .duration(100)
+                    .attr("r", 6)
+                d3.selectAll(".trendNumFires")
+                    .transition().duration(200)
+                    .style("stroke-dasharray", "5,5");
+
+            });
+
         let AcresLegend = svgSelect.append("g")
             .attr("class", "legend")
             .attr("transform", (d, i) => `translate(${this.vizMinWidth + 10},${0 + 20})`);
         AcresLegend.append("circle")
-            .attr("class", "totalAcres")
+            .attr("class", "totalAcresLegendCircle")
             .attr("cx", 0)
             .attr("cy", 0)
             .attr("r", ".5rem");
@@ -215,6 +247,38 @@ class NationalHistory {
             .attr("y", 4)
             .text("Total Acres Burned")
             .classed("text-small", true);
+
+        AcresLegend.on("mouseover", function(event, d) {
+                //Hide all total acres:
+                d3.selectAll(".numFires")
+                    .classed("quarter-opacity", true);
+                d3.selectAll(".trendNumFires")
+                    .classed("quarter-opacity", true);
+                //Highlight numfires stuffs:
+                d3.selectAll(".totalAcres")
+                    .transition()
+                    .duration(100)
+                    .attr("r", 10)
+                d3.selectAll(".trendTotalAcres")
+                    .transition().duration(200)
+                    .style("stroke-dasharray", "2,2,2,2,2");
+            })
+            .on("mouseout", function(event, d) {
+                //unHide all total acres:
+                d3.selectAll(".numFires")
+                    .classed("quarter-opacity", false);
+                d3.selectAll(".trendNumFires")
+                    .classed("quarter-opacity", false);
+                //unHighlight numfires stuffs:
+                d3.selectAll(".totalAcres")
+                    .transition()
+                    .duration(100)
+                    .attr("r", 6)
+                d3.selectAll(".trendTotalAcres")
+                    .transition().duration(200)
+                    .style("stroke-dasharray", "5,5");
+
+            })
 
     }
 

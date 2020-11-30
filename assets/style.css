@@ -94,7 +94,10 @@ li.tab-item {
 }
 
 #vis-2,
-#vis-4,
+#vis-4 {
+    height: 500px;
+}
+
 #vis-8 {
     height: 500px;
 }
@@ -119,7 +122,8 @@ button:focus {
     font-weight: 500;
 }
 
-.numFires {
+.numFires,
+.numFiresLegendCircle {
     fill: #ef4043;
 }
 
@@ -129,7 +133,8 @@ button:focus {
     stroke-width: 1px;
 }
 
-.totalAcres {
+.totalAcres,
+.totalAcresLegendCircle {
     fill: #72bad5;
 }
 
@@ -165,7 +170,7 @@ button:focus {
 
 .trendNumFires {
     stroke: #d62839;
-    stroke-width: 2.5px;
+    stroke-width: 2px;
     stroke-dasharray: 5, 5;
 }
 
@@ -173,6 +178,10 @@ button:focus {
     stroke: #4ba3c3;
     stroke-width: 2.5px;
     stroke-dasharray: 5, 5;
+}
+
+.quarter-opacity {
+    opacity: 0.25;
 }
 
 
