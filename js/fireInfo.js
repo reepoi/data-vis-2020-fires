@@ -14,6 +14,7 @@ class FireInfo {
         //Vis sizing:
         this.vizBarWidth = d3.select("#vis-1-div").style("width").replace("px", "") - 20;
         d3.select("#vis-1-svg").style("width", `${this.vizBarWidth}px`);
+
         // this.vizBarHeight = d3.select("#vis-1-svg").style("height").replace("px", ""); //not using
         this.vizBarMinWidth = 10;
 
@@ -44,6 +45,7 @@ class FireInfo {
         this.attachButtonHandlers();
         this.attachDropdownHandlers();
         this.attachToastClearButton();
+
     }
 
     ////////////////////////////////////
