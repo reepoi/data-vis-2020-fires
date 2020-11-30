@@ -87,7 +87,8 @@ li.tab-item {
 
 #tooltip,
 #tooltipcmpyear,
-#tooltipcmpyearfire {
+#tooltipcmpyearfire,
+#national-tooltip {
     position: absolute;
     z-index: 1000;
 }
@@ -118,8 +119,35 @@ button:focus {
     fill: #ef4043;
 }
 
+.numFires-hover {
+    fill: #be1e2d;
+    stroke: #3b4351;
+    stroke-width: 1px;
+}
+
 .totalAcres {
     fill: #72bad5;
+}
+
+.totalAcres-hover {
+    fill: #0e4c6d;
+    stroke: #3b4351;
+    stroke-width: 1px;
+}
+
+.yearLine {
+    stroke: #bcc3ce;
+    stroke-width: 0.3px;
+}
+
+.yearLine-hover {
+    stroke-width: 0.6px;
+}
+
+.yearHiddenLine {
+    stroke: black;
+    stroke-width: 10px;
+    stroke-opacity: 0;
 }
 
 

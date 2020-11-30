@@ -60,23 +60,94 @@ class NationalHistory {
     }
 
     drawPlot() {
+        let parent = this;
         let svgSelect = d3.select("#vis-8-svg");
-        let groupSelect = svgSelect.append("g")
-            .attr("class", "scatters")
-            .attr("transform", "translate(0,0)");
-        groupSelect.selectAll(".numFires").data(this.data)
-            .join("circle")
-            .attr("class", "numFires")
-            .attr("r", 6)
-            .attr("cx", d => this.scaleYears(new Date(d.year, 0, 1)))
-            .attr("cy", d => this.scaleNumFires(d.numFires));
+        let groupSelect = svgSelect.selectAll(".yearGroup").data(this.data)
+            .join("g")
+            .attr("class", "yearCircles");
+        groupSelect.each(function(d, i) {
+            d3.select(this).selectAll(".yearHiddenLine").data(d => [d])
+                .join("line")
+                .attr("class", "yearHiddenLine")
+                .attr("x1", d => parent.scaleYears(new Date(d.year, 0, 1)))
+                .attr("x2", d => parent.scaleYears(new Date(d.year, 0, 1)))
+                .attr("y1", d => parent.scaleNumFires(parent.scaleNumFires.domain()[0]))
+                .attr("y2", d => parent.scaleNumFires(parent.scaleNumFires.domain()[1]));
+            d3.select(this).selectAll(".yearLine").data(d => [d])
+                .join("line")
+                .attr("class", "yearLine")
+                .attr("x1", d => parent.scaleYears(new Date(d.year, 0, 1)))
+                .attr("x2", d => parent.scaleYears(new Date(d.year, 0, 1)))
+                .attr("y1", d => parent.scaleNumFires(parent.scaleNumFires.domain()[0]))
+                .attr("y2", d => parent.scaleNumFires(parent.scaleNumFires.domain()[1]));
+            d3.select(this).selectAll(".numFires").data(d => [d])
+                .join("circle")
+                .attr("class", "numFires")
+                .attr("r", 6)
+                .attr("cx", d => parent.scaleYears(new Date(d.year, 0, 1)))
+                .attr("cy", d => parent.scaleNumFires(d.numFires));
+            d3.select(this).selectAll(".totalAcres").data(d => [d])
+                .join("circle")
+                .attr("class", "totalAcres")
+                .attr("r", 6)
+                .attr("cx", d => parent.scaleYears(new Date(d.year, 0, 1)))
+                .attr("cy", d => parent.scaleTotalAcres(d.totalAcres));
 
-        groupSelect.selectAll(".totalAcres").data(this.data)
-            .join("circle")
-            .attr("class", "totalAcres")
-            .attr("r", 6)
-            .attr("cx", d => this.scaleYears(new Date(d.year, 0, 1)))
-            .attr("cy", d => this.scaleTotalAcres(d.totalAcres));
+
+        });
+        groupSelect.on("mouseover", function(event, d) {
+                d3.select(this).selectAll(".numFires")
+                    .classed("numFires-hover", true)
+                    .attr("r", 8);
+                d3.select(this).selectAll(".totalAcres")
+                    .classed("totalAcres-hover", true)
+                    .attr("r", 8);
+                d3.select(this).selectAll(".yearLine")
+                    .classed("yearLine-hover", true);
+                //Display Tooltip:
+                let tooltip = d3.select("#national-tooltip");
+                tooltip.style("opacity", 0);
+
+                let year = d.year;
+                let numFires = parent.numberWithCommas(d.numFires);
+                let totalAcres = parent.numberWithCommas(d.totalAcres);
+
+                //Populate header:
+                tooltip.select(".card-title").select("span").text(year);
+                //populate body:
+                tooltip.select(".card-body").selectAll("span").data([numFires, totalAcres])
+                    .text(d => d);
+
+                //Tooltip transition and position:
+                tooltip
+                    .style("left", (event.pageX + 20) + 'px')
+                    .style("top", (event.pageY + 20) + 'px')
+                    .classed("d-none", false)
+                    .style("transform", "translate(-50px,-50px) scale(0.4)")
+                    .transition()
+                    .duration(200)
+                    .style("opacity", 1.0)
+                    .style("transform", "scale(1)");
+                tooltip.select(".card").raise();
+
+
+            })
+            .on("mouseout", function(event, d) {
+                d3.select(this).selectAll(".numFires")
+                    .classed("numFires-hover", false)
+                    .attr("r", 6);
+                d3.select(this).selectAll(".totalAcres")
+                    .classed("totalAcres-hover", false)
+                    .attr("r", 6);
+                d3.select(this).selectAll(".yearLine")
+                    .classed("yearLine-hover", false);
+
+                //Remove tooltip:
+                let tooltip = d3.select("#national-tooltip")
+                    .style("opacity", 0)
+                    .classed("d-none", true)
+                    .style("transform", "");
+            })
     }
 
     dataPrepare() {
@@ -85,5 +156,9 @@ class NationalHistory {
             numFires: +d.numFires.replaceAll(",", ""),
             totalAcres: +d.totalAcres.replaceAll(",", ""),
         }));
+    }
+
+    numberWithCommas(x) {
+        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
     }
 }
