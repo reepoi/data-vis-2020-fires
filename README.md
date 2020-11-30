@@ -7,6 +7,7 @@ Website: https://reepoi.github.io/data-vis-2020-fires/
 - [x] Bar chart showing `Structures Destroyed`, `Area burned`, `Suppresion Cost`
 - [x] Coordinated user clicks and navigations 
 - [x] Filtering fires data by causes and dates on right panel
-- [`in progress`] Compare Years from California's wildfires
-- [`in progress`] Story-telling navigation (under fire-map) with animations
+- [x] Compare Years from California's wildfires
+- [x] Story-telling navigation (under fire-map) with animations
+- [x] National Wildfires history from 1983 Visualization
 
