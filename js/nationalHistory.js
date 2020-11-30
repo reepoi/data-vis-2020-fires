@@ -36,6 +36,7 @@ class NationalHistory {
         this.drawAxis();
         this.drawPlot();
         this.drawLegend();
+        this.drawTrendline();
     }
 
 
@@ -221,7 +222,69 @@ class NationalHistory {
      * 
      */
     drawTrendline() {
+        let sortedData = this.data.reverse();
+        let xSeries = d3.range(1, sortedData.length + 1)
+        let ySeriesNumFires = sortedData.map((d) => d.numFires);
+        let ySeriesTotalAcres = sortedData.map((d) => d.totalAcres);
 
+        let lsqNumFires = this.leastSquares(xSeries, ySeriesNumFires);
+        let x1 = sortedData[0].year;
+        let x2 = sortedData[sortedData.length - 1].year;
+        let y1 = lsqNumFires[0] + lsqNumFires[1];
+        let y2 = lsqNumFires[0] * xSeries.length + lsqNumFires[1];
+
+        let trendNumFires = d3.select("#vis-8-svg").selectAll(".trendNumFires").data([
+                [x1, x2, y1, y2]
+            ])
+            .join("line")
+            .attr("class", "trendNumFires")
+            .attr("x1", d => this.scaleYears(new Date(d[0], 0, 1)))
+            .attr("x2", d => this.scaleYears(new Date(d[1], 0, 1)))
+            .attr("y1", d => this.scaleNumFires(d[2]))
+            .attr("y2", d => this.scaleNumFires(d[3]));
+
+        let lsqTotalAcres = this.leastSquares(xSeries, ySeriesTotalAcres);
+        y1 = lsqTotalAcres[0] + lsqTotalAcres[1];
+        y2 = lsqTotalAcres[0] * xSeries.length + lsqTotalAcres[1];
+        let trendTotalAcres = d3.select("#vis-8-svg").selectAll(".trendTotalAcres").data([
+                [x1, x2, y1, y2]
+            ])
+            .join("line")
+            .attr("class", "trendTotalAcres")
+            .attr("x1", d => this.scaleYears(new Date(d[0], 0, 1)))
+            .attr("x2", d => this.scaleYears(new Date(d[1], 0, 1)))
+            .attr("y1", d => this.scaleTotalAcres(d[2]))
+            .attr("y2", d => this.scaleTotalAcres(d[3]));
+
+    }
+
+
+    /**
+     * THIS CODE IS from http://bl.ocks.org/benvandyke/8459843
+     * @param {*} xSeries 
+     * @param {*} ySeries 
+     */
+    // returns slope, intercept and r-square of the line
+    leastSquares(xSeries, ySeries) {
+        var reduceSumFunc = function(prev, cur) { return prev + cur; };
+
+        var xBar = xSeries.reduce(reduceSumFunc) * 1.0 / xSeries.length;
+        var yBar = ySeries.reduce(reduceSumFunc) * 1.0 / ySeries.length;
+
+        var ssXX = xSeries.map(function(d) { return Math.pow(d - xBar, 2); })
+            .reduce(reduceSumFunc);
+
+        var ssYY = ySeries.map(function(d) { return Math.pow(d - yBar, 2); })
+            .reduce(reduceSumFunc);
+
+        var ssXY = xSeries.map(function(d, i) { return (d - xBar) * (ySeries[i] - yBar); })
+            .reduce(reduceSumFunc);
+
+        var slope = ssXY / ssXX;
+        var intercept = yBar - (xBar * slope);
+        var rSquare = Math.pow(ssXY, 2) / (ssXX * ssYY);
+
+        return [slope, intercept, rSquare];
     }
 
     dataPrepare() {

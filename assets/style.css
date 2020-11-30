@@ -163,6 +163,18 @@ button:focus {
     opacity: 1;
 }
 
+.trendNumFires {
+    stroke: #d62839;
+    stroke-width: 2.5px;
+    stroke-dasharray: 5, 5;
+}
+
+.trendTotalAcres {
+    stroke: #4ba3c3;
+    stroke-width: 2.5px;
+    stroke-dasharray: 5, 5;
+}
+
 
 /* Storytelling overlay */
 
