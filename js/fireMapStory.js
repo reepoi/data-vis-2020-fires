@@ -159,9 +159,9 @@ class FireMapStory {
 
     storyContentCreate() {
 
-        let s1Text = `This Bar Chart displays 2020's wildfire stats.\n
-        User can select \`Prev\` and \`Next\` buttons to sort the fires by \n
-         Area burned, Structures Destroyed and Suppression Cost. 
+        let s1Text = `The bar chart displays 2020's wildfire stats.\n
+        Select the \`Prev\` and \`Next\` buttons to sort the fires by \n
+         Area Burned, Structures Destroyed, and Suppression Cost. 
         `;
         let s1Position = this.getRightPosition(this.getOffset("#vis-1.column"), +150, 0);
         let s1RectPosition = this.getOffsetFromParent("#vis-1", "#fire-map-div");
@@ -170,9 +170,9 @@ class FireMapStory {
 
 
         //TODO: Story-2 content:
-        let s2Text = `This Map displays the reported wildfires in the U.S. this year\n
-        .You can choose to pan in and out of the map, try selecting a fire and see where 
-        it stands on our bar chart. 
+        let s2Text = `The map displays the reported wildfires in the U.S. during 2020. 
+        Zoom and pan the map for more details, or try selecting a fire and see where 
+        it stands statistically on our bar chart. 
         `;
         let s2Position = this.getLeftPosition(this.getOffset("#vis-2-svg"), -500, -50);
         let s2RectPosition = this.getOffsetFromParent("#vis-2", "#fire-map-div");
@@ -180,9 +180,9 @@ class FireMapStory {
 
 
         //TODO: Story 3 content:
-        let s3Text = `We can click on the August Complex on either visualizations
-        to zoom into the detailed area it covers and hover over that bar to 
-        see statistics for this fire.
+        let s3Text = `Click on the August Complex fire on either the bar chart or map
+        to zoom to its extent and hover over its bar to 
+        see the full statistics for the fire.
         `;
         let s3Position = this.getLeftPosition(this.getOffset("#vis-2"), -200, -90);
         let s3RectPosition = this.getOffsetFromParent("#vis-1-div", "#fire-map-div");
@@ -196,7 +196,7 @@ class FireMapStory {
 
         let s4Text = `While the August Complex is currently the 
         largest fire this year, it stands fourth and third on number of structures destroyed and 
-        suppression cost`;
+        suppression cost, respectively.`;
         let s4Position = this.getLeftPosition(this.getOffset("#vis-2"), -100, +90);
         let s4RectPosition = this.getOffsetFromParent("#vis-1-div", "#fire-map-div");
         let s4 = {
