@@ -274,6 +274,7 @@ class FireInfo {
      */
     attachButtonHandlers() {
         let parent = this;
+        let btnTitles = ["Area Burned", "Structures", "Cost"]
         let prevBtn = d3.select("#vis-1-prev")
             .on("click", function(event) {
                 parent.currentIndex -= 1;
@@ -283,12 +284,21 @@ class FireInfo {
                 //disable button:
                 if (parent.currentIndex === 0) {
                     d3.select(this).classed("disabled", true);
+                    d3.select(this).select(".page-item-title").classed("d-none", true)
+                } else {
+                    d3.select(this).select(".page-item-title")
+                        .classed("d-none", false)
+                        .text(btnTitles[parent.currentIndex - 1]);
                 }
                 d3.select("#vis-1-next").classed("disabled", false);
+                d3.select("#vis-1-next").select(".page-item-title")
+                    .classed("d-none", false)
+                    .text(btnTitles[parent.currentIndex + 1]);
+
 
                 parent.pageChangeFireInfo(parent.currentPage);
 
-                //return filter to All://TODO: //FIXME: ?
+                //return filter to All
                 let dropdown = d3.select("#cause-dropdown");
                 dropdown.node().value = 'all';
                 dropdown.dispatch("change");
@@ -312,8 +322,17 @@ class FireInfo {
                 //disable button:
                 if (parent.currentIndex === parent.pages.length - 1) {
                     d3.select(this).classed("disabled", true);
+                    d3.select(this).select(".page-item-title")
+                        .classed("d-none", true);
+                } else {
+                    d3.select(this).select(".page-item-title")
+                        .classed("d-none", false)
+                        .text(btnTitles[parent.currentIndex + 1]);
                 }
                 d3.select("#vis-1-prev").classed("disabled", false);
+                d3.select("#vis-1-prev").select(".page-item-title")
+                    .classed("d-none", false)
+                    .text(btnTitles[parent.currentIndex - 1]);
 
                 parent.pageChangeFireInfo(parent.currentPage);
 

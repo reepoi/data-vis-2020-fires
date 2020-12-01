@@ -124,14 +124,36 @@
                 <div id="vis-1" class="column col-5 col-mr-auto col-sm-10">
                     <div class="panel">
                         <div class="panel-header text-center  py-0">
-                            <button id="storybox-btn-activate" class="btn btn-primary s-circle float-right disabled">
+
+                            <button id="storybox-btn-activate" class="btn btn-primary s-circle float-right disabled tooltip" data-tooltip="See Guidelines">
                                 <i class="icon icon-message"></i>
                             </button>
                             <div class="panel-title h3 font-serif">Area Burned:</div>
                             <div class="panel-subtitle h5 text-bold font-serif">Size by Acres</div>
+                            <br>
                             <!-- Pagination on bar chart -->
-                            <button id="vis-1-prev" class="btn btn-link disabled">Prev</button>
-                            <button id="vis-1-next" class="btn btn-link ">Next</button>
+
+                            <div class="columns">
+                                <div class="column col-6 col-mx-auto">
+                                    <ul class="pagination">
+                                        <li class="page-item page-prev text-left">
+                                            <a id="vis-1-prev" class="btn btn-link text-left disabled">
+                                                <div class="">Previous</div>
+                                                <div class="page-item-title h5 d-none">Area</div>
+                                            </a>
+                                        </li>
+                                        <li class="page-item page-next">
+                                            <a id="vis-1-next" class="btn btn-link text-right">
+                                                <div class="">Next</div>
+                                                <div class="page-item-title h5">Structures</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+
                             <div class="divider"></div>
                             <div id="vis-1-toast" class="toast d-none">
                                 <button class="btn btn-clear float-right"></button>
