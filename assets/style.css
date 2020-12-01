@@ -93,9 +93,10 @@ li.tab-item {
     z-index: 1000;
 }
 
+#vis-1,
 #vis-2,
 #vis-4 {
-    height: 500px;
+    height: 600px;
 }
 
 #vis-8 {
