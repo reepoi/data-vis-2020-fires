@@ -194,7 +194,7 @@ class NationalHistory {
         let svgSelect = d3.select("#vis-8-svg");
         let numFireLegend = svgSelect.append("g")
             .attr("class", "legend")
-            .attr("transform", (d, i) => `translate(${this.vizMinWidth + 10},${0 + 15})`);
+            .attr("transform", (d, i) => `translate(${this.vizMinWidth + 10},${0 + 45})`);
         numFireLegend.append("circle")
             .attr("class", "numFiresLegendCircle")
             .attr("cx", 0)
@@ -241,7 +241,7 @@ class NationalHistory {
 
         let AcresLegend = svgSelect.append("g")
             .attr("class", "legend")
-            .attr("transform", (d, i) => `translate(${this.vizMinWidth + 10},${0 + 45})`);
+            .attr("transform", (d, i) => `translate(${this.vizMinWidth + 10},${0 + 15})`);
         AcresLegend.append("circle")
             .attr("class", "totalAcresLegendCircle")
             .attr("cx", 0)
