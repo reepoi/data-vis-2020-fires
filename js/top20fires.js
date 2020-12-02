@@ -2,7 +2,7 @@ class Top20Fires {
     constructor(svgID, data) {
         this.svg = d3.select('#' + svgID).attr('width', 600).attr('height', 250);
         this.data = data;
-        this.minArea = d3.min(data, d => Number(d.acres.replace(/,/g, '')));
+        this.minArea = d3.min(data, d => Number(d.acres.replace(/,/g, ''))); // commas need removal before parsing
         this.maxArea = d3.max(data, d => Number(d.acres.replace(/,/g, '')));
         this.cScale = d3.scaleSqrt().domain([this.minArea, this.maxArea]).range([3, 20]);
         this.circleObjs = [];
@@ -16,6 +16,9 @@ class Top20Fires {
         this.drawCircles();
     }
 
+    /*
+     * Add the title of the visualization at its top
+     */
     drawTitle() {
         this.svg.append('text')
             .attr('class', 'fireCircleTitle text-bold h5')
@@ -23,6 +26,11 @@ class Top20Fires {
             .attr('transform', 'translate(95, 30)');
     }
 
+    /*
+     * Initialize the data for each cirlce drawn
+     * Note the numbers of acres are strings with commas
+     * so include regex to remove them when parsing
+     */
     initCircleObjs() {
         for (let i = 0; i < 20; i++) {
             let obj = {};
@@ -36,10 +44,13 @@ class Top20Fires {
         this.circleObjs = this.circleObjs.sort((a, b) => +a.year - +b.year);
     }
 
+    /*
+     * Create the legend for the colored circles
+     */
     initLegend() {
         let legendRectSize = 130;
         let legend = this.svg.selectAll('.legend')
-            .data(['Time Periods:', 'Pre-1960', '1960-1989', '1990-2019', '2020'])
+            .data(['Time Periods:', 'Pre-1960', '1960-1989', '1990-2019', '2020']) // the legend title is added special
             .enter()
             .append('g')
             .attr('class', 'circle-legend')
@@ -47,7 +58,7 @@ class Top20Fires {
                 let horz = i * legendRectSize + 3;
                 return 'translate(' + horz + ',235)';
             });
-        legend.filter(d => d !== 'Time Periods:').append('circle')
+        legend.filter(d => d !== 'Time Periods:').append('circle') // do not add a circle to the legend title
             .attr('class', d => 'fireCircle period' + d)
             .attr('cx', 0)
             .attr('cy', 0)
@@ -56,9 +67,14 @@ class Top20Fires {
             .attr('x', 17)
             .attr('y', 4)
             .text(d => d)
-            .classed('text-bold', d => d === 'Time Periods:');
+            .classed('text-bold', d => d === 'Time Periods:'); // special styling for the legend title
     }
 
+    /*
+     * Draw the years when a top 20 fire occured.
+     * They are evenly spaced.
+     * Lines drop down from each year label
+     */
     drawAxes() {
         let lastX = 3;
         let lastYear = this.circleObjs[0].year;
@@ -68,7 +84,7 @@ class Top20Fires {
         legendGroup.selectAll('text')
             .data(this.circleObjs, d => d.year)
             .join('text')
-            .attr('x', d => {
+            .attr('x', d => { // shift text right only when the year changes
                 if (lastYear != d.year) {
                     lastX += this.xSpacing;
                     lastYear = d.year;
@@ -85,7 +101,7 @@ class Top20Fires {
             .data(this.circleObjs, d => d.year)
             .join('line')
             .attr('x1', d => {
-                if (lastYear != d.year) {
+                if (lastYear != d.year) { // shift line start right only when year changes
                     lastX1 += this.xSpacing;
                     lastYear = d.year;
                 }
@@ -93,7 +109,7 @@ class Top20Fires {
             })
             .attr('y1', 10)
             .attr('x2', d => {
-                if (lastYear2 != d.year) {
+                if (lastYear2 != d.year) { // shift line end right only when year changes
                     lastX2 += this.xSpacing;
                     lastYear2 = d.year;
                 }
@@ -103,10 +119,16 @@ class Top20Fires {
             .classed('fireCircleLine', true);
     }
 
+    /*
+     * The each circle under each year label.
+     * The circles are stacked with no overlap.
+     */
     drawCircles() {
         let heights = {};
         let lastYear = this.circleObjs[0].year;
         let yearSum = 0;
+
+        // Get the total height of the stacked circles for each year
         this.circleObjs.forEach(obj => {
             if (lastYear != obj.year) {
                 heights[lastYear] = yearSum;
@@ -116,8 +138,11 @@ class Top20Fires {
             yearSum += obj.cradius * 2;
         });
         heights[lastYear] = yearSum;
+
         let lastX = 20;
         lastYear = this.circleObjs[0].year;
+
+        // offset the circle stack height so it is centered on each line
         let lastY = 55 - heights[lastYear] / 2 - this.circleObjs[0].cradius * 2;
         this.svg.append('g')
             .attr('class', 'circleGroup')
@@ -126,14 +151,14 @@ class Top20Fires {
             .data(this.circleObjs, d => d.year)
             .join('circle')
             .attr('r', d => d.cradius)
-            .attr('cx', d => {
+            .attr('cx', d => { // place circles on next line only if the year changes
                 if (lastYear != d.year) {
                     lastX += this.xSpacing;
                     lastYear = d.year;
                 }
                 return lastX;
             })
-            .attr('cy', d => {
+            .attr('cy', d => { // place circles on next line only if the year changes
                 if (lastYear != d.year) {
                     lastYear = d.year;
                     lastY = 55 - heights[lastYear] / 2;
@@ -142,7 +167,7 @@ class Top20Fires {
                 lastY += d.cradius * 2;
                 return result + d.cradius;
             })
-            .on('mouseover', function (e, d) {
+            .on('mouseover', function (e, d) { // add tooltip and style change on hover
                 let tooltipSelect = d3.select("#tooltipcmpyearfire");
                 tooltipSelect
                     .style("opacity", 0);
@@ -178,7 +203,7 @@ class Top20Fires {
                     .style("transform", "");
                 d3.select(this).classed('fireCircle-hover', false)
             })
-            .attr('class', d => {
+            .attr('class', d => { // set the default style of each circle; circle styles are named 'period' + <year range of circle>
                 let year = +d.year;
                 if (year === 2020) {
                     return 'fireCircle period2020';

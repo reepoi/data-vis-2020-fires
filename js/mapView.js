@@ -88,7 +88,6 @@ class MapView {
         this.addPointsOrPolygonsBasedOnZoom();
     }
 
-
     /*
      * Set icon color scale
      */
@@ -294,8 +293,10 @@ class MapView {
         }
     }
 
-
-
+    /*
+     * Helper method for finding highlighting, and opening
+     * popup for currently selected polygon from polyToSelectOnLayerLoad
+     */
     selectPolygon() {
         // deselect all others
         mapView.getLeafletMap().eachLayer(function(layer) {
@@ -312,8 +313,6 @@ class MapView {
             }
         });
     }
-
-
 
     ////////////////////////////////////////////////////////////
     // Style methods ///////////////////////////////////////////
@@ -336,6 +335,9 @@ class MapView {
         return "<b>" + props.IncidentName + "</b><br>" + mapView.numberWithCommas(props[mapView.fireInfoPage]) + mapView.getPopupFirePageStatMessage();
     }
 
+    /*
+     * Helper to update the popup text based on the filtering category of fireInfo.js
+     */
     getPopupFirePageStatMessage() {
         switch (mapView.fireInfoPage) {
             case "SizeAcre":
