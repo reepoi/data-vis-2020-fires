@@ -17,9 +17,9 @@ window.addEventListener("hashchange", function(e) {
 /**
  * GLOBAL CONSTANTS:
  */
+var mapView;
 const tabHashes = getTabHashes();
-const mapView = new MapView('vis-2', [MAP_INIT_LAT, MAP_INIT_LONG], MAP_INIT_ZOOM);
-const mapViewCompareYears = new MapViewCompareYears('vis-5', [MAP_CMP_INIT_LAT, MAP_CMP_INIT_LONG], MAP_CMP_INIT_ZOOM);
+var mapViewCompareYears;
 
 /** Variables to keep the website from reloading and redrawing */
 var isFireMapInit = false;
@@ -45,7 +45,9 @@ function fireMapInitialize() {
 
     loadData().then(data => {
         //Initialize barchart and mapview:
+
         let fireInfo = new FireInfo(data);
+        mapView = new MapView('vis-2', [MAP_INIT_LAT, MAP_INIT_LONG], MAP_INIT_ZOOM)
         mapView.drawMapFeatures(data, fireInfo.currentPage);
 
         /**
@@ -136,6 +138,7 @@ function compareYearsInitialize() {
 
     loadData().then(data => {
         // console.log(data);
+        mapViewCompareYears = new MapViewCompareYears('vis-5', [MAP_CMP_INIT_LAT, MAP_CMP_INIT_LONG], MAP_CMP_INIT_ZOOM)
         let top20fires = new Top20Fires('vis-7-svg', data.top20Fires);
 
         function updateCompareYears(selectedCounty) {
