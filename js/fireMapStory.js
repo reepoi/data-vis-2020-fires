@@ -170,7 +170,6 @@ class FireMapStory {
         let s1Position = this.getRightPosition(this.getOffset("#vis-1.column"), +150, 0);
         let s1RectPosition = this.getOffsetFromParent("#vis-1", "#fire-map-div");
         let s1 = { text: s1Text, position: s1Position, rectPosition: s1RectPosition, whichVis: "#vis-1" };
-        console.log(s1Position);
 
 
         // Story-2 content:

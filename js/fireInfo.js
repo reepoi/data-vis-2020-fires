@@ -310,7 +310,6 @@ class FireInfo {
 
         let nextBtn = d3.select("#vis-1-next")
             .on("click", function(event) {
-                console.log("clicked");
                 parent.currentIndex += 1;
                 //Change Info display:
                 parent.currentPage = parent.pages[parent.currentIndex];
