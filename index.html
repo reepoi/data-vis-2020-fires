@@ -41,11 +41,8 @@
             <a href="https://github.com/reepoi/data-vis-2020-fires/tree/main" class="btn btn-link text-dark">GitHub</a>
         </section>
     </header>
-
     <div class="divider"></div>
-
     <!-- Page Content -->
-
     <div class="container">
         <!-- Visualization Name/options -->
         <div class="columns font-serif">
@@ -122,7 +119,6 @@
                 <div id="vis-1" class="column col-5 col-mr-auto col-sm-10">
                     <div class="panel">
                         <div class="panel-header text-center  py-0">
-
                             <button id="storybox-btn-activate" class="btn btn-primary s-circle float-right disabled tooltip" data-tooltip="See Guidelines">
                                 <i class="gg-info"></i>
                             </button>
@@ -130,7 +126,6 @@
                             <div class="panel-subtitle h5 text-bold font-serif">Size by Acres</div>
                             <br>
                             <!-- Pagination on bar chart -->
-
                             <div class="columns">
                                 <div class="column col-6 col-mx-auto">
                                     <ul class="pagination">
@@ -149,9 +144,7 @@
                                     </ul>
                                 </div>
                             </div>
-
-
-
+                            <!-- Error toast when no fire data -->
                             <div class="divider"></div>
                             <div id="vis-1-toast" class="toast d-none">
                                 <button class="btn btn-clear float-right"></button>
@@ -191,7 +184,7 @@
                 <div id="vis-3" class="d-none"></div>
 
             </div>
-            <!-- Storytelling content -->
+            <!-- Guideline box content -->
             <div id="story-container" class="">
                 <div id="storybox" class="columns d-none">
                     <div id="story-card" class="column col-3 card text-dark m-0 p-0">
@@ -273,14 +266,13 @@
                 <div id="vis-5" class="column col-7 col-sm-12">
                     <!-- Visualization 5 -->
                 </div>
-                <!-- Deleted Vis-6 -->
                 <div id="vis-6" class="d-none"></div>
             </div>
 
         </div>
 
     </div>
-
+    <!-- NATIONAL WILDFIRE HISTORY Tab -->
     <div id="national-div" class="hashPage d-none">
         <div class="columns">
             <div id="national-text" class="col-6 col-mx-auto text-justify font-serif">
@@ -295,7 +287,7 @@
                 </p>
             </div>
         </div>
-
+        <!-- Scatterplot visualization for national -->
         <div class="columns">
             <div id="vis-8" class="column col-11 col-mx-auto">
                 <svg id="vis-8-svg"></svg>
@@ -387,21 +379,22 @@
             </div>
         </div>
     </div>
-
+    <!-- Tooltip for national tab -->
     <div id="national-tooltip" class="d-none">
         <div class="card text-dark text-small">
             <div class="card-body">
                 <!-- NumFires -->
                 <div>
-                    Est. <span class="h5"></span> Wildfires
+                    Est. <span class="h5 text-error"></span> Wildfires
                 </div>
                 <!-- Total Areas-->
                 <div>
-                    Est. <span class="h5"></span> Total Acres Burned nation-wide
+                    Est. <span class="h5 text-primary"></span> Total Acres Burned nation-wide
                 </div>
             </div>
         </div>
     </div>
+    <!-- Footer -->
     <div class="divider"></div>
     <div class="columns bg-gray m-2 p-2">
         <div class="column col-6 col-mx-auto text-centered text-small">
@@ -412,10 +405,6 @@
                 Designed and built by Huy Tran, Taos Transue, Troy Saltiel
             </p>
         </div>
-    </div>
-
-    </div>
-
     </div>
 
 

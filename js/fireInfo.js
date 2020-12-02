@@ -14,8 +14,6 @@ class FireInfo {
         //Vis sizing:
         this.vizBarWidth = d3.select("#vis-1-div").style("width").replace("px", "") - 20;
         d3.select("#vis-1-svg").style("width", `${this.vizBarWidth}px`);
-
-        // this.vizBarHeight = d3.select("#vis-1-svg").style("height").replace("px", ""); //not using
         this.vizBarMinWidth = 10;
 
 
@@ -63,8 +61,8 @@ class FireInfo {
     }
 
     /**
-     * 
-     * @param {*} statName 
+     * Draw the panel title and total data
+     * @param {String} statName - given current page to draw the panel
      */
     drawPanelInfo(statName = this.currentPage) {
         let panelSelection = d3.select("#vis-1").select(".panel");
@@ -83,7 +81,9 @@ class FireInfo {
     /**
      * Function to draw bar charts on vis-1
      * ONLY DRAW this.showingData
-     * Given a scale:
+     * Given a scale
+     * @param {d3.Scale} scaleX - scale to draw the bar chart (area, structures, cost) 
+     * @param {String} statName -given current page
      */
     drawFireChart(scaleX = this.pagesScaleX[this.currentIndex], statName = this.currentPage) {
         //Set up scales:
@@ -232,7 +232,7 @@ class FireInfo {
                     .classed("d-none", true)
                     .style("transform", "");
 
-                //DONE: Only unhighlight if not currentSelectedFire (or there's no selected)
+                //Only unhighlight if not currentSelectedFire (or there's no selected)
                 if (parent.currentSelectedFire == undefined ||
                     d.properties.IncidentID != parent.currentSelectedFire.feature.properties.IncidentID) {
                     d3.select(this).select("rect")
@@ -269,8 +269,6 @@ class FireInfo {
     /**
      * Attach Buttons (Previous, Next) into panel
      * that lets user navigate through fire charts.
-     * //FIXME: Keep filtering?
-     * //Or TODO: Return to `all` filter
      */
     attachButtonHandlers() {
         let parent = this;
@@ -307,8 +305,6 @@ class FireInfo {
                 if (parent.currentSelectedFire != undefined) {
                     parent.updateSelectedFireInfo(parent.currentSelectedFire);
                 }
-
-
 
             });
 
@@ -370,9 +366,6 @@ class FireInfo {
                 // Scroll to fire if found in this list? If not, make it undefined
                 if (parent.currentSelectedFire != undefined) {
                     let currentFireCause = parent.currentSelectedFire.feature.properties.Cause;
-                    /* if (currentFireCause != causeTag && causeTag != "all") {
-                        parent.currentSelectedFire = undefined;
-                    } */
                     // Keep fire on filter
 
                     parent.updateSelectedFireInfo(parent.currentSelectedFire);
@@ -381,15 +374,16 @@ class FireInfo {
     }
 
     /**
-     * 
-     * @param {*} causeTag 
+     * Call the script.js to update mapview on filter
+     * @param {String} causeTag - [all, H, L, U]
      */
     updateMapFiltering(causeTag) {
         this.updateFireFilter(causeTag);
     }
 
     /**
-     * 
+     * Initilize Toast that displays when
+     * clicked to a fire without data
      */
     attachToastClearButton() {
         let toastSelect = d3.select("#vis-1-toast");
@@ -406,14 +400,13 @@ class FireInfo {
                     .then(() => {
                         toastSelect.classed("d-none", true);
                     });
-
-
             });
     }
 
     /**
-     * 
-     * @param {String} message 
+     * Change the text attribute of the toast 
+     * and display the message
+     * @param {String} message - message to display on the toast
      */
     showToastMessage(message) {
         let toastSelect = d3.select("#vis-1-toast");
@@ -485,15 +478,13 @@ class FireInfo {
         gSelect.select("rect")
             .classed("stroke-bold", true)
             .style("fill", "#48cae4");
-        //#1fdcd8
         gSelect.selectAll("text")
             .classed("text-bold", true)
     }
 
     /**
-     * 
+     * perform a scroll animation to selected fire (if found)
      * @param {fire object} fire - selected Fire to scroll to 
-     * if fire == undefined 
      */
     scrollToSelectedFire(fire) {
         //SCroller container:
@@ -559,11 +550,11 @@ class FireInfo {
     }
 
     /**
-     * * Update this.datapoints (341 fires)
+     * Update this.datapoints (341 fires)
      * and this.showingData(specify howmany fires to display)
-     * @param {*} statName 
-     * @param {*} numFires 
-     * @param {*} descending 
+     * @param {String} statName - given attribute name 
+     * @param {Number} numFires - given number of fires we want to show on barchart 
+     * @param {Boolean} descending - true: fires will be sorted descending by attribute, otherwise ascending
      */
     dataUpdate(statName = "SizeAcre", numFires = 20, descending = false) {
         this.datapoints.sort((a, b) => a.properties[statName] - b.properties[statName]);
@@ -590,7 +581,7 @@ class FireInfo {
     }
 
 
-
+    // HELPERFUNCTIONS:
     /**
      * Generate string based on ranking number (1st, 2nd, 3rd)
      * @param {number} i
