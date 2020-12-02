@@ -9,13 +9,8 @@ class NationalHistory {
         this.vizMinWidth = 100;
         this.vizMaxWidth = 100;
         this.vizMinHeight = 50;
-
-        // d3.select("#vis-8-svg").style("width", `${this.vizWidth}px`);
-        // d3.select("#vis-8-svg").style("height", `${this.vizHeight}px`);
         d3.select("#vis-8-svg")
             .attr("viewBox", `0 0 ${this.vizWidth} ${this.vizHeight}`);
-        console.log(this.vizHeight);
-        console.log(this.vizWidth);
         //scales:
         this.scaleTotalAcres = d3.scaleLinear()
             .domain([d3.max(this.data, d => d.totalAcres) + 300000, 0])
@@ -46,7 +41,9 @@ class NationalHistory {
 
 
     /**
-     * Function to draw Axes:
+     * Function to draw X and Y Axes:
+     * X Axis: year from the xAxis scaleYears
+     * Y Axis: - Numfire axis and -Area burned Axis
      */
     drawAxis() {
         let svgSelect = d3.select("#vis-8-svg");
@@ -81,6 +78,14 @@ class NationalHistory {
             .text("Number of Fires")
     }
 
+    /**
+     * Draw the scatterplots
+     * Each year's data is gathered in a <g> element that has:
+     * - hidden year line to let user hover
+     * - low opacity vertical line aligning the year's circles
+     * - circles for numfires and areas
+     * - hidden year's text display on hover 
+     */
     drawPlot() {
         let parent = this;
         let svgSelect = d3.select("#vis-8-svg");
@@ -156,9 +161,6 @@ class NationalHistory {
                     .style("left", (event.pageX + 20) + 'px')
                     .style("top", (event.pageY + 20) + 'px')
                     .classed("d-none", false)
-                    // .style("transform", "translate(-50px,-50px) scale(0.4)")
-                    // .transition()
-                    // .duration(50)
                     .style("opacity", 1.0)
                     .style("transform", "scale(1)");
                 tooltip.select(".card").raise();
@@ -178,7 +180,6 @@ class NationalHistory {
                     .classed("yearNumber-hover", false);
 
                 //Remove tooltip:
-
                 let tooltip = d3.select("#national-tooltip")
                     .style("opacity", 0)
                     .classed("d-none", true)
@@ -187,11 +188,20 @@ class NationalHistory {
     }
 
     /**
+     * Draw the legends for scatterplot:
+     * draw numfire and total area burned legends
      * 
+     * Hover over legend: highlight the legend tag
+     * 
+     * On click over legend: dehighlight the other legend (if applicable),
+     * highlight this legend tag, highlight trendline and points, clicked state = true
+     * 
+     * On hover out of legend: dehighlight this legend (if not in clicked state)
      */
     drawLegend() {
         let parent = this;
         let svgSelect = d3.select("#vis-8-svg");
+        //Each legend is in a <g> group that contains: circle and text
         let numFireLegend = svgSelect.append("g")
             .attr("class", "legend")
             .attr("transform", (d, i) => `translate(${this.vizMinWidth + 10},${0 + 45})`);
@@ -286,13 +296,12 @@ class NationalHistory {
                     parent.unhighlightTotalAcres();
                 }
             });
-        //Add Highlight when click:
-
 
     }
 
     /**
-     * 
+     * Draw the trendline for both data points
+     * Using Least Square Fits function
      */
     drawTrendline() {
         let sortedData = this.data.reverse();
@@ -334,8 +343,8 @@ class NationalHistory {
 
     /**
      * THIS CODE IS from http://bl.ocks.org/benvandyke/8459843
-     * @param {*} xSeries 
-     * @param {*} ySeries 
+     * @param {Array[Number]} xSeries - Specifies the datapoints X coordinates 
+     * @param {Array[Number]} ySeries  - Specifies the datapoints Y coordinates
      */
     // returns slope, intercept and r-square of the line
     leastSquares(xSeries, ySeries) {
@@ -360,6 +369,10 @@ class NationalHistory {
         return [slope, intercept, rSquare];
     }
 
+    /**
+     * Map the data attributes 
+     * from string to JS Number
+     */
     dataPrepare() {
         this.data = this.data.map(d => ({
             year: +d.year,
@@ -368,10 +381,19 @@ class NationalHistory {
         }));
     }
 
+    /**
+     * Helper function to translate 
+     * a number to a string with commas (123456 -> 123,456)
+     * @param {Number} x 
+     */
     numberWithCommas(x) {
         return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
     }
 
+    ////////////////////////////////
+    //HELPER FUNCTIONS TO HIGHLIGHT THE LEGENDS 
+    //AND POINTS ON CLICK AND HOVER
+    ///////////////////////////////
     highlightTotalAcres() {
         //Hide all numfires:
         d3.selectAll(".numFires")
