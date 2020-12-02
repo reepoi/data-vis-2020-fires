@@ -2,7 +2,6 @@ class NationalHistory {
     constructor(data) {
         this.data = [...data];
         this.dataPrepare();
-        console.log(this.data);
         //VizSizes:
         this.vizWidth = d3.select("#vis-8").style("width").replace("px", "");
         this.vizHeight = d3.select("#vis-8").style("height").replace("px", "");
@@ -227,7 +226,6 @@ class NationalHistory {
             })
             .on("mouseout", function(event, d) {
                 if (!parent.isHighlightNumFires) {
-                    console.log("is");
                     d3.select(".numFiresLegendCircle")
                         .attr("r", "0.5rem");
                     d3.select(".numFiresLegendText")

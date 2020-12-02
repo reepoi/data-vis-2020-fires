@@ -388,7 +388,6 @@ class FireInfo {
         let toastSelect = d3.select("#vis-1-toast");
         toastSelect.select(".btn")
             .on("click", function(event) {
-                console.log("clicked");
                 toastSelect
                     .style("opacity", 1)
                 toastSelect

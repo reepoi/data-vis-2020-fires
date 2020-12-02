@@ -160,7 +160,6 @@ function nationalHistoryInitialize() {
     if (isNationalHistoryInit) return;
     isNationalHistoryInit = true;
     loadData().then(data => {
-        console.log(data);
         nationalHistory = new NationalHistory(data.nationalHistory);
     })
 }
