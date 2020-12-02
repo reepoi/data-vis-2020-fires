@@ -616,11 +616,11 @@ class FireInfo {
         switch (statName) {
             case "SizeArea":
             default:
-                return ["Area Burned:", `${this.numberWithCommas(this.totalAreaBurned)} acres`, 'Largest Fires by Area:'];
+                return ["Total Area Burned (.est)", `${this.numberWithCommas(this.totalAreaBurned)} acres`, 'Largest Fires by Area:'];
             case "StructuresDestroyed":
-                return ["Structures Destroyed:", `${this.numberWithCommas(this.totalStructuresDestroyed)}`, 'Most Structures Destroyed:'];
+                return ["Total Structures Destroyed (.est)", `${this.numberWithCommas(this.totalStructuresDestroyed)}`, 'Most Structures Destroyed:'];
             case "SuppresionCost":
-                return ["Suppresion Cost:", `${this.numberWithCommas(this.totalSuppressionCost)}`, 'Highest Suppression Cost:'];
+                return ["Total Suppresion Cost (.est)", `$${this.numberWithCommas(this.totalSuppressionCost)}`, 'Highest Suppression Cost:'];
 
         }
     }
