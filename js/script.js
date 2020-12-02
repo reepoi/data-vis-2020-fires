@@ -1,26 +1,37 @@
 /* Other DOM Manipulation before Data load: */
+/**
+ * Wait for all assets(design elements) to load 
+ * before handling data and visualizations
+ */
 window.addEventListener('load', function() {
     console.log('All assets are loaded');
     pagingHandler();
 });
+/**
+ * Listen for a hashchange
+ */
 window.addEventListener("hashchange", function(e) {
     pagingHandler();
 });
 
+/**
+ * GLOBAL CONSTANTS:
+ */
 const tabHashes = getTabHashes();
 const mapView = new MapView('vis-2', [MAP_INIT_LAT, MAP_INIT_LONG], MAP_INIT_ZOOM);
 const mapViewCompareYears = new MapViewCompareYears('vis-5', [MAP_CMP_INIT_LAT, MAP_CMP_INIT_LONG], MAP_CMP_INIT_ZOOM);
 
+/** Variables to keep the website from reloading and redrawing */
 var isFireMapInit = false;
 var isCompareYearsInit = false;
 var isNationalHistoryInit = false;
 
 
-/* Visualization: After data load */
 
-////////Visualizations are now first drawn by pagingHandler();//////
 /**
- * 
+ * Function called to initialize Fire-map Visualizations
+ * This will only be called once to reduce the amount of data loaded
+ * and keep it from redrawing visualizations
  */
 function fireMapInitialize() {
     //Only load and draw once:
@@ -32,22 +43,21 @@ function fireMapInitialize() {
     }
     isFireMapInit = true;
 
-    // loadData().then(data => {
     loadData().then(data => {
-        console.log(data);
-
-        //Initialize view files:
+        //Initialize barchart and mapview:
         let fireInfo = new FireInfo(data);
         mapView.drawMapFeatures(data, fireInfo.currentPage);
+
         /**
-         * 
+         * Function to call mapview to trigger a zoom and 
+         * select Fire
          * @param {Object} selectedFire - fire's feature
          */
         function updateMapView(selectedFire) {
             mapView.selectAndZoomToPolygon(selectedFire);
         }
         /**
-         * 
+         * Function to update barchart and mapview on selected Fire
          * @param {leaflet e.target} selectedFire - Leaflet e.target 
          * --> Refer to selectedFire.feature for fire info
          */
@@ -59,9 +69,11 @@ function fireMapInitialize() {
         fireInfo.updateMapView = updateMapView;
         fireInfo.updateFireInfo = updateFireInfo;
 
-        /*
+        /**
          * Event handler for when left fireInfoPage bar chart
          * changes pages
+         * @param {String} fireInfoPage - specifies which page the visualization is on 
+         * ["SizeAcre", "StructuresDestroyed", "SuppresionCost"]
          */
         function pageChangeFireInfo(fireInfoPage) {
             mapView.drawMapFeatures(data, fireInfoPage);
@@ -73,8 +85,8 @@ function fireMapInitialize() {
         fireInfo.pageChangeFireInfo = pageChangeFireInfo;
 
         /**
-         * 
-         * @param {string} causeTag - `all, `H`, `L`, `U` 
+         * Function to update mapview on current cause filter
+         * @param {string} causeTag - [`all, `H`, `L`, `U`] 
          */
         function updateFireFilter(causeTag) {
             function isCauseTag(causeTag, fireCause) {
@@ -93,24 +105,29 @@ function fireMapInitialize() {
                 points: newPoints,
                 perimeters: newPolygons
             }
-
             mapView.drawMapFeaturesFiltered(newData, fireInfo.currentPage);
         }
         fireInfo.updateFireFilter = updateFireFilter;
     });
 }
 
+/**
+ * Function called to initialize the fireMap Info guidelines in fire-map
+ * This will only be called once to reduce the amount of data loaded
+ * and keep it from redrawing visualizations
+ */
 function fireMapStoryInitialize() {
     if (d3.select("#fire-map-div").classed("d-none"))
         return;
-    //Storytelling:
+    //Initialize File:
     let fireMapStory = new FireMapStory();
     fireMapStory.initStoryInstances();
 }
 
 /**
- * 
- * @param {Object} data 
+ * Function called to initialize the compare-years tab (ca wildfire history) 
+ * This will only be called once to reduce the amount of data loaded
+ * and keep it from redrawing visualizations
  */
 function compareYearsInitialize() {
     // /Only load and draw once:
@@ -118,7 +135,7 @@ function compareYearsInitialize() {
     isCompareYearsInit = true;
 
     loadData().then(data => {
-        console.log(data);
+        // console.log(data);
         let top20fires = new Top20Fires('vis-7-svg', data.top20Fires);
 
         function updateCompareYears(selectedCounty) {
@@ -127,15 +144,14 @@ function compareYearsInitialize() {
         mapViewCompareYears.updateCompareYears = updateCompareYears;
         let compareYears = new CompareYear('vis-4-svg', data.CACounty);
         mapViewCompareYears.drawMapFeatures(data);
-
-
     });
 
 }
 
 
 /**
- * 
+ * Initialize the national wildfire history tab
+ * Only called once on first load to the tab
  */
 function nationalHistoryInitialize() {
     if (isNationalHistoryInit) return;
@@ -146,7 +162,10 @@ function nationalHistoryInitialize() {
     })
 }
 
-/* Async function to load files that you want */
+/**
+ * Async. Load the data corresponding to 
+ * the current tab.
+ */
 async function loadData() {
     let currentHash = window.location.hash;
     switch (currentHash) {
@@ -175,12 +194,14 @@ async function loadData() {
 }
 
 
-/* Views Helper Functions */
+//////////////////////////////////////////////
+/////VIEWS NAVIGATION AND PAGING//////////////
+//////////////////////////////////////////////
 
 /**
  * This function handles the website paging
  * with hash locations.
- * @param {*} givenHash - String - a given hash to relocate. 
+ * @param {String} hash - String - a given hash to relocate. 
  */
 function pagingHandler(hash = "") {
 
@@ -189,8 +210,6 @@ function pagingHandler(hash = "") {
         currentHash = window.location.hash;
     switch (currentHash) {
         case "#compare-years":
-            /* This is just a demo function I made to see how tabbing works */
-            /* TODO: Add function to handle this */
             compareYearsInitialize();
             break;
         case "#national":
@@ -211,7 +230,7 @@ function pagingHandler(hash = "") {
 }
 
 /**
- * 
+ * Transition to the tab with animations
  */
 function displayCurrentPagebyHash() {
     let currentHash = window.location.hash;
@@ -237,9 +256,6 @@ function displayCurrentPagebyHash() {
                     fireMapStoryInitialize()
                 });
         });
-
-    // .then(() => fireMapStoryInitialize());
-
 }
 
 
@@ -247,6 +263,7 @@ function displayCurrentPagebyHash() {
  * This function changes the DOM classes of the tabs 
  * corresponding to the user's selection (as shown in the page hashtag)
  * This doesn't touch any Visualizations or Data content
+ * @param {String} hash - String - a given hash to change htmlElements' classes
  */
 function activeTabHandler(currentHash) {
     // let tabHashes = [];
@@ -257,7 +274,6 @@ function activeTabHandler(currentHash) {
                 aElement.classed("active", true)
             } else
                 aElement.classed("active", false)
-                // tabHashes.push(aElement.attr("href"));
         });
     //Disable and Enable at left and right most tabs:
     //if hashtag = left most, then disable back button
@@ -285,7 +301,9 @@ function tabBackClicked() {
     pagingHandler(tabHashes[currentTabIndex - 1]);
 }
 
-/* Helper function: get the hashes from main menu (tab) */
+/**
+ * Get the hashes from main menu (tab) 
+ */
 function getTabHashes() {
     let tabHashes = [];
     d3.select("#menu").selectAll(".tab-item")
