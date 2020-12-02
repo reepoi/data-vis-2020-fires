@@ -20,6 +20,14 @@ class CompareYear {
         this.initLegend();
     }
 
+    /*
+     * Set the data of the selected county to display on the pie chart
+     * This involes:
+     *  - Setting the name of the county
+     *  - Setting the total area of the county
+     *  - Setting how much area in the county was burned in each time period
+     *  - Finding the ratio of area burned in each time period
+     */
     setPieData(selectedCounty) {
         this.selectedRegion.region = selectedCounty.properties.COUNTY_NAM;
         this.selectedRegion.totalArea = selectedCounty.properties.totalArea;
@@ -30,21 +38,32 @@ class CompareYear {
         this.updatePieChart();
     }
 
+    /*
+     * Initialize the display of the pie chart
+     */
     initPieChart() {
         let that = this;
+
+        // set svg dimensions and placement
         this.svg
             .attr('width', 600)
             .attr('height', this.height + 40)
             .append('g')
             .attr('transform', 'translate(' + (715 / 2) + ',' + (this.height / 2 + 10) + ')');
+
+        // create the donut arcs
         let arc = d3.arc()
             .innerRadius(this.radius - this.donutWidth)
             .outerRadius(this.radius);
+
+        // size segment proportioning function
         let pie = d3.pie()
             .value(function (d) {
                 return d.totalBurned;
             })
             .sort(null);
+        
+        // draw the donut
         let path = this.svg.select('g').selectAll('path')
             .data(pie(this.pieData))
             .enter()
@@ -55,15 +74,20 @@ class CompareYear {
             })
             .attr('transform', 'translate(0, 0)')
             .classed('pie-slice', true);
+
+        // add tooltip and other handlers
         this.addTooltip(path);
     }
 
+    /*
+     * Draw the legend inside the donut
+     */
     initLegend() {
         let that = this;
         let legendRectSize = 13;
         let legendSpacing = 7;
         let legend = this.svg.selectAll('.legend')
-            .data([this.selectedRegion.region, ...this.pieData], d => d.period)
+            .data([this.selectedRegion.region, ...this.pieData], d => d.period) // the name of the region is added special above the legend
             .enter()
             .append('g')
             .attr('class', 'circle-legend')
@@ -74,7 +98,7 @@ class CompareYear {
                 let vert = i * (height + 5) - offset;
                 return 'translate(' + (that.width / 2 + horz) + ',' + (that.height / 2 + vert) + ')';
             });
-        legend.filter(d => d.period)
+        legend.filter(d => d.period) // do not give the region name a circle
             .append('circle')
             .attr('class', 'fireCircle')
             .style('fill', d => this.color(d.totalBurned))
@@ -87,7 +111,7 @@ class CompareYear {
             .text(function (d) {
                 if (d.period) {
                     return d.period
-                } else {
+                } else { // special placement and classes for region name
                     let regionTitle = d3.select(this);
                     regionTitle.attr('x', legendRectSize - d.length);
                     regionTitle.classed('regionTitle', true);
@@ -97,6 +121,9 @@ class CompareYear {
             });
     }
 
+    /*
+     * helper to add a tooltip and other effects on mouse events
+     */
     addTooltip(selection) {
         let tooltipSelect = d3.select("#tooltipcmpyear");
         tooltipSelect
@@ -130,6 +157,7 @@ class CompareYear {
                 .style("transform", "scale(1)");
             tooltipSelect.select(".card").raise();
 
+            // other effect: change style on pie segment hover
             d3.select(this).classed('pie-slice-hover', true);
         }).on("mouseout", function (e, d) {
             tooltipSelect
@@ -137,10 +165,15 @@ class CompareYear {
                 .classed("d-none", true)
                 .style("transform", "");
 
+            // other effect: reset pie segment hover
             d3.select(this).classed('pie-slice-hover', false);
         });
     }
 
+    /*
+     * Handler to update donut chart when new data is set
+     * by setPieData
+     */
     updatePieChart() {
         let pie = d3.pie()
             .value(function (d) {
@@ -154,7 +187,9 @@ class CompareYear {
             .innerRadius(this.radius - this.donutWidth)
             .outerRadius(this.radius);
 
-        /* custom interpolation function for arcs
+        /* custom interpolation function for arcs;
+         * this more smoothly handles the animation
+         * compared to the default interpolation of d3
          * source: http://jsfiddle.net/Qh9X5/18/
          */
         function arcTween(a) {
