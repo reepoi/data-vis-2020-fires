@@ -6,10 +6,10 @@ YouTube Link: https://youtu.be/J4yhI7hhRPM
 
 # Code
 External Sources
-- [Leaflet JS](https://leafletjs.com/) is used for the map displays
+- [Leaflet JS](https://leafletjs.com/) is used for the map displays.
 - [Leaflet zoomhome](https://github.com/torfsen/leaflet.zoomhome) is the source for leaflet.zoomhome.js and leaflet.zoomhome.css.
 - [Leaflet beautify marker](https://github.com/masajid390/BeautifyMarker) is the source for leaflet-beautify-marker-icon.js and leaflet-beautify-marker-icon.css.
-- [Spectre CSS](https://picturepan2.github.io/spectre/) is used for styling and layout of the website
+- [Spectre CSS](https://picturepan2.github.io/spectre/) is used for styling and layout of the website.
 - The donut chart code is adapted from [Making an animated donut chart with d3.js](https://medium.com/@kj_schmidt/making-an-animated-donut-chart-with-d3-js-17751fde4679) by KJ Schmidt.
 - The donut chart arc function in compareYears.js is adapted from [jsfiddle](http://jsfiddle.net/Qh9X5/18/).
 - The Leaflet mousehover pop-ups in mapView.js are adapted from [user "sowelie" on jsfiddle](http://jsfiddle.net/sowelie/3JbNY/).
@@ -21,7 +21,7 @@ External Sources
 # Visualization Features
 2020 US Wildfire Visualization
 - Point data and bars are encoded by a black to red color scale according to the data in the filter.
-- In the map view, point data is removed and polygon data added after zooming past 50 km in extent
+- In the map view, point data is removed and polygon data added after zooming past 50 km in extent.
 - Selections are synced between the points, polygons, and bars.
 - When selected, the map automatically pans and zooms to the polygon extent of the fire.
 - The data in the views of the bar chart and map can be updated, and the data can futher be filtered.
