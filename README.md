@@ -4,6 +4,9 @@ Website: https://reepoi.github.io/data-vis-2020-fires/
 # Project Screencast
 YouTube Link: https://youtu.be/J4yhI7hhRPM
 
+# Process Book
+In our `docs` folder: https://github.com/reepoi/data-vis-2020-fires/blob/main/docs/process-book.pdf
+
 # Code
 External Sources
 - [Leaflet JS](https://leafletjs.com/) is used for the map displays.
