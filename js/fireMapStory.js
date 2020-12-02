@@ -1,10 +1,11 @@
 class FireMapStory {
     constructor() {
         this.storyBox = d3.select("#storybox");
-
-
     }
 
+    /**
+     * Function called to init the info box sizes and content
+     */
     initStoryInstances() {
         this.stories = this.storyContentCreate();
         this.currentStoryIndex = 0;
@@ -14,15 +15,18 @@ class FireMapStory {
     }
 
     /**
-     * 
+     * Handle info button click
      */
     attachActivateButton() {
         let activateBtnSelect = d3.select("#storybox-btn-activate");
         activateBtnSelect.classed("disabled", false);
         activateBtnSelect
-            .on("click", (event) => this.displayStorybox(event));
+            .on("click", (event) => this.displayStorybox());
     }
 
+    /**
+     * Handle Exit button click
+     */
     attachExitButton() {
         let exitBtnSelect = d3.select("#story-btn-exit");
         exitBtnSelect
@@ -35,21 +39,18 @@ class FireMapStory {
     }
 
     /**
-     * 
-     * @param {*} event 
+     * Change the view to show info box
      */
-    displayStorybox(event) {
+    displayStorybox() {
         //Display box:
         d3.select("#storybox").classed("d-none", false);
         d3.select("#story-svg-container").classed("d-none", false);
         //go to step 1:
         d3.select(".step-item").select("a").dispatch("click");
-
-
     }
 
     /**
-     * 
+     * Handle the info box navigation and steps
      */
     attachNavigateSteps() {
         let stepsSelect = d3.selectAll(".step-item");
@@ -75,8 +76,9 @@ class FireMapStory {
     }
 
     /**
-     * 
-     * @param {*} newStoryIndex 
+     * Change the view on the step line 
+     * and call the infobox to display the new step content
+     * @param {Number} newStoryIndex - index to the new step 
      */
     storyNavigate(newStoryIndex) {
         if (newStoryIndex == this.stories.length - 1) {
@@ -92,8 +94,8 @@ class FireMapStory {
     }
 
     /**
-     * 
-     * @param {number} step - 
+     * Populate the content of the new step
+     * @param {Number} step - current step number to display  
      */
     displayStorybyStep(step) {
         if (step < 0) return;
@@ -124,7 +126,7 @@ class FireMapStory {
             .style("opacity", 1.0)
             .style("transform", "scale(1)");
 
-        //TODO: Highlight Story:
+        // Highlight Story:
         //Notes use a low-opacity filled rect 
         let rectPosition = this.stories[step].rectPosition;
         // console.log(rectPosition);
@@ -151,14 +153,16 @@ class FireMapStory {
         d3.select(this.stories[step].whichVis)
             .classed("highlight-vis", true);
 
-        //
+        //If there's a function to do on this step
         if (this.stories[step].highlightFunction)
             this.stories[step].highlightFunction();
     }
 
-
+    /**
+     * Initial function that returns content for each step
+     */
     storyContentCreate() {
-
+        //Story-1 content
         let s1Text = `The bar chart displays 2020's wildfire stats.\n
         Select the \`Prev\` and \`Next\` buttons to sort the fires by \n
          Area Burned, Structures Destroyed, and Suppression Cost. 
@@ -169,7 +173,7 @@ class FireMapStory {
         console.log(s1Position);
 
 
-        //TODO: Story-2 content:
+        // Story-2 content:
         let s2Text = `The map displays the reported wildfires in the U.S. during 2020. 
         Zoom and pan the map for more details, or try selecting a fire and see where 
         it stands statistically on our bar chart. 
@@ -179,7 +183,7 @@ class FireMapStory {
         let s2 = { text: s2Text, position: s2Position, rectPosition: s2RectPosition, whichVis: "#vis-2" };
 
 
-        //TODO: Story 3 content:
+        //Story 3 content:
         let s3Text = `Click on the August Complex fire on either the bar chart or map
         to zoom to its extent and hover over its bar to 
         see the full statistics for the fire.
@@ -192,8 +196,8 @@ class FireMapStory {
             rectPosition: s3RectPosition,
             whichVis: "#vis-1-div",
             highlightFunction: this.selectAndHighlightAugustComplex
-        }
-
+        };
+        //Story-4 content
         let s4Text = `While the August Complex is currently the 
         largest fire this year, it stands fourth and third on number of structures destroyed and 
         suppression cost, respectively.`;
@@ -212,6 +216,10 @@ class FireMapStory {
         return storyArray;
     }
 
+    /**
+     * Function that dispatch a clkick to august complex fire
+     * Used by story-3
+     */
     selectAndHighlightAugustComplex() {
         //dispatch a click on august complex from the barchart:
         let fireTextSelect = d3.selectAll(".barName").filter(d => {
@@ -223,6 +231,10 @@ class FireMapStory {
 
     }
 
+    /**
+     * Function that clicks next throughout the bar chart 
+     * Used by story-4
+     */
     navigateAugustComplexStat() {
         let prevBtn = d3.select("#vis-1-prev");
         let nextBtn = d3.select("#vis-1-next");
@@ -260,10 +272,20 @@ class FireMapStory {
         }
     }
 
+    /**
+     * Get boundingclientRect of the element given an id tag
+     * Used with d3
+     * @param {String} documentId - i.e. "#vis-1", "#vis-1-div" 
+     */
     getDocumentPosition(documentId) {
         return d3.select(documentId).node().getBoundingClientRect();
     }
 
+    /**
+     * Get actual position of this (child) element relative to its parent element
+     * @param {String} child - childId 
+     * @param {String} parent - parentId 
+     */
     getOffsetFromParent(child, parent) {
         let childPos = this.getDocumentPosition(child);
         let parentPos = this.getDocumentPosition(parent);
